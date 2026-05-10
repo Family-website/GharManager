@@ -1,4 +1,16 @@
 // ==========================================
+// 🛡️ PERMANENT DATA STORAGE ENGINE 
+// Ye phone ko data delete karne se rokega
+// ==========================================
+async function makeDataPermanent() {
+    if (navigator.storage && navigator.storage.persist) {
+        const isPersisted = await navigator.storage.persist();
+        console.log(`Persistent storage granted: ${isPersisted}`);
+    }
+}
+makeDataPermanent();
+
+// ==========================================
 // 0. SMART GREETING & SECURITY 🔐
 // ==========================================
 function updateGreeting() {
@@ -66,18 +78,18 @@ function unlockApp() {
 
 function resetPin() {
     Swal.fire({
-        title: 'Reset Everything?', text: "Data delete karke naya PIN banayein?", icon: 'warning',
+        title: '⚠️ ALERT!', text: "Kya aap sach me saara data aur PIN delete karna chahte hain? Ye wapas nahi aayega!", icon: 'warning',
         showCancelButton: true, confirmButtonColor: '#e74c3c', confirmButtonText: 'Yes, Delete!'
     }).then((result) => { if (result.isConfirmed) { localStorage.clear(); location.reload(); } });
 }
 
-// ☁️ BACKUP & RESTORE
+// ☁️ BACKUP & RESTORE 
 function backupData() {
     const allData = { expenses: localStorage.getItem('familyExpensesData'), dudh: localStorage.getItem('familyDudhData'), ration: localStorage.getItem('familyRationData'), budget: localStorage.getItem('familyBudget') };
     const blob = new Blob([JSON.stringify(allData)], {type: "application/json"});
     const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
     link.download = `FamilyApp_Backup.json`; link.click();
-    Swal.fire('Saved!', 'Backup JSON file me save ho gaya.', 'success');
+    Swal.fire('Saved!', 'Backup JSON aapke phone me save ho gaya hai.', 'success');
 }
 function restoreData(event) {
     const file = event.target.files[0]; if(!file) return;
@@ -89,8 +101,8 @@ function restoreData(event) {
             if(data.dudh) localStorage.setItem('familyDudhData', data.dudh);
             if(data.ration) localStorage.setItem('familyRationData', data.ration);
             if(data.budget) localStorage.setItem('familyBudget', data.budget);
-            Swal.fire('Restored!', 'Data wapas aa gaya.', 'success').then(() => location.reload());
-        } catch(err) { Swal.fire('Error', 'Galat file!', 'error'); }
+            Swal.fire('Restored!', 'Aapka purana data wapas aa gaya hai.', 'success').then(() => location.reload());
+        } catch(err) { Swal.fire('Error', 'Galat file select ki hai!', 'error'); }
     };
     reader.readAsText(file);
 }
@@ -111,20 +123,18 @@ function toggleTheme() {
     if(categoryChartInstance) renderHistoryWithSkeleton(); 
 }
 
-// 🔥 NAV BAR BUG FIXED HERE
 function openSection(sectionName, title) {
     document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active-section'));
     document.getElementById('section-' + sectionName).classList.add('active-section');
     document.getElementById('app-title').innerText = title;
     
-    // Highlight active nav
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('active-nav');
         if(btn.getAttribute('onclick').includes(`'${sectionName}'`)) {
             btn.classList.add('active-nav');
         }
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Upar scroll kar dega tab badalne pe
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
 }
 
 const now = new Date();
@@ -175,7 +185,7 @@ if(receiptImgInput) {
     receiptImgInput.addEventListener('change', async function(e) {
         const file = e.target.files[0]; if(!file) return;
         Swal.fire({ title: 'Uploading...', text: 'Wait karein', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-        const imgbbApiKey = "YAHAN_APNI_IMGBB_API_KEY_PASTE_KAREIN"; 
+        const imgbbApiKey = "09c18550e5cf82654630cbcc1c17d076"; 
         const formData = new FormData(); formData.append("image", file);
         try {
             const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, { method: "POST", body: formData });
@@ -370,7 +380,11 @@ function calculateVyaj() {
 let dudhRecords = []; try { dudhRecords = JSON.parse(localStorage.getItem('familyDudhData')) || []; } catch(e) { dudhRecords = []; }
 let editDudhIndex = -1;
 const dudhDateInput = document.getElementById('dudh-date'); if(dudhDateInput) dudhDateInput.value = todayDateString;
-const checklistMonthPicker = document.getElementById('checklist-month-picker'); if(checklistMonthPicker) { checklistMonthPicker.value = todayDateString.slice(0, 7); checklistMonthPicker.addEventListener('change', updateChecklist); }
+const checklistMonthPicker = document.getElementById('checklist-month-picker'); 
+if(checklistMonthPicker) { 
+    checklistMonthPicker.value = todayDateString.slice(0, 7); 
+    checklistMonthPicker.addEventListener('change', updateChecklist); 
+}
 
 function updateDudhUI() {
     const list = document.getElementById('dudh-list'); if(!list) return; list.innerHTML = ''; let totalLiter = 0, totalBill = 0;
@@ -389,11 +403,13 @@ function updateDudhUI() {
         list.appendChild(li);
     });
     document.getElementById('dudh-total-liter').innerText = totalLiter.toFixed(2); document.getElementById('dudh-total-bill').innerText = `₹${Math.round(totalBill)}`;
-    updateChecklist();
+    if(typeof updateChecklist === "function") updateChecklist();
 }
 
 function updateChecklist() {
-    const grid = document.getElementById('checklist-grid'); if(!grid || !checklistMonthPicker.value) return; grid.innerHTML = '';
+    const grid = document.getElementById('checklist-grid'); 
+    if(!grid || !checklistMonthPicker || !checklistMonthPicker.value) return; 
+    grid.innerHTML = '';
     const [yearStr, monthStr] = checklistMonthPicker.value.split('-'); const daysInMonth = new Date(yearStr, monthStr, 0).getDate(); const enteredDates = new Set(dudhRecords.map(r => r.date));
     for (let i = 1; i <= daysInMonth; i++) {
         const dayBox = document.createElement('div'); dayBox.className = 'day-box'; dayBox.innerText = i; 
