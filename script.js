@@ -1,114 +1,132 @@
 // ==========================================
 // 🛡️ PERMANENT DATA STORAGE ENGINE 
-// Ye phone ko data delete karne se rokega
 // ==========================================
 async function makeDataPermanent() {
     if (navigator.storage && navigator.storage.persist) {
-        const isPersisted = await navigator.storage.persist();
-        console.log(`Persistent storage granted: ${isPersisted}`);
+        await navigator.storage.persist();
     }
 }
 makeDataPermanent();
 
 // ==========================================
-// 0. SMART GREETING & SECURITY 🔐
+// 🔥 1. FIREBASE SETUP & CLOUD ENGINE
 // ==========================================
-function updateGreeting() {
-    const hrs = new Date().getHours();
-    let greet = 'Good Evening';
-    if (hrs < 12) greet = 'Good Morning';
-    else if (hrs < 17) greet = 'Good Afternoon';
-    const greetEl = document.getElementById('smart-greeting');
-    if(greetEl) greetEl.innerText = `${greet}, Aditya! ✨`;
-}
-
-window.onload = () => {
-    updateGreeting();
-    const savedPin = localStorage.getItem('appPin');
-    if(!savedPin) {
-        document.getElementById('lock-title').innerText = "Create New PIN";
-        document.getElementById('lock-desc').innerText = "Pehli baar 4-digit PIN banayein";
-    }
+const firebaseConfig = {
+  apiKey: "AIzaSyCej-idbSFHr3WVokG3sdpmdWPWgz5PkQk",
+  authDomain: "super-family-appp.firebaseapp.com",
+  projectId: "super-family-appp",
+  storageBucket: "super-family-appp.firebasestorage.app",
+  messagingSenderId: "250506329447",
+  appId: "1:250506329447:web:cf9ac2e4d6d24b37e903c2",
+  measurementId: "G-0E3C8289HF"
 };
 
-function handlePinInput(currentId, nextId) {
-    const currentBox = document.getElementById(currentId);
-    currentBox.value = currentBox.value.replace(/[^0-9]/g, '');
-    if (currentBox.value.length === 1 && nextId) document.getElementById(nextId).focus();
-    else if (currentBox.value.length === 1 && !nextId) checkPin(); 
-}
+// Initialize Firebase (Compat Version for Web)
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-function handleBackspace(e, currentId, prevId) {
-    const currentBox = document.getElementById(currentId);
-    if (e.key === 'Backspace' && currentBox.value === '' && prevId) document.getElementById(prevId).focus();
-}
+let currentUser = null;
 
-function checkPin() {
-    const inputPin = document.getElementById('pin1').value + document.getElementById('pin2').value + document.getElementById('pin3').value + document.getElementById('pin4').value;
-    if(inputPin.length !== 4) return; 
-    const savedPin = localStorage.getItem('appPin');
+// ==========================================
+// 🔐 2. GOOGLE LOGIN SYSTEM
+// ==========================================
+const loginScreen = document.getElementById('login-screen');
+const mainApp = document.getElementById('main-app');
+const loginStatus = document.getElementById('login-status');
 
-    if(!savedPin) {
-        localStorage.setItem('appPin', inputPin);
-        Swal.fire('Set!', 'Aapka PIN set ho gaya hai.', 'success');
-        unlockApp();
-    } else {
-        if(inputPin === savedPin) unlockApp();
-        else {
-            if(navigator.vibrate) navigator.vibrate([200, 100, 200]); 
-            document.querySelectorAll('.pin-box').forEach(box => {
-                box.classList.add('shake-error');
-                setTimeout(() => { box.classList.remove('shake-error'); box.value = ''; }, 500);
-            });
-            document.getElementById('pin1').focus(); 
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        if(loginStatus) {
+            loginStatus.style.display = 'block';
+            loginStatus.innerText = "Cloud se data laa rahe hain... ⏳";
         }
+        document.getElementById('smart-greeting').innerText = `Hello, ${user.displayName.split(" ")[0]}! ✨`;
+        await loadCloudData(user.uid);
+        
+        loginScreen.style.opacity = "0";
+        setTimeout(() => {
+            loginScreen.style.display = 'none';
+            mainApp.style.display = 'block';
+            renderHistoryWithSkeleton(); 
+        }, 300);
+    } else {
+        currentUser = null;
+        mainApp.style.display = 'none';
+        loginScreen.style.display = 'flex';
+        loginScreen.style.opacity = "1";
+        if(loginStatus) loginStatus.style.display = 'none';
     }
+});
+
+function loginWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch((error) => {
+        Swal.fire('Login Error', 'Firebase Settings check karein! (Error: ' + error.message + ')', 'error');
+    });
 }
 
-function unlockApp() {
-    const lockScreen = document.getElementById('lock-screen');
-    lockScreen.style.transition = "opacity 0.3s ease";
-    lockScreen.style.opacity = "0";
-    setTimeout(() => {
-        lockScreen.style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        renderHistoryWithSkeleton(); 
-    }, 300);
-}
-
-function resetPin() {
+function logout() {
     Swal.fire({
-        title: '⚠️ ALERT!', text: "Kya aap sach me saara data aur PIN delete karna chahte hain? Ye wapas nahi aayega!", icon: 'warning',
-        showCancelButton: true, confirmButtonColor: '#e74c3c', confirmButtonText: 'Yes, Delete!'
-    }).then((result) => { if (result.isConfirmed) { localStorage.clear(); location.reload(); } });
-}
-
-// ☁️ BACKUP & RESTORE 
-function backupData() {
-    const allData = { expenses: localStorage.getItem('familyExpensesData'), dudh: localStorage.getItem('familyDudhData'), ration: localStorage.getItem('familyRationData'), budget: localStorage.getItem('familyBudget') };
-    const blob = new Blob([JSON.stringify(allData)], {type: "application/json"});
-    const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
-    link.download = `FamilyApp_Backup.json`; link.click();
-    Swal.fire('Saved!', 'Backup JSON aapke phone me save ho gaya hai.', 'success');
-}
-function restoreData(event) {
-    const file = event.target.files[0]; if(!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            if(data.expenses) localStorage.setItem('familyExpensesData', data.expenses);
-            if(data.dudh) localStorage.setItem('familyDudhData', data.dudh);
-            if(data.ration) localStorage.setItem('familyRationData', data.ration);
-            if(data.budget) localStorage.setItem('familyBudget', data.budget);
-            Swal.fire('Restored!', 'Aapka purana data wapas aa gaya hai.', 'success').then(() => location.reload());
-        } catch(err) { Swal.fire('Error', 'Galat file select ki hai!', 'error'); }
-    };
-    reader.readAsText(file);
+        title: 'Logout?',
+        text: "Kya aap sach mein logout karna chahte hain?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e74c3c',
+        confirmButtonText: 'Yes, Logout'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            auth.signOut();
+        }
+    });
 }
 
 // ==========================================
-// 1. THEME & APP SETUP
+// ☁️ 3. CLOUD DATA SYNC ENGINE
+// ==========================================
+let familyExpenses = [];
+let dudhRecords = [];
+let rationItems = [];
+let budgetLimit = 20000;
+
+async function loadCloudData(uid) {
+    try {
+        const docRef = db.collection('familyData').doc(uid);
+        const doc = await docRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            familyExpenses = data.expenses || [];
+            dudhRecords = data.dudh || [];
+            rationItems = data.ration || [];
+            budgetLimit = data.budget || 20000;
+        } else {
+            await saveToCloud(); 
+        }
+        updateHisabUI();
+        updateDudhUI();
+        updateRationUI();
+    } catch (error) {
+        console.error("Cloud fetch failed:", error);
+    }
+}
+
+async function saveToCloud() {
+    if(!currentUser) return;
+    try {
+        await db.collection('familyData').doc(currentUser.uid).set({
+            expenses: familyExpenses,
+            dudh: dudhRecords,
+            ration: rationItems,
+            budget: budgetLimit
+        }, { merge: true });
+    } catch (error) {
+        console.error("Cloud save failed:", error);
+    }
+}
+
+// ==========================================
+// 🎨 4. APP LOGIC & UI
 // ==========================================
 let isDarkMode = localStorage.getItem('darkMode') === 'true';
 if(isDarkMode) document.body.classList.add('dark-mode');
@@ -141,11 +159,8 @@ const now = new Date();
 const todayDateString = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
 
 // ==========================================
-// 2. ADVANCED HISAAB
+// 💰 5. HISAAB SECTION
 // ==========================================
-let familyExpenses = [];
-try { familyExpenses = JSON.parse(localStorage.getItem('familyExpensesData')) || []; } catch(e) { familyExpenses = []; }
-
 let editExpenseIndex = -1;
 let currentReceiptUrl = ""; 
 let categoryChartInstance = null; let memberChartInstance = null; 
@@ -155,54 +170,13 @@ if(dateInput) dateInput.value = todayDateString;
 const monthFilter = document.getElementById('month-filter');
 if(monthFilter) monthFilter.value = todayDateString.slice(0, 7); 
 
-function playSuccessSound() {
-    try {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = context.createOscillator(); const gain = context.createGain();
-        osc.connect(gain); gain.connect(context.destination);
-        osc.type = 'sine'; osc.frequency.setValueAtTime(800, context.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, context.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.5, context.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.1);
-        osc.start(context.currentTime); osc.stop(context.currentTime + 0.1);
-    } catch(e) {}
-}
-
-function startVoice() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return Swal.fire('Oops!', 'Voice support nahi hai.', 'error');
-    try {
-        const recognition = new SpeechRecognition(); recognition.lang = 'hi-IN'; 
-        const micBtn = document.getElementById('mic-btn');
-        recognition.onstart = () => micBtn.classList.add('mic-active');
-        recognition.onresult = (event) => { document.getElementById('description').value = event.results[0][0].transcript; };
-        recognition.onend = () => micBtn.classList.remove('mic-active');
-        recognition.start();
-    } catch(err) {}
-}
-
-const receiptImgInput = document.getElementById('receipt-img');
-if(receiptImgInput) {
-    receiptImgInput.addEventListener('change', async function(e) {
-        const file = e.target.files[0]; if(!file) return;
-        Swal.fire({ title: 'Uploading...', text: 'Wait karein', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-        const imgbbApiKey = "09c18550e5cf82654630cbcc1c17d076"; 
-        const formData = new FormData(); formData.append("image", file);
-        try {
-            const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, { method: "POST", body: formData });
-            const data = await response.json();
-            if (data.success) {
-                currentReceiptUrl = data.data.url; 
-                document.getElementById('receipt-preview').src = currentReceiptUrl;
-                document.getElementById('receipt-preview').style.display = 'block';
-                Swal.fire({ icon: 'success', title: 'Uploaded!', timer: 1500, showConfirmButton: false });
-            } else Swal.fire('Error', 'Upload fail!', 'error');
-        } catch(err) { Swal.fire('Error', 'Internet check karein.', 'error'); }
-    });
-}
-
 function setBudget() {
-    Swal.fire({ title: 'Monthly Budget Set Karein', input: 'number', inputValue: localStorage.getItem('familyBudget') || 20000, showCancelButton: true }).then((result) => {
-        if (result.isConfirmed && result.value > 0) { localStorage.setItem('familyBudget', result.value); renderHistoryWithSkeleton(); }
+    Swal.fire({ title: 'Monthly Budget', input: 'number', inputValue: budgetLimit, showCancelButton: true }).then((result) => {
+        if (result.isConfirmed && result.value > 0) { 
+            budgetLimit = result.value; 
+            saveToCloud(); 
+            renderHistoryWithSkeleton(); 
+        }
     });
 }
 
@@ -219,7 +193,6 @@ function updateHisabUI() {
     list.innerHTML = ''; 
     
     const filterMonth = document.getElementById('month-filter').value || todayDateString.slice(0, 7);
-    const budgetLimit = parseFloat(localStorage.getItem('familyBudget')) || 20000;
     const budgetDisplay = document.getElementById('budget-display');
     if(budgetDisplay) budgetDisplay.innerText = budgetLimit;
 
@@ -306,7 +279,6 @@ function addExpense() {
 
     if(editExpenseIndex === -1) {
         familyExpenses.push(newRecord);
-        playSuccessSound(); 
         if(typeof confetti !== 'undefined') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); 
     } else {
         familyExpenses[editExpenseIndex] = newRecord;
@@ -315,10 +287,8 @@ function addExpense() {
         Swal.fire('Updated!', 'Update ho gaya.', 'success');
     }
 
-    localStorage.setItem('familyExpensesData', JSON.stringify(familyExpenses));
+    saveToCloud(); // 🔥 Data Save to Firestore
     document.getElementById('description').value = ''; document.getElementById('amount').value = ''; 
-    const rImg = document.getElementById('receipt-img'); if(rImg) rImg.value = ''; 
-    const rPrev = document.getElementById('receipt-preview'); if(rPrev) rPrev.style.display = 'none';
     currentReceiptUrl = ""; 
     renderHistoryWithSkeleton();
 }
@@ -330,8 +300,6 @@ function editExpense(index) {
     document.getElementById('description').value = item.description;
     document.getElementById('amount').value = item.amount;
     document.getElementById('date').value = item.date;
-    if(item.receipt) { currentReceiptUrl = item.receipt; document.getElementById('receipt-preview').src = currentReceiptUrl; document.getElementById('receipt-preview').style.display = 'block'; } 
-    else { currentReceiptUrl = ""; document.getElementById('receipt-preview').style.display = 'none'; }
     editExpenseIndex = index;
     document.getElementById('btn-add-expense').innerText = "Update Kharcha ✏️";
     window.scrollTo({ top: 0, behavior: 'smooth' }); 
@@ -339,7 +307,11 @@ function editExpense(index) {
 
 function deleteExpense(index) {
     Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c', confirmButtonText: 'Haan!' }).then((result) => {
-        if (result.isConfirmed) { familyExpenses.splice(index, 1); localStorage.setItem('familyExpensesData', JSON.stringify(familyExpenses)); renderHistoryWithSkeleton(); }
+        if (result.isConfirmed) { 
+            familyExpenses.splice(index, 1); 
+            saveToCloud(); 
+            renderHistoryWithSkeleton(); 
+        }
     });
 }
 
@@ -355,36 +327,13 @@ function exportToPDF() {
     [...dataToExport].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(exp => { const p = exp.date.split('-'); tableRows.push([`${p[2]}/${p[1]}`, exp.member || '-', exp.category || 'Other', exp.description, `Rs ${exp.amount}`]); totalAmount += exp.amount; });
     doc.autoTable({ head: [tableColumn], body: tableRows, startY: 30, theme: 'grid', headStyles: { fillColor: [46, 204, 113] }, foot: [["", "", "", "Total :", `Rs ${totalAmount}`]], footStyles: { fillColor: [231, 76, 60] } });
     doc.save(`Hisaab_${filterMonth}.pdf`);
-    Swal.fire({ icon: 'success', title: 'Downloaded!', timer: 2000, showConfirmButton: false });
 }
 
 // ==========================================
-// 3. EMI & VYAJ CALCULATOR
+// 🥛 6. DUDH & RATION SECTIONS
 // ==========================================
-function calculateEMI() {
-    const p = parseFloat(document.getElementById('emi-principal').value); const r = parseFloat(document.getElementById('emi-rate').value) / 12 / 100; const n = parseFloat(document.getElementById('emi-time').value);
-    if (isNaN(p) || isNaN(r) || isNaN(n) || p <= 0 || n <= 0) return Swal.fire('Galti', 'Sahi details bhariye!', 'error');
-    const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1); const totalAmount = emi * n;
-    document.getElementById('emi-result').style.display = 'block'; document.getElementById('emi-amount').innerText = `₹${Math.round(emi)}`; document.getElementById('emi-interest').innerText = `₹${Math.round(totalAmount - p)}`; document.getElementById('emi-total').innerText = `₹${Math.round(totalAmount)}`;
-}
-function calculateVyaj() {
-    const p = parseFloat(document.getElementById('vyaj-principal').value); const rate = parseFloat(document.getElementById('vyaj-rate').value); const time = parseFloat(document.getElementById('vyaj-time').value);
-    if (isNaN(p) || isNaN(rate) || isNaN(time) || p <= 0 || time <= 0) return Swal.fire('Galti', 'Sahi details bhariye!', 'error');
-    const interest = (p * rate * time) / 100;
-    document.getElementById('vyaj-result').style.display = 'block'; document.getElementById('vyaj-only').innerText = `₹${Math.round(interest)}`; document.getElementById('vyaj-total').innerText = `₹${Math.round(p + interest)}`;
-}
-
-// ==========================================
-// 4. DUDH KA HISAAB 
-// ==========================================
-let dudhRecords = []; try { dudhRecords = JSON.parse(localStorage.getItem('familyDudhData')) || []; } catch(e) { dudhRecords = []; }
 let editDudhIndex = -1;
 const dudhDateInput = document.getElementById('dudh-date'); if(dudhDateInput) dudhDateInput.value = todayDateString;
-const checklistMonthPicker = document.getElementById('checklist-month-picker'); 
-if(checklistMonthPicker) { 
-    checklistMonthPicker.value = todayDateString.slice(0, 7); 
-    checklistMonthPicker.addEventListener('change', updateChecklist); 
-}
 
 function updateDudhUI() {
     const list = document.getElementById('dudh-list'); if(!list) return; list.innerHTML = ''; let totalLiter = 0, totalBill = 0;
@@ -403,38 +352,21 @@ function updateDudhUI() {
         list.appendChild(li);
     });
     document.getElementById('dudh-total-liter').innerText = totalLiter.toFixed(2); document.getElementById('dudh-total-bill').innerText = `₹${Math.round(totalBill)}`;
-    if(typeof updateChecklist === "function") updateChecklist();
-}
-
-function updateChecklist() {
-    const grid = document.getElementById('checklist-grid'); 
-    if(!grid || !checklistMonthPicker || !checklistMonthPicker.value) return; 
-    grid.innerHTML = '';
-    const [yearStr, monthStr] = checklistMonthPicker.value.split('-'); const daysInMonth = new Date(yearStr, monthStr, 0).getDate(); const enteredDates = new Set(dudhRecords.map(r => r.date));
-    for (let i = 1; i <= daysInMonth; i++) {
-        const dayBox = document.createElement('div'); dayBox.className = 'day-box'; dayBox.innerText = i; 
-        const checkDate = `${yearStr}-${monthStr}-${String(i).padStart(2, '0')}`;
-        if (enteredDates.has(checkDate)) dayBox.classList.add('day-yes'); else if (checkDate > todayDateString) dayBox.classList.add('day-future'); else dayBox.classList.add('day-no'); 
-        grid.appendChild(dayBox);
-    }
 }
 
 function addDudh() {
     const dDate = document.getElementById('dudh-date').value; const rate = parseFloat(document.getElementById('dudh-rate').value); const morn = parseFloat(document.getElementById('dudh-morning').value) || 0; const eve = parseFloat(document.getElementById('dudh-evening').value) || 0;
     if (!dDate || isNaN(rate) || (morn === 0 && eve === 0)) return Swal.fire('Galti', 'Sahi details daaliye!', 'error');
-    if(editDudhIndex === -1) { dudhRecords.push({ date: dDate, rate: rate, morning: morn, evening: eve }); Swal.fire({ icon: 'success', title: 'Add ho gaya!', timer: 1500, showConfirmButton: false }); } 
-    else { dudhRecords[editDudhIndex] = { date: dDate, rate: rate, morning: morn, evening: eve }; editDudhIndex = -1; document.getElementById('btn-add-dudh').innerText = "Dudh Add Karein"; Swal.fire('Updated!', 'Update ho gaya.', 'success'); }
-    localStorage.setItem('familyDudhData', JSON.stringify(dudhRecords)); updateDudhUI(); document.getElementById('dudh-morning').value = ''; document.getElementById('dudh-evening').value = '';
+    if(editDudhIndex === -1) { dudhRecords.push({ date: dDate, rate: rate, morning: morn, evening: eve }); } 
+    else { dudhRecords[editDudhIndex] = { date: dDate, rate: rate, morning: morn, evening: eve }; editDudhIndex = -1; document.getElementById('btn-add-dudh').innerText = "Dudh Add Karein"; }
+    
+    saveToCloud(); 
+    updateDudhUI(); 
+    document.getElementById('dudh-morning').value = ''; document.getElementById('dudh-evening').value = '';
 }
 function editDudh(index) { const item = dudhRecords[index]; document.getElementById('dudh-date').value = item.date; document.getElementById('dudh-rate').value = item.rate; document.getElementById('dudh-morning').value = item.morning; document.getElementById('dudh-evening').value = item.evening; editDudhIndex = index; document.getElementById('btn-add-dudh').innerText = "Update Dudh ✏️"; window.scrollTo({ top: 0, behavior: 'smooth' }); }
-function deleteDudh(index) { Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c', confirmButtonText: 'Haan!' }).then((result) => { if (result.isConfirmed) { dudhRecords.splice(index, 1); localStorage.setItem('familyDudhData', JSON.stringify(dudhRecords)); updateDudhUI(); } }); }
-updateDudhUI();
+function deleteDudh(index) { Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true }).then((result) => { if (result.isConfirmed) { dudhRecords.splice(index, 1); saveToCloud(); updateDudhUI(); } }); }
 
-// ==========================================
-// 5. RATION LIST
-// ==========================================
-let rationItems = []; try { rationItems = JSON.parse(localStorage.getItem('familyRationData')) || []; } catch(e) { rationItems = []; }
-rationItems = rationItems.map(item => { if(!item.date) item.date = todayDateString; return item; });
 const rationDateInput = document.getElementById('ration-date'); if(rationDateInput) rationDateInput.value = todayDateString;
 
 function updateRationUI() {
@@ -447,17 +379,4 @@ function updateRationUI() {
             if(item.date === dateStr) {
                 const li = document.createElement('li'); li.style.borderLeftColor = '#8e44ad';
                 li.innerHTML = `
-                    <div class="list-left ration-item ${item.bought ? 'bought' : ''}" onclick="toggleRation(${index})" style="flex-direction: row; align-items:center; cursor:pointer;">
-                        <div class="checkbox-custom"></div><strong style="font-size: 16px;">${item.name}</strong>
-                    </div>
-                    <div class="list-right"><button class="action-btn delete" onclick="deleteRation(${index})">🗑️</button></div>`;
-                list.appendChild(li);
-            }
-        });
-    });
-}
-function addRation() { const name = document.getElementById('ration-item').value; const rDate = document.getElementById('ration-date').value; if(!name || !rDate) return Swal.fire('Bhai', 'Details daaliye!', 'warning'); rationItems.push({ name: name, bought: false, date: rDate }); localStorage.setItem('familyRationData', JSON.stringify(rationItems)); document.getElementById('ration-item').value = ''; updateRationUI(); }
-function toggleRation(index) { rationItems[index].bought = !rationItems[index].bought; localStorage.setItem('familyRationData', JSON.stringify(rationItems)); updateRationUI(); }
-function deleteRation(index) { rationItems.splice(index, 1); localStorage.setItem('familyRationData', JSON.stringify(rationItems)); updateRationUI(); }
-function clearRation() { Swal.fire({ title: 'Clear All?', text: "Saara ration delete ho jayega!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c', confirmButtonText: 'Haan' }).then((result) => { if (result.isConfirmed) { rationItems = []; localStorage.setItem('familyRationData', JSON.stringify(rationItems)); updateRationUI(); } }); }
-updateRationUI();
+                    <div class="list-left ration-item ${item.bought ? 'bought' : ''}" onclick="toggleRation(${index})" style="flex-direction: row; align-items
