@@ -10,10 +10,9 @@
     <link rel="manifest" href="./manifest.json">
     
     <meta name="description" content="Family Super App - Ghar ka hisaab, EMI calculator, Dudh aur Ration ka record rakhne wala smart personal app.">
-    <meta name="keywords" content="Family Super App, Ghar ka hisaab, EMI calculator, expense tracker, family budget app">
     <meta name="google-site-verification" content="fZwGT-hq1h80Z_KN46QPPakhStF9F_geRxz_t1Wg2K0" />
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -24,27 +23,30 @@
 </head>
 <body>
 
-    <div id="login-screen" class="lock-overlay">
+    <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;">
+        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_p8bfn5to.json" background="transparent" speed="1.5" style="width: 180px; height: 180px;" loop autoplay></lottie-player>
+        <h1 style="font-family: 'Caveat', cursive; font-size: 42px; color: #2563eb; margin-top: -20px; font-weight: 700;">Family Super App</h1>
+        <p style="font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #94a3b8; letter-spacing: 1px;">Loading Securely... ☁️</p>
+    </div>
+
+    <div id="login-screen" class="lock-overlay" style="display: none;">
         <div class="lock-card" style="width: 90%; max-width: 350px;">
-            
-            <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_zrqthn6o.json" background="transparent" speed="1" style="width: 120px; height: 120px; margin: 0 auto -10px auto;" loop autoplay></lottie-player>
-            
+            <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_zrqthn6o.json" background="transparent" speed="1" style="width: 100px; height: 100px; margin: 0 auto -15px auto;" loop autoplay></lottie-player>
             <h2 id="lock-title">Family Cloud</h2>
-            <p id="lock-desc" style="margin-bottom: 20px; color: #cbd5e1; font-size: 13px;">Ek baar login karein, aur humesha ke liye jud jaayein!</p>
+            <p id="lock-desc" style="margin-bottom: 20px; color: #94a3b8; font-size: 13px; font-weight: 700;">Humesha ke liye jud jaayein!</p>
             
             <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
-                <input type="email" id="email-input" placeholder="Email ID (e.g., aditya@ghar.com)" style="padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit;">
-                <input type="password" id="password-input" placeholder="Password (Min 6 letters)" style="padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit;">
+                <input type="email" id="email-input" placeholder="Email ID (e.g., papa@ghar.com)" style="padding: 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-family: inherit;">
+                <input type="password" id="password-input" placeholder="Password (Min 6 letters)" style="padding: 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-family: inherit;">
             </div>
 
-            <button onclick="loginWithEmail()" class="expense-btn" style="background: #2563eb; color: white; display: block; width: 100%; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);">
+            <button onclick="loginWithEmail()" class="expense-btn" style="background: #2563eb; color: white; display: block; width: 100%; margin-bottom: 10px;">
                 🚀 Login Karein
             </button>
             <button onclick="registerWithEmail()" style="background: transparent; border: 1.5px solid #2563eb; color: #2563eb; padding: 10px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer;">
                 Naya Account Banayein
             </button>
-            
-            <p id="login-status" style="margin-top: 15px; font-size: 12px; color: #fbbf24; display: none;">Loading... ⏳</p>
+            <p id="login-status" style="margin-top: 15px; font-size: 12px; color: #ef4444; display: none; font-weight: bold;">Loading... ⏳</p>
         </div>
     </div>
 
@@ -53,12 +55,12 @@
         <div class="header">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="text-align: left;">
-                    <p id="smart-greeting" style="font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 2px;">Welcome! ✨</p>
+                    <p id="smart-greeting">Welcome! ✨</p>
                     <h2 id="app-title" style="margin: 0;">Ghar Ka Hisaab 💰</h2>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button id="theme-toggle" onclick="toggleTheme()" style="background: none; border: none; font-size: 24px; cursor: pointer;">🌙</button>
-                    <button onclick="logout()" style="background: rgba(239,68,68,0.1); border: 1.5px solid #ef4444; color: #ef4444; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Logout">🚪</button>
+                    <button onclick="logout()" style="background: transparent; border: none; font-size: 24px; cursor: pointer;" title="Logout">🚪</button>
                 </div>
             </div>
         </div>
@@ -73,13 +75,12 @@
 
                 <div class="budget-section">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="font-weight:bold; color:#2c3e50; font-size: 14px;" class="result-text">Monthly Budget: ₹<span id="budget-display">20000</span></span>
+                        <span class="result-text">Monthly Budget: ₹<span id="budget-display">20000</span></span>
                         <button onclick="setBudget()" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size: 12px; font-weight:bold;">✏️ Edit</button>
                     </div>
                     <div style="width:100%; background:#f1f5f9; border-radius:10px; height:8px; overflow:hidden;">
                         <div id="budget-bar" style="height:100%; width:0%; background:#10b981; transition:width 0.5s ease;"></div>
                     </div>
-                    <p id="budget-warning" style="font-size:12px; color:#ef4444; margin-top:8px; display:none; font-weight: bold;">⚠️ Alert: Budget 80% cross ho gaya hai!</p>
                 </div>
 
                 <div class="form-section">
@@ -104,7 +105,7 @@
                     <label>Kharcha kis cheez par hua?</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <input type="text" id="description" placeholder="e.g., Sabji, Dawa" style="margin-bottom: 0;">
-                        <button id="mic-btn" onclick="startVoice()" style="background:#2563eb; color:white; border:none; border-radius:12px; padding:0 15px; cursor:pointer; font-size: 18px;" title="Bol kar likhein">🎤</button>
+                        <button id="mic-btn" onclick="startVoice()" style="background:transparent; color:#2563eb; border:1.5px solid #2563eb; border-radius:12px; padding:0 15px; cursor:pointer; font-size: 18px;">🎤</button>
                     </div>
                     
                     <label>Kitne paise lage?</label>
@@ -112,37 +113,23 @@
                     
                     <label>Kis din?</label>
                     <input type="date" id="date">
-
-                    <label>Bill/Receipt ki Photo (Optional)</label>
-                    <input type="file" id="receipt-img" accept="image/*" style="font-size: 12px; padding: 8px; background: transparent; border: none;">
-                    <img id="receipt-preview" style="display:none; width:100%; max-height:150px; object-fit:contain; margin-top:10px; border-radius:10px;">
                     
                     <button class="expense-btn" id="btn-add-expense" onclick="addExpense()">Kharcha Add Karein</button>
                 </div>
 
                 <div class="history-section">
                     <h3>Hisaab & Reports</h3>
-                    <input type="month" id="month-filter" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-weight: bold;" onchange="renderHistoryWithSkeleton()">
+                    <input type="month" id="month-filter" style="width: 100%; padding: 10px; margin-bottom: 15px; font-weight: bold;" onchange="renderHistoryWithSkeleton()">
                     
                     <div class="checklist-section">
-                        <h4 style="text-align:center; color:#1e293b; font-size:14px; margin-bottom:10px;" class="result-text">📊 Kisme Kitna Kharcha?</h4>
+                        <h4 style="text-align:center; color:#1e293b; font-size:16px; margin-bottom:10px; font-family:'Caveat', cursive;">📊 Kisme Kitna Kharcha?</h4>
                         <canvas id="categoryChart"></canvas>
-                        <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #e2e8f0;">
-                        <h4 style="text-align:center; color:#1e293b; font-size:14px; margin-bottom:10px;" class="result-text">👤 Kisne Kitna Kharcha?</h4>
-                        <canvas id="memberChart"></canvas>
                     </div>
 
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <button onclick="backupData()" style="flex: 1; padding: 10px; background: transparent; color: #475569; border: 1.5px solid #cbd5e1; border-radius: 12px; font-weight: bold; cursor: pointer;">☁️ Backup</button>
-                        <label style="flex: 1; padding: 10px; background: transparent; color: #475569; border: 1.5px solid #cbd5e1; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center;">
-                            🔄 Restore
-                            <input type="file" accept=".json" style="display: none;" onchange="restoreData(event)">
-                        </label>
+                        <button onclick="exportToPDF()" style="flex:1; padding:12px; background:transparent; color:#ef4444; border:1.5px solid #ef4444; border-radius:12px; cursor:pointer; font-weight:bold;">📄 PDF</button>
+                        <button onclick="shareReport()" style="flex:1; padding:12px; background:#25D366; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold;">📤 Share</button>
                     </div>
-
-                    <button onclick="exportToPDF()" style="margin-bottom:10px; width:100%; padding:12px; background:transparent; color:#ef4444; border:1.5px solid #ef4444; border-radius:12px; cursor:pointer; font-weight:bold;">📄 Download PDF Report</button>
-                    
-                    <button onclick="shareReport()" style="margin-bottom:15px; width:100%; padding:12px; background:#25D366; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold; box-shadow: 0 4px 10px rgba(37,211,102,0.3);">📤 Share PDF (WhatsApp)</button>
                     
                     <ul id="history-list"></ul>
                 </div>
@@ -151,7 +138,7 @@
             <div id="section-emi" class="app-section">
                 <div class="balance-card">
                     <p>Bank EMI Calculator</p>
-                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_yzoqyyq2.json" background="transparent" speed="1" style="width: 100px; height: 100px; margin: 0 auto;" loop autoplay></lottie-player>
+                    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_yzoqyyq2.json" background="transparent" speed="1" style="width: 80px; height: 80px; margin: 0 auto;" loop autoplay></lottie-player>
                 </div>
                 <div class="form-section">
                     <label>Loan Amount (Kitna loan liya?)</label>
@@ -160,14 +147,11 @@
                     <input type="number" id="emi-rate" placeholder="e.g., 10">
                     <label>Time (Kitne mahine ke liye?)</label>
                     <input type="number" id="emi-time" placeholder="e.g., 12">
-                    <button class="expense-btn" onclick="calculateEMI()">EMI Nikalein</button>
+                    <button class="expense-btn" style="background:#f472b6;" onclick="calculateEMI()">EMI Nikalein</button>
                 </div>
-                <div class="result-card" id="emi-result" style="display:none; background:white; padding:20px; border-radius:20px; margin-top:15px; text-align:center;">
-                    <h3 style="color: #2c3e50; margin-bottom: 10px;" class="result-text">Har Mahine Ki EMI</h3>
-                    <h1 id="emi-amount" style="color: #ef4444;">₹0</h1>
-                    <hr style="margin: 10px 0; border: 0; border-top: 1px dashed #e2e8f0;">
-                    <p style="color: #64748b; font-size: 14px;">Total Interest: <strong id="emi-interest" style="color: #333;">₹0</strong></p>
-                    <p style="color: #64748b; font-size: 14px;">Total Dena Hoga: <strong id="emi-total" style="color: #333;">₹0</strong></p>
+                <div class="result-card" id="emi-result" style="display:none; background:rgba(255,255,255,0.8); padding:20px; border-radius:16px; border:1.5px dashed #cbd5e1; margin-top:15px; text-align:center;">
+                    <h3 style="color: #2c3e50; font-family:'Caveat', cursive; font-size:28px;">Har Mahine Ki EMI</h3>
+                    <h1 id="emi-amount" style="color: #ef4444; font-family:'Caveat', cursive; font-size:45px;">₹0</h1>
                 </div>
             </div>
 
@@ -183,13 +167,11 @@
                     <input type="number" id="vyaj-rate" placeholder="e.g., 5">
                     <label>Samay (Kitne mahine ho gaye?)</label>
                     <input type="number" id="vyaj-time" placeholder="e.g., 4">
-                    <button class="expense-btn" onclick="calculateVyaj()">Vyaj Nikalein</button>
+                    <button class="expense-btn" style="background:#4ade80;" onclick="calculateVyaj()">Vyaj Nikalein</button>
                 </div>
-                <div class="result-card" id="vyaj-result" style="display:none; background:white; padding:20px; border-radius:20px; margin-top:15px; text-align:center;">
-                    <h3 style="color: #2c3e50; margin-bottom: 10px;" class="result-text">Sirf Vyaj (Interest)</h3>
-                    <h1 id="vyaj-only" style="color: #ef4444;">₹0</h1>
-                    <hr style="margin: 10px 0; border: 0; border-top: 1px dashed #e2e8f0;">
-                    <p style="color: #64748b; font-size: 16px;">Total Lautana Hai: <strong id="vyaj-total" style="color: #10b981; font-size: 20px;">₹0</strong></p>
+                <div class="result-card" id="vyaj-result" style="display:none; background:rgba(255,255,255,0.8); padding:20px; border-radius:16px; border:1.5px dashed #cbd5e1; margin-top:15px; text-align:center;">
+                    <h3 style="color: #2c3e50; font-family:'Caveat', cursive; font-size:28px;">Sirf Vyaj (Interest)</h3>
+                    <h1 id="vyaj-only" style="color: #ef4444; font-family:'Caveat', cursive; font-size:45px;">₹0</h1>
                 </div>
             </div>
 
@@ -206,7 +188,7 @@
                     <label>Kitna Dudh aaya?</label>
                     <input type="number" id="dudh-morning" placeholder="Subah (Max 5 Ltr)" step="0.1" min="0" max="5">
                     <input type="number" id="dudh-evening" placeholder="Shaam (Max 5 Ltr)" step="0.1" min="0" max="5">
-                    <button class="expense-btn" onclick="addDudh()">Dudh Add Karein</button>
+                    <button class="expense-btn" style="background:#60a5fa;" onclick="addDudh()">Dudh Add Karein</button>
                 </div>
                 <div class="history-section">
                     <h3>Daily Dudh Record</h3>
@@ -217,18 +199,18 @@
             <div id="section-ration" class="app-section">
                 <div class="balance-card">
                     <p>Kirana & Ration</p>
-                    <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_pNx6yH.json" background="transparent" speed="1" style="width: 100px; height: 100px; margin: 0 auto;" loop autoplay></lottie-player>
+                    <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_pNx6yH.json" background="transparent" speed="1" style="width: 80px; height: 80px; margin: 0 auto;" loop autoplay></lottie-player>
                 </div>
                 <div class="form-section">
                     <label>Samaan ka naam aur Date:</label>
                     <input type="date" id="ration-date" style="margin-bottom: 10px;">
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="ration-item" placeholder="e.g., Chawal 5kg" style="margin-bottom: 0;">
-                        <button class="expense-btn" style="margin-top: 0; width: auto; padding: 0 20px;" onclick="addRation()">Add</button>
+                        <button class="expense-btn" style="background:#c084fc; margin-top: 0; width: auto; padding: 0 20px;" onclick="addRation()">Add</button>
                     </div>
                 </div>
                 <div class="history-section">
-                    <h3 style="display: flex; justify-content: space-between; align-items: center;">Ration List</h3>
+                    <h3>Ration List</h3>
                     <ul id="ration-list"></ul>
                 </div>
             </div>
@@ -254,11 +236,28 @@
         </div>
     </div>
 
+    <audio id="sound-success" src="https://actions.google.com/sounds/v1/foley/cash_register_kaching.ogg" preload="auto"></audio>
+    <audio id="sound-click" src="https://actions.google.com/sounds/v1/ui/click.ogg" preload="auto"></audio>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    // Check login status here to show app or login
+                    document.getElementById(localStorage.getItem('familyAppUser') ? 'main-app' : 'login-screen').style.display = 'block';
+                }, 500);
+            }, 2000); // 2 second ki splash screen
+        });
+    </script>
     
     <script src="./script.js"></script>
 </body>
