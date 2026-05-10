@@ -26,7 +26,7 @@
                 <input type="password" id="pin3" class="pin-box" inputmode="numeric" maxlength="1" oninput="handlePinInput('pin3', 'pin4')" onkeydown="handleBackspace(event, 'pin3', 'pin2')">
                 <input type="password" id="pin4" class="pin-box" inputmode="numeric" maxlength="1" oninput="handlePinInput('pin4', null)" onkeydown="handleBackspace(event, 'pin4', 'pin3')">
             </div>
-            <button onclick="resetPin()" class="forgot-btn">Forgot PIN? Reset Data</button>
+            <button onclick="resetPin()" class="forgot-btn" style="background: transparent; color: #ffcccb; border: 1px solid #ffcccb; padding: 5px 10px; border-radius: 8px; margin-top: 10px; font-size: 12px;">Forgot PIN? Reset App</button>
         </div>
     </div>
 
@@ -236,6 +236,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(() => console.log("Service Worker Ready!"));
+      }
+    </script>
     <script src="./script.js"></script>
 </body>
 </html>
