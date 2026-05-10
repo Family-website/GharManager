@@ -454,7 +454,7 @@ function calculateVyaj() {
 }
 
 // ==========================================
-// ☁️ 8. BACKUP & RESTORE SYSTEM
+// ☁️ 8. BACKUP & RESTORE SYSTEM (SMART VERSION)
 // ==========================================
 function backupData() {
     const dataObj = { expenses: familyExpenses, dudh: dudhRecords, ration: rationItems, budget: budgetLimit };
@@ -475,13 +475,28 @@ function restoreData(event) {
     reader.onload = async function(e) {
         try {
             const importedData = JSON.parse(e.target.result);
-            if (importedData.expenses || importedData.familyExpenses) familyExpenses = importedData.expenses || importedData.familyExpenses || [];
-            if (importedData.dudh || importedData.dudhRecords) dudhRecords = importedData.dudh || importedData.dudhRecords || [];
-            if (importedData.ration || importedData.rationItems) rationItems = importedData.ration || importedData.rationItems || [];
-            if (importedData.budget || importedData.budgetLimit) budgetLimit = importedData.budget || importedData.budgetLimit || 20000;
             
-            updateHisabUI(); updateDudhUI(); updateRationUI();
+            // 🛠️ SMART PARSING: Agar data string form mein hai, toh use theek karo
+            let tempExp = importedData.expenses || importedData.familyExpenses || [];
+            if (typeof tempExp === 'string') tempExp = JSON.parse(tempExp);
+            familyExpenses = tempExp;
+
+            let tempDudh = importedData.dudh || importedData.dudhRecords || [];
+            if (typeof tempDudh === 'string') tempDudh = JSON.parse(tempDudh);
+            dudhRecords = tempDudh === null ? [] : tempDudh; // Null check
             
+            let tempRation = importedData.ration || importedData.rationItems || [];
+            if (typeof tempRation === 'string') tempRation = JSON.parse(tempRation);
+            rationItems = tempRation === null ? [] : tempRation; // Null check
+
+            budgetLimit = importedData.budget || importedData.budgetLimit || 20000;
+            
+            // UI Update karo
+            updateHisabUI(); 
+            updateDudhUI(); 
+            updateRationUI();
+            
+            // Agar cloud login hai, toh seedha wahan save kar do
             if (currentUser) {
                 await saveToCloud();
                 Swal.fire('Restored & Synced!', 'Data wapas aagaya aur Cloud par bhi save ho gaya! ☁️', 'success');
@@ -490,6 +505,7 @@ function restoreData(event) {
             }
         } catch (err) {
             Swal.fire('Error', 'Sahi backup file select karein.', 'error');
+            console.error("Restore failed:", err);
         }
     };
     reader.readAsText(file);
