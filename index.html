@@ -4,34 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Family Super App</title>
-
-<meta name="description" content="Family Super App - Ghar ka hisaab, EMI calculator, Dudh aur Ration ka record rakhne wala smart personal app.">
-<meta name="keywords" content="Family Super App, Ghar ka hisaab, EMI calculator, expense tracker, family budget app">
-
     
     <link rel="icon" href="./icon.png">
     <link rel="apple-touch-icon" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
     
+    <meta name="description" content="Family Super App - Ghar ka hisaab, EMI calculator, Dudh aur Ration ka record rakhne wala smart personal app.">
+    <meta name="keywords" content="Family Super App, Ghar ka hisaab, EMI calculator, expense tracker, family budget app">
+    
+    <meta name="google-site-verification" content="fZwGT-hq1h80Z_KN46QPPakhStF9F_geRxz_t1Wg2K0" />
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
-<meta name="google-site-verification" content="fZwGT-hq1h80Z_KN46QPPakhStF9F_geRxz_t1Wg2K0" />
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-    <div id="lock-screen" class="lock-overlay">
+    <div id="login-screen" class="lock-overlay">
         <div class="lock-card">
-            <div class="lock-icon">🔒</div>
-            <h2 id="lock-title">App Locked</h2>
-            <p id="lock-desc">Apna 4-digit PIN daalein</p>
+            <div class="lock-icon" style="font-size: 50px;">☁️</div>
+            <h2 id="lock-title">Family Cloud</h2>
+            <p id="lock-desc" style="margin-bottom: 25px; color: #cbd5e1; font-size: 13px;">Apna data life-time safe rakhne ke liye Gmail se login karein</p>
             
-            <div class="pin-container">
-                <input type="password" id="pin1" class="pin-box" inputmode="numeric" maxlength="1" oninput="handlePinInput('pin1', 'pin2')" onkeydown="handleBackspace(event, 'pin1', null)" autofocus>
-                <input type="password" id="pin2" class="pin-box" inputmode="numeric" maxlength="1" oninput="handlePinInput('pin2', 'pin3')" onkeydown="handleBackspace(event, 'pin2', 'pin1')">
-                <input type="password" id="pin3" class="pin-box" inputmode="numeric" maxlength="1" oninput="handlePinInput('pin3', 'pin4')" onkeydown="handleBackspace(event, 'pin3', 'pin2')">
-                <input type="password" id="pin4" class="pin-box" inputmode="numeric" maxlength="1" oninput="handlePinInput('pin4', null)" onkeydown="handleBackspace(event, 'pin4', 'pin3')">
-            </div>
-            <button onclick="resetPin()" class="forgot-btn" style="background: transparent; color: #ffcccb; border: 1px solid #ffcccb; padding: 5px 10px; border-radius: 8px; margin-top: 10px; font-size: 12px;">Forgot PIN? Reset App</button>
+            <button onclick="loginWithGoogle()" class="expense-btn" style="background: white; color: #333; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; margin-top: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="22">
+                Continue with Google
+            </button>
+            <p id="login-status" style="margin-top: 15px; font-size: 12px; color: #fbbf24; display: none;">Loading Cloud Data... ⏳</p>
         </div>
     </div>
 
@@ -40,10 +42,13 @@
         <div class="header">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="text-align: left;">
-                    <p id="smart-greeting" style="font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 2px;">Good Morning, Aditya! ✨</p>
+                    <p id="smart-greeting" style="font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 2px;">Welcome! ✨</p>
                     <h2 id="app-title" style="margin: 0;">Ghar Ka Hisaab 💰</h2>
                 </div>
-                <button id="theme-toggle" onclick="toggleTheme()" style="background: none; border: none; font-size: 24px; cursor: pointer;">🌙</button>
+                <div style="display: flex; gap: 10px;">
+                    <button id="theme-toggle" onclick="toggleTheme()" style="background: none; border: none; font-size: 24px; cursor: pointer;">🌙</button>
+                    <button onclick="logout()" style="background: rgba(231,76,60,0.2); border: 1px solid #e74c3c; color: white; border-radius: 50%; width: 35px; height: 35px; cursor: pointer;" title="Logout">🚪</button>
+                </div>
             </div>
         </div>
 
@@ -106,13 +111,6 @@
 
                 <div class="history-section">
                     <h3>Hisaab & Reports</h3>
-
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <button onclick="backupData()" style="flex: 1; padding: 12px; background: rgba(52, 73, 94, 0.9); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">☁️ Backup Data</button>
-                        <button onclick="document.getElementById('restore-file').click()" style="flex: 1; padding: 12px; background: rgba(243, 156, 18, 0.9); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">🔄 Restore Data</button>
-                        <input type="file" id="restore-file" accept=".json" style="display: none;" onchange="restoreData(event)">
-                    </div>
-
                     <input type="month" id="month-filter" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #ccc; font-weight: bold;" onchange="renderHistoryWithSkeleton()">
                     
                     <div class="checklist-section">
@@ -246,6 +244,7 @@
         navigator.serviceWorker.register('sw.js').then(() => console.log("Service Worker Ready!"));
       }
     </script>
+    
     <script src="./script.js"></script>
 </body>
 </html>
