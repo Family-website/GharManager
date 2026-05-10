@@ -1,14 +1,4 @@
 // ==========================================
-// 🛡️ PERMANENT DATA STORAGE ENGINE 
-// ==========================================
-async function makeDataPermanent() {
-    if (navigator.storage && navigator.storage.persist) {
-        await navigator.storage.persist();
-    }
-}
-makeDataPermanent();
-
-// ==========================================
 // 🔥 1. FIREBASE SETUP & CLOUD ENGINE
 // ==========================================
 const firebaseConfig = {
@@ -21,7 +11,7 @@ const firebaseConfig = {
   measurementId: "G-0E3C8289HF"
 };
 
-// Initialize Firebase (Compat Version for Web)
+// Initialize Firebase (Compat Version)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -29,7 +19,7 @@ const db = firebase.firestore();
 let currentUser = null;
 
 // ==========================================
-// 🔐 2. GOOGLE LOGIN SYSTEM
+// 🔐 2. GOOGLE LOGIN SYSTEM (Redirect Method)
 // ==========================================
 const loginScreen = document.getElementById('login-screen');
 const mainApp = document.getElementById('main-app');
@@ -43,13 +33,21 @@ auth.onAuthStateChanged(async (user) => {
             loginStatus.innerText = "Cloud se data laa rahe hain... ⏳";
         }
         document.getElementById('smart-greeting').innerText = `Hello, ${user.displayName.split(" ")[0]}! ✨`;
+        
+        // 1. Cloud se data laao
         await loadCloudData(user.uid);
         
+        // 2. Agar phone mein purana data hai toh usko cloud par bhej do
+        await syncOldLocalData();
+        
+        // UI Dikhao
         loginScreen.style.opacity = "0";
         setTimeout(() => {
             loginScreen.style.display = 'none';
             mainApp.style.display = 'block';
             renderHistoryWithSkeleton(); 
+            updateDudhUI();
+            updateRationUI();
         }, 300);
     } else {
         currentUser = null;
@@ -61,10 +59,12 @@ auth.onAuthStateChanged(async (user) => {
 });
 
 function loginWithGoogle() {
+    if(loginStatus) {
+        loginStatus.style.display = 'block';
+        loginStatus.innerText = "Google par jaa rahe hain... ⏳";
+    }
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch((error) => {
-        Swal.fire('Login Error', 'Firebase Settings check karein! (Error: ' + error.message + ')', 'error');
-    });
+    auth.signInWithRedirect(provider); // Mobile ke liye Redirect best hai
 }
 
 function logout() {
@@ -83,7 +83,7 @@ function logout() {
 }
 
 // ==========================================
-// ☁️ 3. CLOUD DATA SYNC ENGINE
+// ☁️ 3. CLOUD DATA SYNC & LOCAL MIGRATION
 // ==========================================
 let familyExpenses = [];
 let dudhRecords = [];
@@ -100,12 +100,7 @@ async function loadCloudData(uid) {
             dudhRecords = data.dudh || [];
             rationItems = data.ration || [];
             budgetLimit = data.budget || 20000;
-        } else {
-            await saveToCloud(); 
         }
-        updateHisabUI();
-        updateDudhUI();
-        updateRationUI();
     } catch (error) {
         console.error("Cloud fetch failed:", error);
     }
@@ -125,8 +120,39 @@ async function saveToCloud() {
     }
 }
 
+async function syncOldLocalData() {
+    try {
+        const localExp = JSON.parse(localStorage.getItem('familyExpenses'));
+        const localDudh = JSON.parse(localStorage.getItem('dudhRecords'));
+        const localRation = JSON.parse(localStorage.getItem('rationItems'));
+        
+        let dataChanged = false;
+
+        if (localExp && localExp.length > 0 && familyExpenses.length === 0) {
+            familyExpenses = localExp; dataChanged = true;
+        }
+        if (localDudh && localDudh.length > 0 && dudhRecords.length === 0) {
+            dudhRecords = localDudh; dataChanged = true;
+        }
+        if (localRation && localRation.length > 0 && rationItems.length === 0) {
+            rationItems = localRation; dataChanged = true;
+        }
+
+        if (dataChanged) {
+            await saveToCloud();
+            console.log("Old Local Data Synced to Cloud Successfully! ✅");
+            // Sync hone ke baad phone ki memory khali kar do taaki double na ho
+            localStorage.removeItem('familyExpenses');
+            localStorage.removeItem('dudhRecords');
+            localStorage.removeItem('rationItems');
+        }
+    } catch(e) {
+        console.log("Error syncing local data:", e);
+    }
+}
+
 // ==========================================
-// 🎨 4. APP LOGIC & UI
+// 🎨 4. APP LOGIC & UI (Theme, Nav)
 // ==========================================
 let isDarkMode = localStorage.getItem('darkMode') === 'true';
 if(isDarkMode) document.body.classList.add('dark-mode');
@@ -287,7 +313,7 @@ function addExpense() {
         Swal.fire('Updated!', 'Update ho gaya.', 'success');
     }
 
-    saveToCloud(); // 🔥 Data Save to Firestore
+    saveToCloud(); 
     document.getElementById('description').value = ''; document.getElementById('amount').value = ''; 
     currentReceiptUrl = ""; 
     renderHistoryWithSkeleton();
@@ -379,4 +405,32 @@ function updateRationUI() {
             if(item.date === dateStr) {
                 const li = document.createElement('li'); li.style.borderLeftColor = '#8e44ad';
                 li.innerHTML = `
-                    <div class="list-left ration-item ${item.bought ? 'bought' : ''}" onclick="toggleRation(${index})" style="flex-direction: row; align-items
+                    <div class="list-left ration-item ${item.bought ? 'bought' : ''}" onclick="toggleRation(${index})" style="flex-direction: row; align-items:center; cursor:pointer;">
+                        <div class="checkbox-custom"></div><strong style="font-size: 16px;">${item.name}</strong>
+                    </div>
+                    <div class="list-right"><button class="action-btn delete" onclick="deleteRation(${index})">🗑️</button></div>`;
+                list.appendChild(li);
+            }
+        });
+    });
+}
+function addRation() { const name = document.getElementById('ration-item').value; const rDate = document.getElementById('ration-date').value; if(!name || !rDate) return; rationItems.push({ name: name, bought: false, date: rDate }); saveToCloud(); document.getElementById('ration-item').value = ''; updateRationUI(); }
+function toggleRation(index) { rationItems[index].bought = !rationItems[index].bought; saveToCloud(); updateRationUI(); }
+function deleteRation(index) { rationItems.splice(index, 1); saveToCloud(); updateRationUI(); }
+
+// ==========================================
+// 🏦 7. EMI AND VYAJ LOGIC
+// ==========================================
+function calculateEMI() {
+    const p = parseFloat(document.getElementById('emi-principal').value); const r = parseFloat(document.getElementById('emi-rate').value) / 12 / 100; const n = parseFloat(document.getElementById('emi-time').value);
+    if (isNaN(p) || isNaN(r) || isNaN(n) || p <= 0 || n <= 0) return Swal.fire('Galti', 'Sahi details bhariye!', 'error');
+    const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1); const totalAmount = emi * n;
+    document.getElementById('emi-result').style.display = 'block'; document.getElementById('emi-amount').innerText = `₹${Math.round(emi)}`; document.getElementById('emi-interest').innerText = `₹${Math.round(totalAmount - p)}`; document.getElementById('emi-total').innerText = `₹${Math.round(totalAmount)}`;
+}
+
+function calculateVyaj() {
+    const p = parseFloat(document.getElementById('vyaj-principal').value); const rate = parseFloat(document.getElementById('vyaj-rate').value); const time = parseFloat(document.getElementById('vyaj-time').value);
+    if (isNaN(p) || isNaN(rate) || isNaN(time) || p <= 0 || time <= 0) return Swal.fire('Galti', 'Sahi details bhariye!', 'error');
+    const interest = (p * rate * time) / 100;
+    document.getElementById('vyaj-result').style.display = 'block'; document.getElementById('vyaj-only').innerText = `₹${Math.round(interest)}`; document.getElementById('vyaj-total').innerText = `₹${Math.round(p + interest)}`;
+}
