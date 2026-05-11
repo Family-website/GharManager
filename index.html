@@ -9,10 +9,12 @@
     <link rel="apple-touch-icon" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
     
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <meta name="description" content="Family Super App - Ghar ka hisaab, EMI calculator, Dudh aur Ration ka record rakhne wala smart personal app.">
+    <meta name="keywords" content="Family Super App, Ghar ka hisaab, EMI calculator, expense tracker, family budget app">
+    <meta name="google-site-verification" content="fZwGT-hq1h80Z_KN46QPPakhStF9F_geRxz_t1Wg2K0" />
     
-    <link rel="stylesheet" href="./style.css?v=9">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css?v=10">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -20,40 +22,39 @@
 </head>
 <body>
 
-    <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <span class="material-symbols-rounded anim-premium-icon" style="font-size: 80px;">cloud_sync</span>
-        <h1 style="font-family: 'Caveat', cursive; font-size: 44px; color: #2563eb; font-weight: 700; margin-top: 5px;">Family Super App</h1>
-        <p style="font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #94a3b8; letter-spacing: 1px;">Loading Securely... ⏳</p>
-    </div>
-
-    <div id="login-screen" class="lock-overlay" style="display: none;">
+    <div id="login-screen" class="lock-overlay">
         <div class="lock-card" style="width: 90%; max-width: 350px;">
-            <span class="material-symbols-rounded anim-premium-icon" style="font-size: 70px;">lock_person</span>
-            <h2 id="lock-title" style="margin-top: 10px;">Family Cloud</h2>
-            <p id="lock-desc" style="margin-bottom: 25px; color: #94a3b8; font-size: 13px; font-weight: 700;">Humesha ke liye jud jaayein!</p>
+            <div class="lock-icon" style="font-size: 50px;">☁️</div>
+            <h2 id="lock-title">Family Cloud</h2>
+            <p id="lock-desc" style="margin-bottom: 25px; color: #cbd5e1; font-size: 13px;">Ek baar login karein, aur humesha ke liye jud jaayein!</p>
             
-            <button type="button" onclick="loginWithGoogle()" class="google-btn">
+            <button onclick="loginWithGoogle()" class="google-btn" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; background: white; color: #2c3e50; border: 1.5px solid #cbd5e1; border-radius: 12px; cursor: pointer; font-family: inherit; font-size: 16px; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.2s;">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width: 24px; height: 24px;">
                 <span>Sign in with Google</span>
             </button>
-
-            <p id="login-status" style="margin-top: 15px; font-size: 13px; color: #2563eb; display: none; font-weight: bold;">Loading... ⏳</p>
+            
+            <p id="login-status" style="margin-top: 15px; font-size: 13px; color: #3498db; display: none; font-weight: bold;">Cloud se jud rahe hain... ⏳</p>
         </div>
     </div>
 
     <div class="app-container" id="main-app" style="display: none;">
         
-        <div style="display: flex; justify-content: flex-end; padding: 15px 20px 0 20px; gap: 15px; position: relative; z-index: 100;">
-            <button type="button" id="theme-toggle" onclick="toggleTheme()" style="background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.8;">🌙</button>
-            <button type="button" onclick="logout()" style="background: transparent; border: none; font-size: 24px; cursor: pointer; opacity: 0.8;" title="Logout">🚪</button>
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="text-align: left;">
+                    <p id="smart-greeting" style="font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 2px;">Welcome! ✨</p>
+                    <h2 id="app-title" style="margin: 0;">Ghar Ka Hisaab 💰</h2>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button id="theme-toggle" onclick="toggleTheme()" style="background: none; border: none; font-size: 24px; cursor: pointer;">🌙</button>
+                    <button onclick="logout()" style="background: rgba(231,76,60,0.2); border: 1px solid #e74c3c; color: white; border-radius: 50%; width: 35px; height: 35px; cursor: pointer;" title="Logout">🚪</button>
+                </div>
+            </div>
         </div>
 
         <div class="content-area">
             
             <div id="section-hisab" class="app-section active-section">
-                <div style="margin-bottom: 10px;">
-                    <p id="smart-greeting" style="font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">Welcome! ✨</p>
-                </div>
                 <div class="balance-card">
                     <p>Total Kharcha (Is Mahine)</p>
                     <h1 id="total-expense">₹0</h1>
@@ -61,13 +62,13 @@
 
                 <div class="budget-section">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span class="result-text">Monthly Budget: ₹<span id="budget-display">20000</span></span>
-                        <button type="button" onclick="setBudget()" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size: 12px; font-weight:bold;">✏️ Edit</button>
+                        <span style="font-weight:bold; color:#2c3e50; font-size: 14px;" class="result-text">Monthly Budget: ₹<span id="budget-display">20000</span></span>
+                        <button onclick="setBudget()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size: 12px; font-weight:bold;">✏️ Edit</button>
                     </div>
-                    <div style="width:100%; background:#f1f5f9; border-radius:10px; height:8px; overflow:hidden;">
-                        <div id="budget-bar" style="height:100%; width:0%; background:#10b981; transition:width 0.5s ease;"></div>
+                    <div style="width:100%; background:#ecf0f1; border-radius:10px; height:10px; overflow:hidden;">
+                        <div id="budget-bar" style="height:100%; width:0%; background:#2ecc71; transition:width 0.5s ease;"></div>
                     </div>
-                    <p id="budget-warning" style="display: none; color: #e74c3c; font-size: 12px; font-weight: bold; margin-top: 5px;">⚠️ Alert: Budget limit cross ho gaya hai!</p>
+                    <p id="budget-warning" style="font-size:12px; color:#e74c3c; margin-top:8px; display:none; font-weight: bold;">⚠️ Alert: Budget 80% cross ho gaya hai!</p>
                 </div>
 
                 <div class="form-section">
@@ -92,7 +93,7 @@
                     <label>Kharcha kis cheez par hua?</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <input type="text" id="description" placeholder="e.g., Sabji, Dawa" style="margin-bottom: 0;">
-                        <button type="button" id="mic-btn" onclick="startVoice()" style="background:transparent; color:#2563eb; border:2px solid #2563eb; border-radius:12px; padding:0 15px; cursor:pointer; font-size: 18px;">🎤</button>
+                        <button id="mic-btn" onclick="startVoice()" style="background:#3498db; color:white; border:none; border-radius:15px; padding:0 15px; cursor:pointer; font-size: 18px;" title="Bol kar likhein">🎤</button>
                     </div>
                     
                     <label>Kitne paise lage?</label>
@@ -100,35 +101,46 @@
                     
                     <label>Kis din?</label>
                     <input type="date" id="date">
+
+                    <label>Bill/Receipt ki Photo (Optional)</label>
+                    <input type="file" id="receipt-img" accept="image/*" style="font-size: 12px; padding: 8px; background: transparent;">
+                    <img id="receipt-preview" style="display:none; width:100%; max-height:150px; object-fit:contain; margin-top:10px; border-radius:10px;">
                     
-                    <button type="button" class="expense-btn" id="btn-add-expense" onclick="addExpense()">Kharcha Add Karein</button>
+                    <button class="expense-btn" id="btn-add-expense" onclick="addExpense()">Kharcha Add Karein</button>
                 </div>
 
                 <div class="history-section">
                     <h3>Hisaab & Reports</h3>
-                    <input type="month" id="month-filter" style="width: 100%; padding: 10px; margin-bottom: 15px; font-weight: bold;" onchange="renderHistoryWithSkeleton()">
+                    <input type="month" id="month-filter" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #ccc; font-weight: bold;" onchange="renderHistoryWithSkeleton()">
                     
                     <div class="checklist-section">
-                        <h4 style="text-align:center; color:#1e293b; font-size:16px; margin-bottom:10px; font-family:'Caveat', cursive;">📊 Kisme Kitna Kharcha?</h4>
+                        <h4 style="text-align:center; color:#2c3e50; font-size:14px; margin-bottom:10px;" class="result-text">📊 Kisme Kitna Kharcha?</h4>
                         <canvas id="categoryChart"></canvas>
-                        
-                        <h4 style="text-align:center; color:#1e293b; font-size:16px; margin-top:20px; margin-bottom:10px; font-family:'Caveat', cursive;">👥 Kisne Kitna Kharcha?</h4>
+                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                        <h4 style="text-align:center; color:#2c3e50; font-size:14px; margin-bottom:10px;" class="result-text">👤 Kisne Kitna Kharcha?</h4>
                         <canvas id="memberChart"></canvas>
                     </div>
 
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <button type="button" onclick="exportToPDF()" style="flex:1; padding:12px; background:transparent; color:#ef4444; border:2px solid #ef4444; border-radius:12px; cursor:pointer; font-weight:bold;">📄 Save PDF</button>
-                        <button type="button" onclick="shareReport()" style="flex:1; padding:12px; background:#25D366; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold;">📤 Share</button>
+                        <button onclick="backupData()" style="flex: 1; padding: 10px; background: #2c3e50; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">☁️ Backup Data</button>
+                        <label style="flex: 1; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            🔄 Restore Data
+                            <input type="file" accept=".json" style="display: none;" onchange="restoreData(event)">
+                        </label>
                     </div>
+
+                    <button onclick="exportToPDF()" style="margin-bottom:10px; width:100%; padding:10px; background:rgba(231,76,60,0.9); color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold; box-shadow: 0 4px 10px rgba(231,76,60,0.3);">📄 Download PDF Report</button>
+                    
+                    <button onclick="shareReport()" style="margin-bottom:15px; width:100%; padding:10px; background:#25D366; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold; box-shadow: 0 4px 10px rgba(37,211,102,0.3);">📤 Share PDF (WhatsApp)</button>
                     
                     <ul id="history-list"></ul>
                 </div>
             </div>
 
             <div id="section-emi" class="app-section">
-                <div class="balance-card">
+                <div class="balance-card" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
                     <p>Bank EMI Calculator</p>
-                    <span class="material-symbols-rounded anim-premium-icon" style="color:#f472b6;">account_balance</span>
+                    <h1 style="font-size: 35px;">🏦</h1>
                 </div>
                 <div class="form-section">
                     <label>Loan Amount (Kitna loan liya?)</label>
@@ -137,20 +149,21 @@
                     <input type="number" id="emi-rate" placeholder="e.g., 10">
                     <label>Time (Kitne mahine ke liye?)</label>
                     <input type="number" id="emi-time" placeholder="e.g., 12">
-                    <button type="button" class="expense-btn" style="background:#f472b6;" onclick="calculateEMI()">EMI Nikalein</button>
+                    <button class="expense-btn" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);" onclick="calculateEMI()">EMI Nikalein</button>
                 </div>
-                <div class="result-card" id="emi-result" style="display:none; background:rgba(255,255,255,0.9); padding:20px; border-radius:16px; border:2px dashed #cbd5e1; margin-top:15px; text-align:center;">
-                    <h3 style="color: #2c3e50; font-family:'Caveat', cursive; font-size:28px;">Har Mahine Ki EMI</h3>
-                    <h1 id="emi-amount" style="color: #ef4444; font-family:'Caveat', cursive; font-size:45px;">₹0</h1>
-                    <p style="margin-top: 10px; font-weight: bold; color: #64748b; font-size: 14px;">Total Vyaj: <span id="emi-interest" style="color: #f59e0b;">₹0</span></p>
-                    <p style="font-weight: bold; color: #64748b; font-size: 14px;">Total Bharna Hoga: <span id="emi-total" style="color: #2563eb;">₹0</span></p>
+                <div class="result-card" id="emi-result" style="display:none; background:white; padding:20px; border-radius:20px; margin-top:15px; text-align:center;">
+                    <h3 style="color: #2c3e50; margin-bottom: 10px;" class="result-text">Har Mahine Ki EMI</h3>
+                    <h1 id="emi-amount" style="color: #e74c3c;">₹0</h1>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+                    <p style="color: #7f8c8d; font-size: 14px;">Total Interest: <strong id="emi-interest" style="color: #333;">₹0</strong></p>
+                    <p style="color: #7f8c8d; font-size: 14px;">Total Dena Hoga: <strong id="emi-total" style="color: #333;">₹0</strong></p>
                 </div>
             </div>
 
             <div id="section-vyaj" class="app-section">
-                <div class="balance-card">
+                <div class="balance-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
                     <p>Gaon Ka Vyaj (Rupay Saikra)</p>
-                    <span class="material-symbols-rounded anim-premium-icon" style="color:#10b981;">currency_rupee</span>
+                    <h1 style="font-size: 35px;">₹</h1>
                 </div>
                 <div class="form-section">
                     <label>Muldhan (Kitne paise diye/liye?)</label>
@@ -159,20 +172,21 @@
                     <input type="number" id="vyaj-rate" placeholder="e.g., 5">
                     <label>Samay (Kitne mahine ho gaye?)</label>
                     <input type="number" id="vyaj-time" placeholder="e.g., 4">
-                    <button type="button" class="expense-btn" style="background:#4ade80;" onclick="calculateVyaj()">Vyaj Nikalein</button>
+                    <button class="expense-btn" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);" onclick="calculateVyaj()">Vyaj Nikalein</button>
                 </div>
-                <div class="result-card" id="vyaj-result" style="display:none; background:rgba(255,255,255,0.9); padding:20px; border-radius:16px; border:2px dashed #cbd5e1; margin-top:15px; text-align:center;">
-                    <h3 style="color: #2c3e50; font-family:'Caveat', cursive; font-size:28px;">Sirf Vyaj (Interest)</h3>
-                    <h1 id="vyaj-only" style="color: #ef4444; font-family:'Caveat', cursive; font-size:45px;">₹0</h1>
-                    <p style="margin-top: 10px; font-weight: bold; color: #64748b; font-size: 15px;">Total Wapas Karna Hoga: <span id="vyaj-total" style="color: #2563eb;">₹0</span></p>
+                <div class="result-card" id="vyaj-result" style="display:none; background:white; padding:20px; border-radius:20px; margin-top:15px; text-align:center;">
+                    <h3 style="color: #2c3e50; margin-bottom: 10px;" class="result-text">Sirf Vyaj (Interest)</h3>
+                    <h1 id="vyaj-only" style="color: #e74c3c;">₹0</h1>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+                    <p style="color: #7f8c8d; font-size: 16px;">Total Lautana Hai: <strong id="vyaj-total" style="color: #27ae60; font-size: 20px;">₹0</strong></p>
                 </div>
             </div>
 
             <div id="section-dudh" class="app-section">
-                <div class="balance-card">
+                <div class="balance-card" style="background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);">
                     <p>Is Mahine Ka Total Bill</p>
                     <h1 id="dudh-total-bill">₹0</h1>
-                    <p style="margin-top: 5px; font-weight: bold; font-size: 14px;">Total Dudh: <span id="dudh-total-liter">0</span> Ltr</p>
+                    <p style="margin-top: 5px; font-weight: bold;">Total Dudh: <span id="dudh-total-liter">0</span> Ltr</p>
                 </div>
                 <div class="form-section">
                     <label>Date aur Rate</label>
@@ -181,7 +195,7 @@
                     <label>Kitna Dudh aaya?</label>
                     <input type="number" id="dudh-morning" placeholder="Subah (Max 5 Ltr)" step="0.1" min="0" max="5">
                     <input type="number" id="dudh-evening" placeholder="Shaam (Max 5 Ltr)" step="0.1" min="0" max="5">
-                    <button type="button" id="btn-add-dudh" class="expense-btn" style="background:#60a5fa;" onclick="addDudh()">Dudh Add Karein</button>
+                    <button class="expense-btn" style="background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);" onclick="addDudh()">Dudh Add Karein</button>
                 </div>
                 <div class="history-section">
                     <h3>Daily Dudh Record</h3>
@@ -190,20 +204,20 @@
             </div>
 
             <div id="section-ration" class="app-section">
-                <div class="balance-card">
+                <div class="balance-card" style="background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);">
                     <p>Kirana & Ration</p>
-                    <span class="material-symbols-rounded anim-premium-icon" style="color:#c084fc;">shopping_cart</span>
+                    <h1 style="font-size: 35px;">🛒</h1>
                 </div>
                 <div class="form-section">
                     <label>Samaan ka naam aur Date:</label>
                     <input type="date" id="ration-date" style="margin-bottom: 10px;">
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="ration-item" placeholder="e.g., Chawal 5kg" style="margin-bottom: 0;">
-                        <button type="button" class="expense-btn" style="background:#c084fc; margin-top: 0; width: auto; padding: 0 20px;" onclick="addRation()">Add</button>
+                        <button class="expense-btn" style="background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%); margin-top: 0; width: auto; padding: 0 20px;" onclick="addRation()">Add</button>
                     </div>
                 </div>
                 <div class="history-section">
-                    <h3>Ration List</h3>
+                    <h3 style="display: flex; justify-content: space-between; align-items: center;">Ration List</h3>
                     <ul id="ration-list"></ul>
                 </div>
             </div>
@@ -211,26 +225,23 @@
         </div>
 
         <div class="bottom-nav">
-            <button type="button" class="nav-btn active-nav" onclick="openSection('hisab', 'Ghar Ka Hisaab 💰')">
+            <button class="nav-btn active-nav" onclick="openSection('hisab', 'Ghar Ka Hisaab 💰')">
                 <i style="font-style: normal; font-size: 20px;">💰</i><span>Hisaab</span>
             </button>
-            <button type="button" class="nav-btn" onclick="openSection('emi', 'EMI Calculator 🏦')">
+            <button class="nav-btn" onclick="openSection('emi', 'EMI Calculator 🏦')">
                 <i style="font-style: normal; font-size: 20px;">🏦</i><span>EMI</span>
             </button>
-            <button type="button" class="nav-btn" onclick="openSection('vyaj', 'Gaon Ka Vyaj ₹')">
+            <button class="nav-btn" onclick="openSection('vyaj', 'Gaon Ka Vyaj ₹')">
                 <i style="font-style: normal; font-size: 20px;">₹</i><span>Vyaj</span>
             </button>
-            <button type="button" class="nav-btn" onclick="openSection('dudh', 'Dudh 🥛')">
+            <button class="nav-btn" onclick="openSection('dudh', 'Dudh 🥛')">
                 <i style="font-style: normal; font-size: 20px;">🥛</i><span>Dudh</span>
             </button>
-            <button type="button" class="nav-btn" onclick="openSection('ration', 'Ration 🛒')">
+            <button class="nav-btn" onclick="openSection('ration', 'Ration 🛒')">
                 <i style="font-style: normal; font-size: 20px;">🛒</i><span>Ration</span>
             </button>
         </div>
     </div>
-
-    <audio id="sound-success" src="https://actions.google.com/sounds/v1/foley/cash_register_kaching.ogg" preload="auto"></audio>
-    <audio id="sound-click" src="https://actions.google.com/sounds/v1/ui/click.ogg" preload="auto"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -241,4 +252,3 @@
     <script src="./script.js"></script>
 </body>
 </html>
-
