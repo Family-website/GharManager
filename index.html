@@ -8,13 +8,12 @@
     <link rel="icon" href="./icon.png">
     <link rel="apple-touch-icon" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
-    
-    <meta name="description" content="Family Super App - Ghar ka hisaab, EMI calculator, Dudh aur Ration ka record rakhne wala smart personal app.">
+    <meta name="description" content="Family Super App - Ghar ka hisaab, EMI calculator, Dudh aur Ration ka record.">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="./style.css?v=16">
+    <link rel="stylesheet" href="./style.css?v=19">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -54,13 +53,12 @@
         
         <div class="header" style="padding: 20px 20px 10px 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="text-align: left;">
-                    <p id="smart-greeting" style="font-size: 13px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">Hello! ✨</p>
-                    <h2 id="app-title" style="margin: 0; font-family: 'Caveat', cursive; font-size: 40px; color: #2563eb;">Ghar Ka Hisaab 💰</h2>
-                </div>
-                <div style="display: flex; gap: 12px;">
-                    <button type="button" id="theme-toggle" onclick="toggleTheme()" style="background: none; border: none; font-size: 24px; cursor: pointer;">🌙</button>
-                    <button type="button" onclick="logout()" style="background: transparent; border: none; font-size: 24px; cursor: pointer;" title="Logout">🚪</button>
+                <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
+                    <div id="user-avatar" onclick="openProfile()" style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, var(--ink-blue), #8b5cf6); color: white; display: flex; justify-content: center; align-items: center; font-size: 22px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-family: 'Nunito', sans-serif; transition: 0.3s;">A</div>
+                    <div>
+                        <p id="smart-greeting" style="font-size: 13px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px;">Hello! ✨</p>
+                        <h2 id="app-title" style="margin: 0; font-family: 'Caveat', cursive; font-size: 34px; color: var(--ink-blue); line-height: 1; transition: 0.3s;">Ghar Ka Hisaab</h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,7 +74,7 @@
                 <div class="budget-section">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="font-weight:bold; color:#2c3e50; font-size: 14px;">Monthly Budget: ₹<span id="budget-display">20000</span></span>
-                        <button type="button" onclick="setBudget()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size: 12px; font-weight:bold;">✏️ Edit</button>
+                        <button type="button" onclick="setBudget()" style="background:none; border:none; color:var(--ink-blue); cursor:pointer; font-size: 12px; font-weight:bold;">✏️ Edit</button>
                     </div>
                     <div style="width:100%; background:#ecf0f1; border-radius:10px; height:8px; overflow:hidden;">
                         <div id="budget-bar" style="height:100%; width:0%; background:#2ecc71; transition:width 0.5s ease;"></div>
@@ -106,7 +104,7 @@
                     <label>Kharcha kis cheez par hua?</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <input type="text" id="description" placeholder="e.g., Sabji, Dawa" style="margin-bottom: 0;">
-                        <button type="button" id="mic-btn" onclick="startVoice()" style="background:#3498db; color:white; border:none; border-radius:12px; padding:0 15px; cursor:pointer; font-size: 18px;">🎤</button>
+                        <button type="button" id="mic-btn" onclick="startVoice()" style="background:var(--ink-blue); color:white; border:none; border-radius:12px; padding:0 15px; cursor:pointer; font-size: 18px; transition: 0.3s;">🎤</button>
                     </div>
                     
                     <label>Kitne paise lage?</label>
@@ -127,7 +125,7 @@
                     <input type="month" id="month-filter" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #cbd5e1; font-weight: bold;" onchange="renderHistoryWithSkeleton()">
                     
                     <div class="checklist-section">
-                        <h4 style="text-align:center; color:#2c3e50; font-size:14px; margin-bottom:10px; font-family:'Caveat', cursive;">📊 Expense Charts</h4>
+                        <h4 style="text-align:center; color:var(--text-main); font-size:14px; margin-bottom:10px; font-family:'Caveat', cursive;">📊 Expense Charts</h4>
                         <canvas id="categoryChart"></canvas>
                         <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #cbd5e1;">
                         <canvas id="memberChart"></canvas>
@@ -253,6 +251,59 @@
         </div>
     </div>
 
+    <div id="profile-modal" class="lock-overlay" style="display: none; z-index: 1000000; align-items: flex-end; padding-bottom: 15px;">
+        <div class="lock-card profile-card-anim" style="width: 95%; max-width: 400px; margin: 0 auto; position: relative; padding: 30px 20px; background: var(--paper-bg); border-radius: 30px; box-shadow: 0 -10px 40px rgba(0,0,0,0.1);">
+            <button onclick="closeProfile()" style="position: absolute; top: 15px; right: 15px; background: var(--line-color); border: none; font-size: 14px; cursor: pointer; color: #64748b; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">❌</button>
+            
+            <div id="profile-avatar-large" class="anim-premium-icon" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--ink-blue), #8b5cf6); color: white; display: flex; justify-content: center; align-items: center; font-size: 38px; font-weight: 800; margin: 0 auto 15px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); font-family: 'Nunito', sans-serif; transition: 0.3s;">A</div>
+            
+            <h2 id="profile-name" style="font-family: 'Nunito', sans-serif; font-size: 26px; color: var(--ink-blue); font-weight: 800; margin-bottom: 2px; transition: 0.3s;">User</h2>
+            <p id="profile-email" style="color: #94a3b8; font-size: 14px; margin-bottom: 25px; font-weight: 700;">email@domain.com</p>
+            
+            <div class="profile-stats" style="background: var(--line-color); border: 1.5px dashed #cbd5e1; border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: left;">
+                <p style="font-size: 13px; color: #64748b; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">📊 Life-time App Stats</p>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px;">
+                    <span style="font-weight: 700; color: var(--text-main);">💰 Total Kharcha:</span>
+                    <span id="profile-total-expense" style="font-weight: 800; color: var(--ink-red);">₹0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px;">
+                    <span style="font-weight: 700; color: var(--text-main);">🥛 Dudh Bill:</span>
+                    <span id="profile-total-dudh" style="font-weight: 800; color: var(--ink-blue);">₹0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="font-weight: 700; color: var(--text-main);">🛒 Ration Items:</span>
+                    <span id="profile-total-ration" style="font-weight: 800; color: #8b5cf6;">0</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" onclick="openThemeStore()" class="expense-btn" style="background: var(--line-color); color: var(--ink-blue); border: 2px solid var(--ink-blue); font-size: 15px; padding: 12px; border-radius: 16px; width: 100%; box-shadow: none; margin-top: 0; font-family: 'Nunito', sans-serif; font-weight: 800; transition: 0.3s;">🎨 Themes</button>
+                    <button type="button" onclick="toggleSound()" id="sound-toggle-btn" class="expense-btn" style="background: var(--line-color); color: #10b981; border: 2px solid #10b981; font-size: 15px; padding: 12px; border-radius: 16px; width: 100%; box-shadow: none; margin-top: 0; font-family: 'Nunito', sans-serif; font-weight: 800; transition: 0.3s;">🔊 Sound: ON</button>
+                </div>
+                <button type="button" onclick="logout(); closeProfile();" class="expense-btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 2px solid #ef4444; font-size: 15px; padding: 12px; border-radius: 16px; width: 100%; box-shadow: none; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 5px; font-family: 'Nunito', sans-serif; font-weight: 800;">🚪 Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="theme-modal" class="lock-overlay" style="display: none; z-index: 1000001; align-items: center;">
+        <div class="lock-card profile-card-anim" style="width: 90%; max-width: 350px; margin: 0 auto; position: relative; padding: 30px 20px; background: var(--paper-bg); border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <button onclick="closeThemeStore()" style="position: absolute; top: 15px; right: 15px; background: var(--line-color); border: none; font-size: 14px; cursor: pointer; color: #64748b; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">❌</button>
+            <div class="anim-premium-icon" style="font-size: 50px; margin-bottom: 5px; line-height: 1;">🎨</div>
+            <h2 style="font-family: 'Caveat', cursive; font-size: 32px; color: var(--text-main); margin-bottom: 5px;">Theme Store</h2>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px; font-weight: 700;">Apne app ka naya rang chunein!</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button onclick="applyTheme('default')" class="theme-btn" style="background: #f8fafc; border: 2px solid #2563eb; color: #2563eb;">📘 Classic Blue</button>
+                <button onclick="applyTheme('nature')" class="theme-btn" style="background: #f0fdf4; border: 2px solid #16a34a; color: #16a34a;">🌿 Nature Green</button>
+                <button onclick="applyTheme('sunset')" class="theme-btn" style="background: #faf5ff; border: 2px solid #9333ea; color: #9333ea;">🌆 Sunset Purple</button>
+                <button onclick="applyTheme('coffee')" class="theme-btn" style="background: #fffbeb; border: 2px solid #b45309; color: #b45309;">☕ Coffee Brown</button>
+                <button onclick="applyTheme('rose')" class="theme-btn" style="background: #fff1f2; border: 2px solid #e11d48; color: #e11d48;">🌹 Rose Pink</button>
+                <button onclick="toggleTheme(); closeThemeStore();" class="theme-btn" style="background: #1e293b; border: 2px solid #cbd5e1; color: #f1f5f9;">🌙 Night Mode</button>
+            </div>
+        </div>
+    </div>
+
     <audio id="sound-success" src="https://actions.google.com/sounds/v1/foley/cash_register_kaching.ogg" preload="auto"></audio>
     <audio id="sound-click" src="https://actions.google.com/sounds/v1/ui/click.ogg" preload="auto"></audio>
 
@@ -262,6 +313,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <script src="./script.js?v=16"></script>
+    <script src="./script.js?v=19"></script>
 </body>
 </html>
