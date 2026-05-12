@@ -429,3 +429,14 @@ window.addEventListener('DOMContentLoaded', () => {
     let savedAppTheme = localStorage.getItem('appTheme'); if(savedAppTheme) document.body.setAttribute('data-theme', savedAppTheme);
     updateSoundUI();
 });
+
+// ==========================================
+// 📲 14. PWA / INSTALL APP SYSTEM (SERVICE WORKER)
+// ==========================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker Registered! 😎', reg))
+            .catch(err => console.log('Service Worker Error ❌', err));
+    });
+}
