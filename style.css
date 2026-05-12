@@ -161,3 +161,12 @@ body[data-theme="nature"] { --ink-blue: #16a34a; --ink-red: #ea580c; --sticky-ye
 body[data-theme="sunset"] { --ink-blue: #9333ea; --ink-red: #e11d48; --sticky-yellow: #f3e8ff; --margin-color: #fce7f3; }
 body[data-theme="coffee"] { --ink-blue: #b45309; --ink-red: #be123c; --sticky-yellow: #fef3c7; --margin-color: #ffedd5; }
 body[data-theme="rose"]   { --ink-blue: #e11d48; --ink-red: #be185d; --sticky-yellow: #ffe4e6; --margin-color: #fbcfe8; }
+
+
+/* Image ko ekdam gol (round) banane ka code */
+.round-icon {
+    border-radius: 50%; /* Ye image ko gol kaat dega */
+    object-fit: cover;  /* Image ko pichakne nahi dega */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* Premium 3D shadow */
+}
+
