@@ -1,40 +1,36 @@
 /* ==========================================
-   📏 FONT SIZE FIX (Medium & Balanced)
-   Sirf size chota kiya hai, Font wahi rahega!
+   📏 EXACT FONT SIZE FIX (Sirf Size, Font wahi rahega)
 ========================================== */
 
-/* 1. Input Box aur Dropdown (Aditya, Ration etc.) ko medium kiya */
+/* 1. Main Title (GharManager) ka size medium kiya */
+#app-title {
+    font-size: 26px !important; 
+}
+
+/* 2. Total Kharcha (₹4676) ko screen ke hisaab se set kiya */
+#total-expense, #dudh-total-bill {
+    font-size: 34px !important;
+}
+
+/* 3. Input Box aur Dropdown (Aditya, Sabji, Dawa) ko thoda chota kiya */
 input, select, textarea {
-    font-size: 16px !important; /* Pehle bahut bada tha, ab ekdam standard ho gaya */
+    font-size: 15px !important; 
     padding: 10px 14px !important;
 }
 
-/* 2. Labels (Kaun kharcha kar raha hai?) ko chota aur clean kiya */
+/* 4. Labels (Kaun kharcha kar raha hai?) */
 label {
-    font-size: 13px !important;
+    font-size: 13px !important; 
     margin-bottom: 4px !important;
 }
 
-/* 3. Main Title (GharManager) ka size adjust kiya */
-#app-title {
-    font-size: 28px !important; 
-}
-
-/* 4. Total Amount (₹4676) thoda bada rahega par limit me */
-#total-expense, #dudh-total-bill {
-    font-size: 38px !important;
-}
-.balance-card p {
-    font-size: 14px !important;
-}
-
-/* 5. Buttons aur baki chote text */
+/* 5. Buttons aur Bottom Menu */
 .expense-btn {
-    font-size: 16px !important;
+    font-size: 15px !important; 
     padding: 12px !important;
 }
 .nav-btn span {
-    font-size: 11px !important; /* Bottom menu text chota kiya */
+    font-size: 11px !important; 
 }
 
 
