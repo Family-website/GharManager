@@ -1,49 +1,48 @@
 /* ==========================================
-   ✨ BALANCED PREMIUM FONT SYSTEM (MEDIUM)
+   ✨ ORIGINAL FONTS - MEDIUM & BALANCED SIZE
 ========================================== */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Quicksand:wght@500;600&display=swap');
 
 /* 1. Poore app ka base size set kiya */
 html {
-    font-size: 14px; /* Default size ko thoda kam kiya */
+    font-size: 14px; /* Isse sab kuch thoda compact aur medium ho jayega */
 }
 
 body {
-    font-family: 'Quicksand', sans-serif !important;
+    font-family: 'Nunito', sans-serif !important;
     -webkit-font-smoothing: antialiased;
     color: #1e293b;
 }
 
-/* 2. Headings ko medium aur balanced kiya */
+/* 2. Main Headings ko medium kiya (Caveat font) */
 h1, h2, #app-title, #lock-title {
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 1.6rem !important; /* Pehle se kaafi chota aur elegant */
+    font-family: 'Caveat', cursive !important;
+    font-size: 2.4rem !important; /* Pehle se thoda chota */
     font-weight: 700 !important;
-    letter-spacing: -0.5px !important;
 }
 
 h3, .balance-card p {
-    font-family: 'Poppins', sans-serif !important;
+    font-family: 'Nunito', sans-serif !important;
     font-size: 1.1rem !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }
 
-/* 3. Main Balance Amount (Ye thoda highlight hona chahiye) */
+/* 3. Main Balance Amount (Ye thoda bada rahega taki saaf dikhe) */
 #total-expense, #dudh-total-bill {
     font-size: 2.2rem !important;
     font-weight: 800 !important;
     letter-spacing: -1px !important;
 }
 
-/* 4. List Items, Buttons aur Inputs ko compact kiya */
+/* 4. List Items, Buttons aur Inputs ko medium aur clean kiya */
 li strong, label, .nav-btn span {
     font-size: 1rem !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }
 
 input, select, .expense-btn {
     font-size: 0.95rem !important;
-    padding: 10px 15px !important; /* Input box ko chota kiya */
+    padding: 10px 15px !important; /* Boxes ko thoda patla aur medium kiya */
+    font-family: 'Nunito', sans-serif !important;
 }
 
 .history-section h3 {
