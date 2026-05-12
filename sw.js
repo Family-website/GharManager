@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gharmanager-v3';
+const CACHE_NAME = 'gharmanager-final-v1'; // Naya naam tak ki purana cache reset ho jaye
 
 self.addEventListener('install', (e) => {
     e.waitUntil(
@@ -7,26 +7,22 @@ self.addEventListener('install', (e) => {
                 './',
                 './index.html',
                 './style.css',
-                './cloud.js',
-                './auth.js',
-                './charts.js',
-                './expense.js',
-                './ui.js',
+                './script.js',
                 './manifest.json',
                 './icon.png'
             ]).catch(err => console.log('Cache error', err));
         })
     );
-    self.skipWaiting();
+    self.skipWaiting(); // Naye service worker ko turant active karne ke liye
 });
 
-// Purane Cache (memory) ko automatically delete karne ka jaadu
+// Purani memory (cache) ko auto-delete karne ka jaadu
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then((keyList) => {
             return Promise.all(keyList.map((key) => {
                 if (key !== CACHE_NAME) {
-                    console.log('[Service Worker] Purana cache delete ho gaya:', key);
+                    console.log('[Service Worker] Purana cache ud gaya:', key);
                     return caches.delete(key);
                 }
             }));
