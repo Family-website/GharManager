@@ -1,10 +1,10 @@
-{
-  "name": "Family Super App",
-  "short_name": "FamilyApp",
+
+  "name": "GharManager",
+  "short_name": "GharManager",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f4f7f6",
-  "theme_color": "#1e3c72",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
   "icons": [
     {
       "src": "./icon.png",
@@ -19,5 +19,3 @@
       "purpose": "any maskable"
     }
   ]
-}
-
