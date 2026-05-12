@@ -1,7 +1,6 @@
-
 // Install Event
 self.addEventListener('install', (e) => {
-    console.log('[Service Worker] Family App Install');
+    console.log('[Service Worker] GharManager App Install');
 });
 
 // Fetch Event - Ye lagana sabse zaroori hai tabhi "Install" ka popup aayega!
