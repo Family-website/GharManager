@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gharmanager-v2';
+const CACHE_NAME = 'gharmanager-v3';
 
 self.addEventListener('install', (e) => {
     e.waitUntil(
@@ -7,15 +7,31 @@ self.addEventListener('install', (e) => {
                 './',
                 './index.html',
                 './style.css',
-                './script.js',
-                './manifest.json'
+                './cloud.js',
+                './auth.js',
+                './charts.js',
+                './expense.js',
+                './ui.js',
+                './manifest.json',
+                './icon.png'
             ]).catch(err => console.log('Cache error', err));
         })
     );
     self.skipWaiting();
 });
 
+// Purane Cache (memory) ko automatically delete karne ka jaadu
 self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then((keyList) => {
+            return Promise.all(keyList.map((key) => {
+                if (key !== CACHE_NAME) {
+                    console.log('[Service Worker] Purana cache delete ho gaya:', key);
+                    return caches.delete(key);
+                }
+            }));
+        })
+    );
     e.waitUntil(self.clients.claim());
 });
 
