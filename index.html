@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="./style.css?v=phase4">
+    <link rel="stylesheet" href="./style.css?v=phase5">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -24,7 +24,7 @@
     <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
         <img src="./icon.png" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 15px; border: 3px solid white;">
         <h1 style="font-family: 'Caveat', cursive; font-size: 44px; color: #2563eb; font-weight: 700;">GharManager</h1>
-        <p style="font-family: 'Nunito', sans-serif; font-size: 14px; color: #94a3b8; font-weight: 700;">Loading Phase 4... ⏳</p>
+        <p style="font-family: 'Nunito', sans-serif; font-size: 14px; color: #94a3b8; font-weight: 700;">Loading Debt Manager... ⏳</p>
     </div>
 
     <div id="login-screen" class="lock-overlay" style="display: none;">
@@ -98,21 +98,15 @@
                 <div style="background: var(--paper-bg); border-radius: 20px; padding: 15px; margin: 0 20px 15px 20px; box-shadow: 0 8px 25px var(--shadow-color);">
                     <p style="font-size: 12px; color: var(--text-muted); font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">📅 Smart Expense Calendar</p>
                     <div id="expense-calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center;"></div>
-                    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 10px; font-size: 10px; font-weight: bold;">
-                        <span style="color: #10b981;">🟢 Safe (Kam)</span>
-                        <span style="color: #f59e0b;">🟠 Med (Theek)</span>
-                        <span style="color: #ef4444;">🔴 High (Zyada)</span>
-                    </div>
                 </div>
 
                 <div style="margin: 0 20px 15px 20px; display: flex; gap: 10px;">
                     <input type="text" id="search-expense" placeholder="🔍 Search..." onkeyup="updateHisabUI()" style="flex: 2; border: 2px solid var(--line-color); background: var(--paper-bg); font-weight: bold; margin-bottom: 0;">
                     <select id="family-filter" onchange="updateHisabUI()" style="flex: 1; border: 2px solid var(--line-color); background: var(--paper-bg); font-weight: bold; margin-bottom: 0;">
-                        <option value="All">All Family</option>
+                        <option value="All">All</option>
                         <option value="Papa">Papa</option>
                         <option value="Mummy">Mummy</option>
                         <option value="Aditya">Aditya</option>
-                        <option value="Bhai/Behan">Bhai/Behan</option>
                     </select>
                 </div>
 
@@ -127,11 +121,10 @@
 
                     <label>Category</label>
                     <select id="expense-category">
-                        <option value="Ration">🛒 Ration & Groceries</option>
+                        <option value="Ration">🛒 Ration</option>
                         <option value="Medical">💊 Medical</option>
-                        <option value="Petrol">⛽ Petrol & Travel</option>
-                        <option value="Shopping">🛍️ Shopping</option>
-                        <option value="Bills">⚡ Bills & Recharge</option>
+                        <option value="Petrol">⛽ Petrol</option>
+                        <option value="Bills">⚡ Bills</option>
                         <option value="Other">📝 Other</option>
                     </select>
 
@@ -143,7 +136,6 @@
                     
                     <label>Kitne paise lage?</label>
                     <input type="number" id="amount" placeholder="Amount (₹)">
-                    
                     <label>Kis din?</label>
                     <input type="date" id="date">
 
@@ -159,21 +151,60 @@
 
             <div id="section-emi" class="app-section">
                 <div class="balance-card" style="background: #fbcfe8;">
-                    <p>Bank EMI Calculator</p>
+                    <p>Debt Manager & EMI</p>
                     <div class="anim-premium-icon" style="font-size: 45px; margin: 10px 0 0 0; line-height: 1;">🏦</div>
                 </div>
+                
                 <div class="form-section">
-                    <label>Loan Amount</label>
-                    <input type="number" id="emi-principal" placeholder="e.g., 50000">
-                    <label>Interest Rate (%)</label>
-                    <input type="number" id="emi-rate" placeholder="e.g., 10">
-                    <label>Months</label>
-                    <input type="number" id="emi-time" placeholder="e.g., 12">
-                    <button type="button" class="expense-btn" style="background:#f472b6; border:none;" onclick="calculateEMI()">EMI Nikalein</button>
+                    <label>Loan Ka Naam</label>
+                    <input type="text" id="emi-name" placeholder="e.g., Bike Loan, Papa Phone">
+                    
+                    <div style="display: flex; gap: 8px;">
+                        <div style="flex: 1;">
+                            <label>Loan Amount (₹)</label>
+                            <input type="number" id="emi-principal" placeholder="e.g., 50000">
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Rate (%)</label>
+                            <input type="number" id="emi-rate" placeholder="e.g., 10">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px;">
+                        <div style="flex: 1;">
+                            <label>Kitne Mahine?</label>
+                            <input type="number" id="emi-time" placeholder="e.g., 12">
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Har Mahine Kis Tarikh ko?</label>
+                            <input type="number" id="emi-due-date" placeholder="Tarikh (1-31)" min="1" max="31">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="expense-btn" style="background:#f472b6; border:none;" onclick="calculateEMI()">Check EMI</button>
                 </div>
+                
                 <div class="result-card" id="emi-result" style="display:none; text-align:center; border: 1.5px dashed #f472b6;">
                     <h3 style="color: var(--text-main); margin-bottom: 5px;">Har Mahine Ki EMI</h3>
                     <h1 id="emi-amount" style="color: #e74c3c;">₹0</h1>
+                    
+                    <div style="background: var(--line-color); border-radius: 12px; padding: 10px; margin-top: 15px; text-align: left;">
+                        <p style="font-size: 11px; color: var(--text-muted); font-weight: bold; margin-bottom: 5px;">💔 The Sachhai Breakdown (Principal vs Interest)</p>
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 5px;">
+                            <span style="color: #10b981;">Loan: ₹<span id="emi-break-principal">0</span></span>
+                            <span style="color: #ef4444;">Bank ka Byaj: ₹<span id="emi-break-interest">0</span></span>
+                        </div>
+                        <div style="width:100%; background:#fecaca; border-radius:10px; height:8px; overflow:hidden; display: flex;">
+                            <div id="emi-break-bar" style="height:100%; width:0%; background:#10b981;"></div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="expense-btn" style="background:#ec4899; border:none; margin-top: 15px;" onclick="saveLoan()">Save This Loan 💾</button>
+                </div>
+
+                <div class="history-section">
+                    <h3>Active Loans 🏦</h3>
+                    <ul id="loan-list"></ul>
                 </div>
             </div>
 
@@ -274,7 +305,7 @@
             <button type="button" class="nav-btn" onclick="openSection('invest', 'Investments 📈')">
                 <i style="font-style: normal; font-size: 18px;">📈</i><span style="font-size: 10px !important;">INVEST</span>
             </button>
-            <button type="button" class="nav-btn" onclick="openSection('emi', 'EMI Calc 🏦')">
+            <button type="button" class="nav-btn" onclick="openSection('emi', 'EMI & Loan 🏦')">
                 <i style="font-style: normal; font-size: 18px;">🏦</i><span style="font-size: 10px !important;">EMI</span>
             </button>
             <button type="button" class="nav-btn" onclick="openSection('vyaj', 'Gaon Vyaj ₹')">
@@ -393,14 +424,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <script src="./script.js?v=phase4"></script>
+    <script src="./script.js?v=phase5"></script>
 
     <script>
         setTimeout(() => {
             const splash = document.getElementById('splash-screen');
             const login = document.getElementById('login-screen');
             const main = document.getElementById('main-app');
-            
             if (splash && splash.style.display !== 'none') {
                 splash.style.display = 'none';
                 if (main && main.style.display !== 'block') {
