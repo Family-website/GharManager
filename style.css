@@ -1,410 +1,243 @@
 /* ==========================================
-   ✨ ULTRA SMOOTH PREMIUM ANIMATIONS
-================================================ */
+   ✨ GHARMANAGER : NEXT-LEVEL UI/UX SYSTEM
+   (3D, iOS Toggles, Blobs, Ripple, Skeletons)
+========================================== */
 
-/* 🌊 GLOBAL SMOOTHNESS */
-html {
-    scroll-behavior: smooth;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;800&family=Quicksand:wght@500;700&display=swap');
+
+/* --- 🎨 1. DYNAMIC THEME COLORS (Smooth Transitions) --- */
+:root {
+    --bg-color: #f8fafc;
+    --paper-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --line-color: #f1f5f9;
+    --ink-blue: #2563eb;
+    --ink-red: #ef4444;
+    --shadow-color: rgba(37, 99, 235, 0.15);
+    --btn-shadow: #1e40af; /* 3D Button Depth */
 }
 
+/* Dark Mode Theme */
+[data-theme="night"] {
+    --bg-color: #0f172a;
+    --paper-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --line-color: #334155;
+    --ink-blue: #60a5fa;
+    --ink-red: #f87171;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --btn-shadow: #1e293b;
+}
+
+/* Base Styles & Medium Fonts */
 * {
-    transition:
-        background-color 0.25s ease,
-        color 0.25s ease,
-        border-color 0.25s ease;
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif !important;
+    transition: background-color 0.4s ease, color 0.4s ease; /* Dynamic Theme Smoothness */
 }
 
-/* 🚀 APP OPEN ANIMATION */
-.app-container {
-    animation: appBoot 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes appBoot {
-
-    0% {
-        opacity: 0;
-        transform:
-            scale(0.96)
-            translateY(20px);
-        filter: blur(8px);
-    }
-
-    100% {
-        opacity: 1;
-        transform:
-            scale(1)
-            translateY(0);
-        filter: blur(0);
-    }
-}
-
-/* ✨ SECTION SWITCH ANIMATION */
-.app-section {
-    opacity: 0;
-    transform:
-        translateY(15px)
-        scale(0.98);
-
-    transition:
-        opacity 0.4s ease,
-        transform 0.4s ease;
-}
-
-.active-section {
-    opacity: 1;
-    transform:
-        translateY(0)
-        scale(1);
-
-    animation:
-        smoothSection 0.45s
-        cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes smoothSection {
-
-    from {
-        opacity: 0;
-        transform:
-            translateY(20px)
-            scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform:
-            translateY(0)
-            scale(1);
-    }
-}
-
-/* 💎 FLOATING CARD EFFECT */
-.balance-card,
-.form-section,
-.history-section,
-.budget-section,
-.checklist-section {
-
-    transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        background 0.35s ease;
-}
-
-.balance-card:hover,
-.form-section:hover,
-.history-section:hover,
-.budget-section:hover,
-.checklist-section:hover {
-
-    transform:
-        translateY(-4px);
-
-    box-shadow:
-        0 18px 40px rgba(0,0,0,0.08);
-}
-
-/* 📦 LIST ITEM ANIMATION */
-li {
-    animation:
-        listReveal 0.4s ease;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-}
-
-li:hover {
-
-    transform:
-        translateX(4px);
-
-    background:
-        rgba(59,130,246,0.03);
-}
-
-@keyframes listReveal {
-
-    from {
-        opacity: 0;
-        transform:
-            translateX(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform:
-            translateX(0);
-    }
-}
-
-/* 🔘 PREMIUM BUTTON ANIMATIONS */
-.expense-btn {
-
-    position: relative;
-    overflow: hidden;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.25s ease;
-}
-
-.expense-btn:hover {
-
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 12px 25px rgba(37,99,235,0.25);
-}
-
-.expense-btn:active {
-
-    transform:
-        scale(0.96);
-}
-
-/* ✨ SHINE EFFECT */
-.expense-btn::before {
-
-    content: '';
-
-    position: absolute;
-
-    top: 0;
-    left: -120%;
-
-    width: 100%;
-    height: 100%;
-
-    background:
-        linear-gradient(
-            120deg,
-            transparent,
-            rgba(255,255,255,0.35),
-            transparent
-        );
-
-    transition: 0.7s;
-}
-
-.expense-btn:hover::before {
-    left: 120%;
-}
-
-/* 🧊 INPUT ANIMATIONS */
-.form-section input,
-.form-section select {
-
-    transition:
-        all 0.25s ease;
-}
-
-.form-section input:focus,
-.form-section select:focus {
-
-    transform:
-        scale(1.01);
-
-    box-shadow:
-        0 10px 20px rgba(59,130,246,0.08);
-
-    border-bottom:
-        2px solid #2563eb;
-}
-
-/* 🛸 NAVIGATION ANIMATION */
-.nav-btn {
-
-    position: relative;
-
-    transition:
-        transform 0.25s ease,
-        color 0.25s ease;
-}
-
-.nav-btn:hover {
-
-    transform:
-        translateY(-2px);
-}
-
-.active-nav {
-
-    animation:
-        activePulse 2s infinite;
-}
-
-@keyframes activePulse {
-
-    0%,100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-}
-
-/* 🌈 ICON FLOAT */
-.nav-btn i {
-
-    transition:
-        transform 0.3s ease,
-        opacity 0.3s ease;
-}
-
-.nav-btn:hover i {
-
-    transform:
-        translateY(-3px)
-        scale(1.1);
-}
-
-/* 🔥 HEADER GLOW */
-.header h2 {
-
-    animation:
-        glowText 4s ease-in-out infinite;
-}
-
-@keyframes glowText {
-
-    0%,100% {
-        text-shadow:
-            0 0 0 rgba(37,99,235,0);
-    }
-
-    50% {
-        text-shadow:
-            0 0 18px rgba(37,99,235,0.25);
-    }
-}
-
-/* ✨ BALANCE CARD FLOAT */
-.balance-card {
-
-    animation:
-        floatingCard 5s ease-in-out infinite;
-}
-
-@keyframes floatingCard {
-
-    0%,100% {
-        transform:
-            translateY(0)
-            rotate(-1deg);
-    }
-
-    50% {
-        transform:
-            translateY(-4px)
-            rotate(-1deg);
-    }
-}
-
-/* 🌙 DARK MODE SMOOTH */
-body.dark-mode .balance-card,
-body.dark-mode .form-section,
-body.dark-mode .history-section {
-
-    transition:
-        background 0.4s ease,
-        box-shadow 0.4s ease;
-}
-
-/* 📊 CHART FADE */
-canvas {
-
-    animation:
-        chartFade 0.8s ease;
-}
-
-@keyframes chartFade {
-
-    from {
-        opacity: 0;
-        transform:
-            scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform:
-            scale(1);
-    }
-}
-
-/* 🔥 LOADING SKELETON ANIMATION */
-.skeleton-box {
-
-    height: 70px;
-
-    border-radius: 18px;
-
-    margin-bottom: 10px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #e2e8f0 25%,
-            #f8fafc 50%,
-            #e2e8f0 75%
-        );
-
-    background-size: 200% 100%;
-
-    animation:
-        shimmer 1.4s infinite;
-}
-
-@keyframes shimmer {
-
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-/* 💫 MICRO INTERACTIONS */
-.action-btn {
-
-    transition:
-        transform 0.2s ease,
-        opacity 0.2s ease;
-}
-
-.action-btn:hover {
-
-    transform:
-        scale(1.15)
-        rotate(5deg);
-}
-
-/* 🌊 PAGE SMOOTHNESS */
 body {
+    background: var(--bg-color); color: var(--text-main);
+    -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
 }
 
-/* ⚡ PREMIUM SCROLLBAR */
-::-webkit-scrollbar {
-    width: 8px;
+/* Headings (Poppins) */
+h1, h2, h3, h4, #app-title, #lock-title, .balance-card p {
+    font-family: 'Poppins', sans-serif !important;
+    letter-spacing: 0.5px !important;
 }
 
-::-webkit-scrollbar-thumb {
+#app-title { font-size: 26px !important; }
+#total-expense, #dudh-total-bill { font-size: 34px !important; }
 
-    background:
-        linear-gradient(
-            #60a5fa,
-            #2563eb
-        );
-
-    border-radius: 999px;
+/* --- 💧 2. LIQUID BLOB & FLOATING ANIMATIONS --- */
+.anim-premium-icon {
+    display: inline-block;
+    animation: floatParticle 3s ease-in-out infinite;
+    filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.1));
 }
 
-::-webkit-scrollbar-track {
-    background: transparent;
+@keyframes floatParticle {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
 }
+
+/* Liquid Blob Background Effect (For Modal/Cards) */
+.profile-card-anim::before {
+    content: ''; position: absolute;
+    width: 150px; height: 150px;
+    background: linear-gradient(135deg, var(--ink-blue), #c084fc);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    filter: blur(40px); opacity: 0.15;
+    top: -20px; right: -20px; z-index: -1;
+    animation: liquidBlob 8s ease-in-out infinite alternate;
+}
+
+@keyframes liquidBlob {
+    0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: scale(1); }
+    100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: scale(1.2); }
+}
+
+/* --- 🧊 3. 3D BUTTONS & RIPPLE EFFECT --- */
+.expense-btn {
+    position: relative; overflow: hidden;
+    background: var(--ink-blue); color: white;
+    border: none; border-radius: 14px;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 700 !important; font-size: 15px !important;
+    padding: 12px 20px !important; width: 100%;
+    margin-top: 15px; cursor: pointer;
+    
+    /* 3D Effect */
+    box-shadow: 0 5px 0 var(--btn-shadow), 0 10px 20px var(--shadow-color);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.expense-btn:active {
+    transform: translateY(5px); /* Button dabne ka effect */
+    box-shadow: 0 0px 0 var(--btn-shadow), 0 5px 10px var(--shadow-color);
+}
+
+/* CSS Ripple Effect Hack */
+.expense-btn::after {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; width: 0; height: 0;
+    background: rgba(255, 255, 255, 0.3); border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s;
+    opacity: 0;
+}
+.expense-btn:active::after {
+    width: 300px; height: 300px; opacity: 1; transition: 0s;
+}
+
+/* --- 🍏 4. iOS STYLE TOGGLES (Ration Checkboxes) --- */
+.ration-item input[type="checkbox"] {
+    appearance: none; -webkit-appearance: none;
+    width: 44px !important; height: 24px !important;
+    background: #cbd5e1; border-radius: 20px;
+    position: relative; cursor: pointer; outline: none;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    transition: background 0.3s ease, transform 0.2s;
+    margin-right: 12px !important; flex-shrink: 0;
+}
+
+.ration-item input[type="checkbox"]::after {
+    content: ''; position: absolute;
+    top: 2px; left: 2px; width: 20px; height: 20px;
+    background: white; border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ration-item input[type="checkbox"]:checked { background: #10b981; }
+.ration-item input[type="checkbox"]:checked::after { transform: translateX(20px); }
+
+/* --- 🦴 5. SMOOTH SKELETON LOADERS --- */
+.skeleton-box {
+    background: linear-gradient(90deg, var(--line-color) 25%, var(--paper-bg) 50%, var(--line-color) 75%);
+    background-size: 200% 100%;
+    animation: shimmerLoader 1.5s infinite linear;
+    border-radius: 12px; height: 70px; margin-bottom: 12px;
+}
+
+@keyframes shimmerLoader {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* --- 📊 6. ANIMATED CHARTS & CARDS ENTRANCE --- */
+.app-section { display: none; opacity: 0; animation: slideUp 0.4s ease forwards; }
+.active-section { display: block; }
+
+.balance-card, .form-section, .history-section, .result-card {
+    background: var(--paper-bg);
+    border-radius: 20px; padding: 20px; margin: 15px 20px;
+    box-shadow: 0 8px 25px var(--shadow-color);
+    transform: translateY(20px); opacity: 0;
+    animation: slideUpFade 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Staggered Loading Effect */
+.balance-card { animation-delay: 0.1s; }
+.form-section { animation-delay: 0.2s; }
+.history-section { animation-delay: 0.3s; }
+
+@keyframes slideUpFade {
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- 🧲 7. MAGNETIC BOTTOM NAV --- */
+.bottom-nav {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: var(--paper-bg);
+    display: flex; justify-content: space-around;
+    padding: 12px 5px 20px 5px;
+    box-shadow: 0 -5px 20px var(--shadow-color);
+    border-top-left-radius: 25px; border-top-right-radius: 25px;
+    z-index: 100;
+}
+
+.nav-btn {
+    background: none; border: none;
+    display: flex; flex-direction: column; align-items: center;
+    color: var(--text-muted); cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 5px 10px; border-radius: 15px;
+}
+
+.nav-btn i { font-size: 22px; transition: transform 0.3s; }
+.nav-btn span { font-size: 11px !important; font-weight: 700 !important; margin-top: 4px; }
+
+/* Active & Magnetic Hover State */
+.active-nav { color: var(--ink-blue); }
+.active-nav i { transform: translateY(-5px) scale(1.2); filter: drop-shadow(0 5px 5px var(--shadow-color)); }
+.nav-btn:active i { transform: scale(0.9); }
+
+/* --- 🎨 8. INPUTS, LISTS & MISC --- */
+input, select, textarea {
+    width: 100%; background: var(--line-color); color: var(--text-main);
+    border: 2px solid transparent; border-radius: 12px;
+    font-size: 15px !important; padding: 12px 14px !important;
+    margin-bottom: 12px; outline: none; transition: 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: var(--ink-blue); background: var(--paper-bg);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+label {
+    display: block; font-size: 13px !important; font-weight: 700;
+    color: var(--text-muted); margin-bottom: 6px !important;
+}
+
+ul { list-style: none; }
+li {
+    background: var(--line-color); margin-bottom: 10px; padding: 15px;
+    border-radius: 15px; display: flex; justify-content: space-between;
+    align-items: center; transition: 0.3s;
+}
+li:hover { transform: translateX(5px); }
+
+.action-btn {
+    background: var(--paper-bg); border: none; border-radius: 8px;
+    padding: 6px; cursor: pointer; margin-left: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s;
+}
+.action-btn:active { transform: scale(0.8); }
+
+.member-badge { background: #e0e7ff; color: #4f46e5; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: bold; }
+.category-badge { background: #fef3c7; color: #d97706; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: bold; }
+
+.lock-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); /* Glassmorphism */
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
