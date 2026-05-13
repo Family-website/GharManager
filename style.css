@@ -263,3 +263,17 @@ li:hover { transform: translateX(5px); }
 .lock-card { background: var(--paper-bg); border-radius: 30px; padding: 30px 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center; }
 
 @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+/* --- 🎯 CENTER ALIGNMENT FIX --- */
+.balance-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+/* EMI aur Vyaj ke icon ko properly center karne ke liye */
+.balance-card .anim-premium-icon {
+    margin: 10px auto 0 auto !important; 
+}
