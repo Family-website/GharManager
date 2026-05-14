@@ -54,6 +54,9 @@
                         <p id="smart-greeting" style="font-size: 13px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px;">Hello! ✨</p>
                         <h2 id="app-title" style="margin: 0; font-family: 'Caveat', cursive !important; font-size: 34px !important; color: var(--ink-blue); line-height: 1; transition: 0.3s;">GharManager</h2>
                         <p id="sync-status" style="font-size: 11px; color: #10b981; font-weight: 800; margin-top: 4px; transition: 0.3s;">☁️ Synced Just Now</p>
+                                               
+                                                <p id="daily-streak" style="font-size: 12px; color: #f97316; font-weight: 900; margin-top: 4px; text-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);">🔥 0 Day Streak</p>
+
                     </div>
                 </div>
             </div>
@@ -72,6 +75,22 @@
                         <span style="font-weight:bold; color:var(--text-main); font-size: 14px;">Monthly Budget: ₹<span id="budget-display">20000</span></span>
                         <button type="button" onclick="setBudget()" style="background:none; border:none; color:var(--ink-blue); cursor:pointer; font-size: 12px; font-weight:bold;">✏️ Edit</button>
                     </div>
+                    
+                                    </div>
+
+                ```
+
+**Kya karna hai:** In dono lines ke **beech mein** yeh To-Do list ka code paste kar do:
+```html
+                <div style="background: #fef3c7; border: 1.5px dashed #f59e0b; padding: 15px; border-radius: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <p style="font-size: 12px; color: #b45309; font-weight: 800; text-transform: uppercase;">📝 Pending Tasks</p>
+                        <button onclick="addToDo()" style="background: #f59e0b; color: white; border: none; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3);">+ Add</button>
+                    </div>
+                    <ul id="todo-list" style="margin: 0; padding: 0;"></ul>
+                </div>
+
+                    
                     <div style="width:100%; background:#ecf0f1; border-radius:10px; height:8px; overflow:hidden;">
                         <div id="budget-bar" style="height:100%; width:0%; background:#2ecc71; transition:width 0.5s ease;"></div>
                     </div>
@@ -79,6 +98,26 @@
 
                 <div class="form-section" style="background: rgba(34, 197, 94, 0.1); border: 2px dashed #22c55e; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
                     <div>
+                        
+                                        <div id="smart-budget-planner" style="background: var(--paper-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px var(--shadow-color); display: none;">
+                    <p style="font-size: 12px; color: var(--text-muted); font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">🧠 AI 50-30-20 Budget Rule</p>
+                    <div style="display: flex; justify-content: space-between; text-align: center; gap: 5px;">
+                        <div style="flex: 1; background: #dcfce7; padding: 8px; border-radius: 10px;">
+                            <span style="font-size: 10px; color: #166534; font-weight: bold;">Needs (50%)</span><br>
+                            <span id="rule-needs" style="font-size: 13px; font-weight: 800; color: #15803d;">₹0</span>
+                        </div>
+                        <div style="flex: 1; background: #fef3c7; padding: 8px; border-radius: 10px;">
+                            <span style="font-size: 10px; color: #b45309; font-weight: bold;">Wants (30%)</span><br>
+                            <span id="rule-wants" style="font-size: 13px; font-weight: 800; color: #b45309;">₹0</span>
+                        </div>
+                        <div style="flex: 1; background: #dbeafe; padding: 8px; border-radius: 10px;">
+                            <span style="font-size: 10px; color: #1d4ed8; font-weight: bold;">Save (20%)</span><br>
+                            <span id="rule-saves" style="font-size: 13px; font-weight: 800; color: #1d4ed8;">₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                        
                         <p style="font-size: 12px; color: #166534; font-weight: bold;">Kamai (Income)</p>
                         <h2 id="total-income-display" style="color: #15803d; font-size: 22px; font-weight: 800;">₹0</h2>
                     </div>
@@ -337,6 +376,40 @@
 
             <p id="profile-level-badge" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);">Level 1 | Beginner 🥉</p>
             
+                        <div style="background: #ecfeff; border: 1.5px solid #06b6d4; border-radius: 20px; padding: 15px; margin-bottom: 20px; text-align: left;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <span style="font-weight: 800; color: #0891b2; font-size: 13px;">🏥 Financial Health Score</span>
+                    <span id="health-score-text" style="font-weight: 900; color: #0ea5e9; font-size: 18px;">0/100</span>
+                </div>
+                <p id="health-score-msg" style="font-size: 11px; color: #0891b2; font-weight: bold; margin-bottom: 8px;">Analyzing your spending...</p>
+                <div style="width:100%; background:#cffafe; border-radius:10px; height:8px; overflow:hidden;">
+                    <div id="health-score-bar" style="height:100%; width:0%; background:#06b6d4; transition:width 1s ease;"></div>
+                    
+            <div style="background: #fdf4ff; border: 1.5px dashed #d946ef; border-radius: 20px; padding: 15px; margin-bottom: 20px; text-align: left;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <span style="font-weight: 800; color: #a21caf; font-size: 13px;">🎯 Target / Dream (Goal)</span>
+                    <button onclick="setGoal()" style="background: #d946ef; color: white; border: none; padding: 4px 10px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer;">Set Goal</button>
+                </div>
+                <p id="goal-name" style="font-size: 14px; font-weight: bold; color: #701a75;">No Goal Set</p>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #a21caf; margin-top: 8px;">
+                    <span>Saved: ₹<span id="goal-saved">0</span></span>
+                    <span>Target: ₹<span id="goal-target">0</span></span>
+                </div>
+                <div style="width:100%; background:#f0abfc; border-radius:10px; height:6px; overflow:hidden; margin-top: 4px;">
+                    <div id="goal-bar" style="height:100%; width:0%; background:#a21caf; transition:width 0.5s;"></div>
+                </div>
+            </div>
+
+            <div style="background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 20px; padding: 15px; margin-bottom: 20px; text-align: left;">
+                <p style="font-size: 12px; color: #b45309; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">🏆 Top Spenders (Is Mahine)</p>
+                <ul id="leaderboard-list" style="margin: 0; padding: 0; list-style: none;"></ul>
+            </div>
+
+                    
+                </div>
+            </div>
+
+            
             <div style="background: #fdf4ff; border: 1.5px solid #d946ef; border-radius: 20px; padding: 15px; margin-bottom: 20px; text-align: left;">
                 <p style="font-size: 12px; color: #a21caf; font-weight: 800; margin-bottom: 8px; text-transform: uppercase;">🏆 30-Day Savings Challenge</p>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
@@ -354,10 +427,18 @@
                     <span style="font-weight: 700; color: var(--text-main); font-size: 13px;">💰 Total Kharcha:</span>
                     <span id="profile-total-expense" style="font-weight: 800; color: var(--ink-red); font-size: 14px;">₹0</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
                     <span style="font-weight: 700; color: var(--text-main); font-size: 13px;">🥛 Dudh Bill:</span>
                     <span id="profile-total-dudh" style="font-weight: 800; color: var(--ink-blue); font-size: 14px;">₹0</span>
                 </div>
+                
+                                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 2px dashed #10b981;">
+                    <span style="font-weight: 800; color: #047857; font-size: 14px;">💎 Net Worth (Taqat):</span>
+                    <span id="profile-net-worth" style="font-weight: 800; color: #10b981; font-size: 16px;">₹0</span>
+                </div>
+
+                
+                
             </div>
 
             <div class="checklist-section" style="background: var(--line-color); border-radius: 20px; padding: 15px; margin-bottom: 20px;">
@@ -372,9 +453,12 @@
             <div style="background: var(--line-color); border-radius: 20px; padding: 15px; margin-bottom: 20px;">
                 <p style="font-size: 12px; color: #64748b; font-weight: 800; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: left;">💾 Data & Reports</p>
                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <button type="button" onclick="exportToPDF()" style="flex:1; padding:10px; background:white; color:#e74c3c; border:1.5px solid #e74c3c; border-radius:12px; cursor:pointer; font-weight:bold; font-size:13px;">📄 Save PDF</button>
-                    <button type="button" onclick="shareReport()" style="flex:1; padding:10px; background:#25D366; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold; font-size:13px;">📤 Share</button>
+                                    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <button type="button" onclick="exportToPDF()" style="flex:1; padding:10px; background:white; color:#e74c3c; border:1.5px solid #e74c3c; border-radius:12px; cursor:pointer; font-weight:bold; font-size:12px;">📄 PDF</button>
+                    <button type="button" onclick="exportToExcel()" style="flex:1; padding:10px; background:white; color:#10b981; border:1.5px solid #10b981; border-radius:12px; cursor:pointer; font-weight:bold; font-size:12px;">📊 Excel</button>
+                    <button type="button" onclick="shareReport()" style="flex:1; padding:10px; background:#25D366; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold; font-size:12px;">📤 Share</button>
                 </div>
+
                 <div style="display: flex; gap: 10px;">
                     <button type="button" onclick="backupData()" style="flex: 1; padding: 10px; background: #2c3e50; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size:13px;">☁️ Backup</button>
                     <label style="flex: 1; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; font-size:13px; margin: 0;">
