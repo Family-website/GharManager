@@ -623,7 +623,7 @@ function exportToExcel() {
 
 // 🛡️ 11. THE REAL GEMINI AI API (BUG FIX 4: PRO MODEL & CHAT UI)
 async function sendToRealAI() {
-    const GEMINI_API_KEY = "AlzaSyDjMUbcpxt4R6Gcigi7w7ykbN- Fx2QCKw4"; 
+    const GEMINI_API_KEY = "AlzaSyDjMUbcpxt4R6Gclgi7w7ykbN-Fx2QCKw4"; 
 
     let inputEl = document.getElementById('ai-user-input');
     let chatBox = document.getElementById('ai-chat-box');
