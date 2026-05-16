@@ -702,7 +702,7 @@ async function sendToRealAI() {
     // 🔥 YAHAN APNI ASLI GEMINI API KEY DAALO 🔥
     const GEMINI_API_KEY = "YAHAN_APNI_API_KEY_PASTE_KARO"; 
 
-    if(GEMINI_API_KEY === "YAHAN_APNI_API_KEY_PASTE_KARO" || !GEMINI_API_KEY) { 
+    if(GEMINI_API_KEY === "AIzaSyC5VaHXD9zC5Zpf_vcsYdaZq6ehJOcaIfk" || !GEMINI_API_KEY) { 
         Swal.fire('API Key Missing', 'Bhai, script.js me line 286 (GEMINI_API_KEY) par apni asli key paste karo!', 'warning'); 
         return; 
     }
