@@ -2609,7 +2609,7 @@ function setupPin() {
         
         /* PIN screen backdrop blur */
         #pin-screen { background: rgba(0,0,0,0.75) !important; backdrop-filter: blur(24px) !important; }
-        
+         
         /* Smooth section transitions */
         .active-section > * { animation: fadeInUp 0.3s ease both; }
         .active-section > *:nth-child(2) { animation-delay: 0.04s; }
