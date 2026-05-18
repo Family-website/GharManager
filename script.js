@@ -783,7 +783,7 @@ function exportToExcel() {
 
 // 🛡️ 11. THE REAL GEMINI AI API (UPGRADED v2 - SMARTER CONTEXT)
 async function sendToRealAI() {
-    const GEMINI_API_KEY = "AIzaSyC5VaHXD9zC5Zpf_vcsYdaZq6ehJOcaIfk"; 
+    const GEMINI_API_KEY = ""; 
 
     let inputEl = document.getElementById('ai-user-input');
     let chatBox = document.getElementById('ai-chat-box');
