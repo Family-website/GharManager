@@ -2098,7 +2098,7 @@ function dismissInstallBanner() {
 // ── 3. PUSH NOTIFICATIONS ───────────────────────────────────
 // VAPID public key — Replace with your own from https://web-push-codelab.glitch.me/
 // OR use Firebase Cloud Messaging (FCM) key from Firebase Console
-const VAPID_PUBLIC_KEY = 'YOUR_VAPID_PUBLIC_KEY_HERE';
+const VAPID_PUBLIC_KEY = 'BDxa__BGgwxRftUv2PUphCJG06hDRfPGdgubPlbL6ZOK5fGqL_C-KOPYxxQgo3m5mW5xYyIkN8t98JplvWfZx6U';
 
 async function requestPushPermission() {
     if (!('Notification' in window)) {
