@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GharManager Pro - Fixed</title>
+    <link rel="icon" href="./icon.png">
+    <link rel="manifest" href="./manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css?v=5.0">
+    <style>
+        body { margin: 0; padding: 20px; background: #f5f5f5; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #007AFF; text-align: center; margin-bottom: 20px; }
+        .btn { width: 100%; padding: 15px; background: #007AFF; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: 0.3s; }
+        .btn:hover { background: #0055CC; transform: translateY(-2px); }
+        .info { background: #f0f9ff; padding: 15px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #007AFF; }
+        .info p { margin: 8px 0; color: #333; font-size: 14px; }
+        .error { background: #fef2f2; color: #dc2626; padding: 15px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 GharManager Pro</h1>
+        
+        <div class="info">
+            <p><strong>✅ App Loading...</strong></p>
+            <p>अगर यह page दिख रहा है, तो Firebase initialization हो रही है।</p>
+        </div>
+
+        <button class="btn" onclick="testApp()">Test App (Open DevTools)</button>
+        <button class="btn" onclick="goToLive()" style="background: #10b981;">Go to Live Version →</button>
+        
+        <div id="status" class="info" style="display:none;"></div>
+        <div id="error" class="error" style="display:none;"></div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        function testApp() {
+            console.log('🧪 Testing GharManager...');
+            
+            // Test Firebase Config
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCej-idbSFHr3WVokG3sdpmdWPWgz5PkQk",
+                    authDomain: "super-family-appp.firebaseapp.com",
+                    projectId: "super-family-appp",
+                    storageBucket: "super-family-appp.appspot.com",
+                    messagingSenderId: "551147138816",
+                    appId: "1:551147138816:web:7f3c9b5c8e2a1d4f5e6g7h"
+                };
+                
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                showStatus('✅ Firebase Initialized Successfully!');
+                console.log('Firebase initialized');
+                
+                // Check localStorage
+                console.log('Local Storage:', localStorage.getItem('familyExpenses'));
+                
+            } catch(err) {
+                showError('❌ Error: ' + err.message);
+                console.error('Error:', err);
+            }
+        }
+
+        function showStatus(msg) {
+            const el = document.getElementById('status');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('error');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function goToLive() {
+            window.location.href = './index.html';
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            console.log('Page loaded, testing Firebase...');
+            setTimeout(testApp, 500);
+        });
+    </script>
+</body>
+</html>
