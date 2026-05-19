@@ -1,20 +1,27 @@
 {
   "id": "/gharmanager/",
-  "name": "GharManager Pro",
+  "name": "GharManager",
   "short_name": "GharManager",
   "description": "GharManager is a complete home and family finance management app. Track expenses, manage budgets, savings jars, loans, and family goals — all in one place.",
   "start_url": "./index.html?source=pwa",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#f8fafc",
   "theme_color": "#2563eb",
   "lang": "hi",
   "dir": "ltr",
   "orientation": "portrait-primary",
-  "categories": ["finance", "productivity", "utilities"],
+  "categories": [
+    "finance",
+    "productivity",
+    "utilities"
+  ],
   "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e6",
-
   "icons": [
     {
       "src": "./icon.png",
@@ -76,7 +83,6 @@
       "purpose": "maskable"
     }
   ],
-
   "screenshots": [
     {
       "src": "./screenshots/screen1.png",
@@ -100,31 +106,44 @@
       "label": "GharManager Desktop View"
     }
   ],
-
   "shortcuts": [
     {
       "name": "Add Expense",
       "short_name": "Add",
       "description": "Quickly add a new expense",
       "url": "./index.html?shortcut=add-expense",
-      "icons": [{ "src": "./icon.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "./icon.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "View Budget",
       "short_name": "Budget",
       "description": "Check your monthly budget",
       "url": "./index.html?shortcut=budget",
-      "icons": [{ "src": "./icon.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "./icon.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Savings Jars",
       "short_name": "Savings",
       "description": "View your savings jars",
       "url": "./index.html?shortcut=savings",
-      "icons": [{ "src": "./icon.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "./icon.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
-
   "share_target": {
     "action": "./index.html",
     "method": "GET",
@@ -134,18 +153,14 @@
       "url": "url"
     }
   },
-
   "protocol_handlers": [
     {
       "protocol": "web+gharmanager",
       "url": "./index.html?protocol=%s"
     }
   ],
-
   "edge_side_panel": {
     "preferred_width": 400
   },
-
-  "related_applications": [],
   "prefer_related_applications": false
 }
