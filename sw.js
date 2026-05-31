@@ -3,7 +3,7 @@
 // PWABuilder 100% Score ke liye sab kuch included hai
 // ============================================================
 
-const CACHE_NAME = 'gharmanager-4';
+const CACHE_NAME = 'gharmanager-5';
 const OFFLINE_URL = './offline.html';
 
 const STATIC_ASSETS = [
