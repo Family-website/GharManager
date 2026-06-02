@@ -746,21 +746,62 @@ function updateHisabUI() {
         emptyDiv.innerHTML = `<div style="text-align:center; padding: 40px 10px; opacity:0.7; background:var(--line-color); border-radius:15px;"><div style="font-size:50px; margin-bottom:10px;">🤷‍♂️</div><h3 style="color:var(--text-main); font-size:18px;">Koi Hisaab Nahi!</h3><p style="color:var(--text-muted); font-size:13px; font-weight:bold;">Is filter ya mahine mein koi kharcha nahi mila 😊</p></div>`;
         fragment.appendChild(emptyDiv);
     } else {
+        // iOS Grouped Table View — date groups with hairline separators
+        const CAT_DARK = { Ration:'#14532D', Medical:'#7F1D1D', Petrol:'#78350F', Bills:'#1E3A8A', Food:'#7C2D12', Shopping:'#831843', Travel:'#164E63', Other:'#1E293B' };
         let currentDateHeader = "";
+        let currentGroupCard = null;
+        let groupItemCount = 0;
+        const wrapDiv = document.createElement('div');
+        wrapDiv.className = 'hx-list-area-new';
+
         filteredExpenses.forEach((item) => {
-            if(isDateSorted && item.date !== currentDateHeader) {
-                currentDateHeader = item.date; const parts = currentDateHeader.split('-'); const dateObj = new Date(parts[0], parts[1] - 1, parts[2]); const showDate = `${dateObj.getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][dateObj.getMonth()]}`;
-                const dateHeader = document.createElement('div'); dateHeader.className = 'date-header'; dateHeader.style.fontWeight = 'bold'; dateHeader.style.color = 'var(--ink-blue)'; dateHeader.style.margin = '10px 0 5px 0'; dateHeader.innerText = `📅 ${showDate}`; fragment.appendChild(dateHeader);
+            if (isDateSorted && item.date !== currentDateHeader) {
+                currentDateHeader = item.date;
+                groupItemCount = 0;
+                const parts = currentDateHeader.split('-');
+                const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                const showDate = `${dateObj.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dateObj.getMonth()]}`;
+                // Date header
+                const dHdr = document.createElement('div');
+                dHdr.className = 'hx-date-hdr-new';
+                dHdr.innerHTML = `<span class="hx-date-dot-new"></span>${showDate}`;
+                wrapDiv.appendChild(dHdr);
+                // Group card
+                currentGroupCard = document.createElement('div');
+                currentGroupCard.className = 'hx-exp-group-card';
+                wrapDiv.appendChild(currentGroupCard);
             }
-            const originalIndex = familyExpenses.indexOf(item); const li = document.createElement('li');
-            let receiptHTML = item.receipt ? `<img src="${item.receipt}" class="receipt-thumb" style="width:30px; height:30px; border-radius:8px; object-fit:cover; margin-right:5px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.12);" onclick="Swal.fire({imageUrl: '${item.receipt}', imageWidth: '100%'})">` : '';
+            const originalIndex = familyExpenses.indexOf(item);
             const catMeta = getCategoryMeta(item.category);
-            li.setAttribute('ondblclick', `editExpense(${originalIndex})`); li.style.cursor = 'pointer';
-            li.style.borderLeft = `4px solid ${catMeta.color}`;
-            li.style.transition = 'transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s ease';
-            li.innerHTML = `<div class="list-left" style="pointer-events:none;"><div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;"><span style="background:${catMeta.bg}; color:${catMeta.color}; font-size:15px; width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:1px solid ${catMeta.border||catMeta.bg};">${catMeta.icon}</span><strong style="font-size:15px; line-height:1.25; color:var(--text-main); font-family:'DM Sans',sans-serif; font-weight:700;">${item.description}</strong></div><div style="display:flex; align-items:center; flex-wrap:wrap; gap:5px; padding-left:40px;"><span class="member-badge">👤 ${item.member}</span><span class="category-badge" style="background:${catMeta.bg}; color:${catMeta.color}; border:1px solid ${catMeta.border||catMeta.bg};">${item.category||'Other'}</span>${item.date ? `<span style="font-size:10px;color:var(--text-faint);font-weight:600;">📅 ${item.date.slice(8)}</span>` : ''}</div></div><div class="list-right">${receiptHTML}<span style="font-weight:900; color:${catMeta.color}; font-size:17px; margin:0 5px; font-family:'Sora',sans-serif; letter-spacing:-0.5px;">₹${item.amount}</span><button class="action-btn delete" onclick="event.stopPropagation(); deleteExpense(${originalIndex})" style="width:30px;height:30px;font-size:14px;">🗑️</button></div>`;
-            fragment.appendChild(li);
+            const darkColor = CAT_DARK[item.category] || '#1E293B';
+            const thumbHTML = item.receipt ? `<img src="${item.receipt}" style="width:28px;height:28px;border-radius:7px;object-fit:cover;cursor:pointer;flex-shrink:0;" onclick="event.stopPropagation();Swal.fire({imageUrl:'${item.receipt}',imageWidth:'100%'})">` : '';
+
+            // Separator between items
+            if (groupItemCount > 0 && currentGroupCard) {
+                const sep = document.createElement('div');
+                sep.className = 'hx-exp-sep';
+                currentGroupCard.appendChild(sep);
+            }
+            groupItemCount++;
+
+            const row = document.createElement('div');
+            row.className = 'hx-exp-row';
+            row.setAttribute('ondblclick', `editExpense(${originalIndex})`);
+            row.innerHTML = `
+                <div class="hx-exp-icon" style="background:${catMeta.bg};">${catMeta.icon}</div>
+                <div class="hx-exp-body">
+                    <div class="hx-exp-name">${item.description}</div>
+                    <div class="hx-exp-meta">
+                        <span class="hx-exp-pill" style="background:${catMeta.bg};color:${darkColor};">${item.category||'Other'}</span>
+                        <span class="hx-exp-who">· ${item.member}</span>
+                        ${thumbHTML}
+                    </div>
+                </div>
+                <div class="hx-exp-amt" style="color:${catMeta.color};">₹${item.amount}</div>
+                <span class="hx-exp-arr" onclick="event.stopPropagation();deleteExpense(${originalIndex})" title="Delete">›</span>`;
+            (currentGroupCard || wrapDiv).appendChild(row);
         });
+        fragment.appendChild(wrapDiv);
     }
     
     list.appendChild(fragment); 
@@ -906,6 +947,10 @@ function updateRationUI() {
     const list = document.getElementById('ration-list');
     if (!list) return;
     list.innerHTML = '';
+    // Reset the parent rt-item-group wrapper too
+    const groupWrapper = list.closest('.rt-item-group');
+    if (groupWrapper) groupWrapper.innerHTML = '';
+    if (groupWrapper) groupWrapper.appendChild(list);
 
     const searchVal = (document.getElementById('ration-search')?.value || '').toLowerCase();
     const sortBy = document.getElementById('ration-sort')?.value || 'date';
@@ -952,10 +997,13 @@ function updateRationUI() {
     const runWrap = document.getElementById('ration-running-total');
     const runAmt  = document.getElementById('ration-running-amount');
     const spentAmt = document.getElementById('ration-spent-amount');
+    const pendingCount = document.getElementById('ration-pending-count');
     if (total > 0 && runWrap) {
-        runWrap.style.display = 'block';
-        if (runAmt)  runAmt.textContent  = '\u20B9' + pendingCost.toLocaleString('en-IN');
-        if (spentAmt) spentAmt.textContent = '\u20B9' + spentCost.toLocaleString('en-IN');
+        runWrap.style.display = 'flex';
+        if (runAmt)  runAmt.textContent  = '₹' + pendingCost.toLocaleString('en-IN');
+        if (spentAmt) spentAmt.textContent = '₹' + spentCost.toLocaleString('en-IN');
+        const pendingNum = rationItems.filter(i => !i.bought).length;
+        if (pendingCount) pendingCount.textContent = pendingNum + ' items remaining';
     } else if (runWrap) { runWrap.style.display = 'none'; }
 
     if (items.length === 0) {
@@ -973,13 +1021,42 @@ function renderRationItem(list, item, index) {
     const priceHistory = item.priceHistory || [];
     const prevPrice = priceHistory.length > 1 ? priceHistory[priceHistory.length - 2].price : null;
     const priceTrend = prevPrice !== null
-        ? (item.amount > prevPrice ? `🔴 +\u20B9${item.amount - prevPrice}` : item.amount < prevPrice ? `🟢 -\u20B9${prevPrice - item.amount}` : '')
+        ? (item.amount > prevPrice ? `🔴 +₹${item.amount - prevPrice}` : item.amount < prevPrice ? `🟢 -₹${prevPrice - item.amount}` : '')
         : '';
 
-    const li = document.createElement('li');
-    li.style.cssText = `background:${item.bought ? 'var(--line-color)' : item.lowStock ? '#fef2f2' : 'var(--paper-bg)'};border:1.5px solid ${item.lowStock ? '#fecaca' : item.bought ? 'transparent' : cc.border};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:10px;transition:all 0.2s;opacity:${item.bought ? '0.65' : '1'};box-shadow:${item.bought ? 'none' : '0 2px 8px rgba(0,0,0,0.05)'};`;
-    li.innerHTML = `<div onclick="toggleRation(${index})" style="cursor:pointer;flex-shrink:0;"><div style="width:24px;height:24px;border-radius:8px;border:2px solid ${item.bought ? '#10b981' : '#c084fc'};background:${item.bought ? '#10b981' : 'transparent'};display:flex;align-items:center;justify-content:center;transition:all 0.2s;">${item.bought ? '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"3\" width=\"14\" height=\"14\"><polyline points=\"20 6 9 17 4 12\"/></svg>' : ''}</div></div><div onclick="toggleRation(${index})" style="flex:1;cursor:pointer;min-width:0;"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><span style="font-size:13px;font-weight:900;color:var(--text-main);text-decoration:${item.bought ? 'line-through' : 'none'};">${item.name}</span>${qty ? `<span style="font-size:10px;font-weight:800;color:${cc.text};background:${cc.bg};padding:2px 7px;border-radius:6px;">${qty}</span>` : ''}${item.lowStock ? '<span style="font-size:10px;font-weight:800;color:#dc2626;background:#fee2e2;padding:2px 7px;border-radius:6px;">⚠️ Low Stock</span>' : ''}</div><div style="display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap;">${item.amount > 0 ? `<span style="font-size:12px;font-weight:900;color:#7c3aed;">\u20B9${item.amount}</span>` : ''}${priceTrend ? `<span style="font-size:10px;font-weight:700;">${priceTrend}</span>` : ''}<span style="font-size:10px;font-weight:700;color:${cc.text};background:${cc.bg};padding:1px 6px;border-radius:5px;">${cc.icon} ${cat}</span>${item.note ? `<span style="font-size:10px;color:var(--text-muted);font-weight:600;">• ${item.note}</span>` : ''}</div></div><div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;"><button type="button" onclick="editRationPrice(${index})" style="font-size:10px;font-weight:800;padding:4px 8px;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:7px;cursor:pointer;white-space:nowrap;">\u20B9 Edit</button><div style="display:flex;gap:4px;"><button type="button" onclick="toggleLowStock(${index})" title="Low Stock Toggle" style="font-size:13px;padding:4px 7px;background:${item.lowStock ? '#fee2e2' : 'var(--line-color)'};border:none;border-radius:7px;cursor:pointer;">⚠️</button><button type="button" onclick="deleteRation(${index})" style="font-size:13px;padding:4px 7px;background:#fef2f2;border:none;border-radius:7px;cursor:pointer;">🗑️</button></div></div>`;
-    list.appendChild(li);
+    // Separator between rows (not before first)
+    if (list.children.length > 0) {
+        const sep = document.createElement('div');
+        sep.className = 'rt-item-sep';
+        list.appendChild(sep);
+    }
+
+    const row = document.createElement('div');
+    row.className = `rt-item-row${item.bought ? ' rt-bought' : ''}${item.lowStock ? ' rt-low-stock' : ''}`;
+
+    const checkSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+    row.innerHTML = `
+        <div class="rt-chk-new ${item.bought ? 'rt-chk-done' : ''}" onclick="event.stopPropagation();toggleRation(${index})">${item.bought ? checkSVG : ''}</div>
+        <div class="rt-item-body" onclick="toggleRation(${index})">
+            <div class="rt-item-name">${item.name}</div>
+            <div class="rt-item-tags">
+                ${qty ? `<span class="rt-qty-tag" style="background:${cc.bg};color:${cc.text};">${qty}</span>` : ''}
+                <span class="rt-cat-tag">${cc.icon} ${cat}</span>
+                ${item.lowStock ? '<span class="rt-low-tag-new">⚠️ Low</span>' : ''}
+                ${item.note ? `<span class="rt-note-txt">· ${item.note}</span>` : ''}
+            </div>
+        </div>
+        <div class="rt-item-right">
+            ${item.amount > 0 ? `<span class="rt-item-price">₹${item.amount}</span>` : ''}
+            ${priceTrend ? `<span class="${priceTrend.includes('🔴') ? 'rt-trend-up' : 'rt-trend-down'}">${priceTrend}</span>` : ''}
+            <div class="rt-item-acts">
+                <button type="button" class="rt-act-btn rt-act-edit" onclick="editRationPrice(${index})" title="Edit Price">₹</button>
+                <button type="button" class="rt-act-btn rt-act-low"  onclick="toggleLowStock(${index})" title="Low Stock">⚠️</button>
+                <button type="button" class="rt-act-btn rt-act-del"  onclick="deleteRation(${index})"   title="Delete">🗑️</button>
+            </div>
+        </div>`;
+    list.appendChild(row);
 }
 
 function openRationAddForm() {

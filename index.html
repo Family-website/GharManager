@@ -16,7 +16,7 @@
     
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="stylesheet" href="./style.css?v=v6">
+    <link rel="stylesheet" href="./style.css?v=v5">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -557,37 +557,26 @@
             
             <div id="section-hisab" class="app-section active-section">
 
-                <!-- ① HEADER: Psychology-First Dual Stat Cards -->
-                <!-- Motivational greeting strip -->
-                <div style="padding:14px 14px 0;display:flex;align-items:center;justify-content:space-between;">
-                    <div>
-                        <p id="smart-greeting-display" style="font-size:13px;font-weight:700;color:var(--text-2);margin:0 0 2px;">Namaste! 🙏</p>
-                        <p style="font-size:10px;font-weight:600;color:var(--text-3);margin:0;" id="month-mood-text">Aaj ka hisaab shuru karein...</p>
-                    </div>
-                    <div id="streak-display" style="display:none;">
-                        <div class="streak-badge">🔥 <span id="streak-count">0</span> Din</div>
-                    </div>
-                </div>
-
+                <!-- ① HEADER: Dual Stat Cards -->
                 <div class="hx-header">
-                    <!-- KHARCHA CARD — reframed as "aaj tak" not total -->
                     <div class="hx-stat-card hx-kharcha">
-                        <p class="hx-stat-label translatable">💸 Mahine ka Kharcha</p>
-                        <h1 class="hx-stat-val" id="total-expense" style="font-size:28px;">₹0</h1>
+                        <p class="hx-stat-label translatable">Is Mahine Kharcha</p>
+                        <h1 class="hx-stat-val" id="total-expense">₹0</h1>
                         <p class="hx-stat-sub" id="month-comparison">📊 Calculating...</p>
+                        <!-- mini bar indicator -->
                         <div style="margin-top:10px;height:3px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;position:relative;z-index:1;">
                             <div id="hx-mini-bar" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(255,255,255,0.5),rgba(255,255,255,0.9));border-radius:99px;transition:width 0.8s cubic-bezier(0.22,1,0.36,1);"></div>
                         </div>
                     </div>
-                    <!-- BACHAT CARD — the hero number (positive psychology) -->
                     <div class="hx-stat-card hx-bachat">
-                        <p class="hx-stat-label" style="color:rgba(255,255,255,0.8);">✅ Abhi Bacha Hai</p>
-                        <h1 class="hx-stat-val" id="hx-budget-left" style="font-size:28px;">₹0</h1>
+                        <p class="hx-stat-label">💚 Budget Bacha</p>
+                        <h1 class="hx-stat-val" id="hx-budget-left">₹0</h1>
                         <p class="hx-stat-sub">Budget: ₹<span id="budget-display">20000</span></p>
+                        <!-- mini savings indicator -->
                         <div style="margin-top:10px;display:flex;gap:3px;position:relative;z-index:1;">
-                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.6);border-radius:99px;"></div>
+                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.55);border-radius:99px;"></div>
                             <div style="height:3px;flex:1;background:rgba(255,255,255,0.35);border-radius:99px;"></div>
-                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.18);border-radius:99px;"></div>
+                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.2);border-radius:99px;"></div>
                         </div>
                     </div>
                 </div>
@@ -722,50 +711,42 @@
                 </div>
 
                 <!-- ⑤ HISTORY SECTION -->
-                <div class="history-section hx-history">
-                    <div class="hx-history-hdr">
-                        <h3 class="translatable">📋 Hisaab & Reports</h3>
+                <div class="hx-history">
+                    <div class="hx-history-hdr" style="padding: 0 14px; margin-bottom: 10px;">
+                        <h3 class="translatable" style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text-main);margin:0;">📋 Hisaab & Reports</h3>
                         <input type="month" id="month-filter" class="hx-month-input" onchange="renderHistoryWithSkeleton()">
                     </div>
-                    <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px; font-style:italic;">✌️ Double-tap karke edit karein</p>
-                    <ul id="history-list"></ul>
+                    <p style="font-size:11px; color:var(--text-muted); margin:0 14px 8px; font-style:italic; font-weight:500;">✌️ Double-tap karke edit karein</p>
+                    <ul id="history-list" style="list-style:none;padding:0;margin:0;"></ul>
                 </div>
 
             </div>
 
             <div id="section-tools" class="app-section">
-                <!-- TOOLS HEADER — Psychology-First Dashboard Hero -->
-                <div class="tools-hero">
-                    <p style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;position:relative;z-index:1;">Smart Tools & Analytics</p>
-                    <h2 style="font-size:28px;font-weight:700;color:white;margin:0;font-family:'Caveat',cursive;position:relative;z-index:1;letter-spacing:0.5px;">Finance Dashboard</h2>
-                    <!-- Financial health indicator -->
-                    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;position:relative;z-index:1;">
-                        <div style="flex:1;height:6px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;">
-                            <div id="tools-health-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#34D399,#F59E0B,#EF4444);border-radius:99px;transition:width 0.8s;"></div>
-                        </div>
-                        <span id="tools-health-label" style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.7);white-space:nowrap;">Financial Health</span>
-                    </div>
+                <!-- TOOLS HEADER -->
+                <div style="background:linear-gradient(135deg,#0B1535 0%,#162040 55%,#1E2D52 100%);padding:22px 20px 18px;color:white;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-30px;right:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(240,165,0,0.18),transparent 70%);border-radius:50%;"></div>
+                    <div style="position:absolute;bottom:-40px;left:10px;width:100px;height:100px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);border-radius:50%;"></div>
+                    <p style="font-size:10px;color:rgba(255,255,255,0.45);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;position:relative;z-index:1;font-family:'DM Sans',sans-serif;">Smart Tools & Analytics</p>
+                    <h2 style="font-size:30px;font-weight:700;color:white;margin:0;font-family:'Caveat',cursive;position:relative;z-index:1;letter-spacing:0.5px;">Finance Dashboard</h2>
                 </div>
 
-                <!-- ① INCOME · KHARCHA · BACHAT ROW — Psychology: Savings First! -->
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:14px 14px 0;">
-                    <!-- BACHAT — shown first (positive framing) -->
-                    <div style="background:linear-gradient(145deg,#065F46,#10B981); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(16,185,129,0.28);">
-                        <p style="font-size:8px; color:rgba(255,255,255,0.8); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">💚 Bachat</p>
-                        <h3 id="tools-bachat" style="font-size:15px; color:white; font-weight:900; margin:0; font-family:'Sora',sans-serif;">₹0</h3>
-                        <p id="tools-bachat-pct" style="font-size:9px; color:rgba(255,255,255,0.7); margin-top:4px; font-weight:700;">0% bachat dar</p>
+                <!-- ① INCOME · KHARCHA · BACHAT ROW -->
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:15px 15px 0;">
+                    <div style="background:linear-gradient(135deg,#dcfce7,#bbf7d0); border-radius:16px; padding:12px; border:1px solid #86efac;">
+                        <p style="font-size:9px; color:#166534; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Income</p>
+                        <h3 id="tools-income" style="font-size:16px; color:#15803d; font-weight:900; margin:0;">₹0</h3>
+                        <button onclick="setIncome()" style="margin-top:6px; background:#16a34a; color:white; border:none; border-radius:8px; padding:4px 8px; font-size:10px; font-weight:800; cursor:pointer; width:100%;">+ Edit</button>
                     </div>
-                    <!-- INCOME -->
-                    <div style="background:linear-gradient(145deg,#1E3A8A,#2563EB); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(37,99,235,0.28);">
-                        <p style="font-size:8px; color:rgba(255,255,255,0.8); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">💰 Aamdani</p>
-                        <h3 id="tools-income" style="font-size:15px; color:white; font-weight:900; margin:0; font-family:'Sora',sans-serif;">₹0</h3>
-                        <button onclick="setIncome()" style="margin-top:4px; background:rgba(255,255,255,0.18); color:white; border:none; border-radius:8px; padding:4px 8px; font-size:9px; font-weight:800; cursor:pointer; width:100%;">+ Set</button>
+                    <div style="background:linear-gradient(135deg,#fee2e2,#fecaca); border-radius:16px; padding:12px; border:1px solid #fca5a5;">
+                        <p style="font-size:9px; color:#b91c1c; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Kharcha</p>
+                        <h3 id="tools-kharcha" style="font-size:16px; color:#dc2626; font-weight:900; margin:0;">₹0</h3>
+                        <p style="font-size:9px; color:#ef4444; margin-top:6px; font-weight:700;">This month</p>
                     </div>
-                    <!-- KHARCHA — shown last (de-emphasize expense) -->
-                    <div style="background:linear-gradient(145deg,#7F1D1D,#EF4444); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(239,68,68,0.28);">
-                        <p style="font-size:8px; color:rgba(255,255,255,0.8); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">💸 Kharcha</p>
-                        <h3 id="tools-kharcha" style="font-size:15px; color:white; font-weight:900; margin:0; font-family:'Sora',sans-serif;">₹0</h3>
-                        <p style="font-size:9px; color:rgba(255,255,255,0.7); margin-top:4px; font-weight:700;">Is mahine</p>
+                    <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe); border-radius:16px; padding:12px; border:1px solid #93c5fd;">
+                        <p style="font-size:9px; color:#1d4ed8; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Bachat</p>
+                        <h3 id="tools-bachat" style="font-size:16px; color:#1e40af; font-weight:900; margin:0;">₹0</h3>
+                        <p id="tools-bachat-pct" style="font-size:9px; color:#3b82f6; margin-top:6px; font-weight:700;">0% rate</p>
                     </div>
                 </div>
 
@@ -995,15 +976,17 @@
                             <button type="button" onclick="exportRationList()" style="font-size:10px;font-weight:800;padding:5px 10px;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:8px;cursor:pointer;">📤 Share</button>
                         </div>
                     </div>
-                    <ul id="ration-list" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;"></ul>
-                    <div id="ration-running-total" style="display:none;margin-top:12px;padding:12px 16px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:14px;border:1px solid #ddd6fe;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:13px;font-weight:800;color:#6d28d9;">🛒 Running Total (Pending)</span>
-                            <span id="ration-running-amount" style="font-size:18px;font-weight:900;color:#7c3aed;">₹0</span>
+                    <div class="rt-item-group">
+                    <ul id="ration-list" style="list-style:none;padding:0;margin:0;display:contents;"></ul>
+                    </div>
+                    <div id="ration-running-total" style="display:none;" class="rt-running-total-new">
+                        <div>
+                            <div class="rt-total-lbl">🛒 Baaki (Pending)</div>
+                            <div class="rt-total-sub" id="ration-pending-count">0 items remaining</div>
                         </div>
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
-                            <span style="font-size:11px;font-weight:700;color:#8b5cf6;">Kharida gaya</span>
-                            <span id="ration-spent-amount" style="font-size:13px;font-weight:900;color:#10b981;">₹0</span>
+                        <div>
+                            <div class="rt-total-val" id="ration-running-amount">₹0</div>
+                            <div style="font-size:10px;font-weight:700;color:#10b981;text-align:right;margin-top:2px;">✓ <span id="ration-spent-amount">₹0</span> kharida</div>
                         </div>
                     </div>
                 </div>
@@ -1338,761 +1321,455 @@
 </script>
 <script src="./script.js?v=ai_fix_final"></script>
 
-
     <!-- ══════════════════════════════════════════
-         🔥 UPGRADED: SMART KHARCHA ADD SYSTEM
+         💚 ADD EXPENSE BOTTOM SHEET — Voice + Manual
          ══════════════════════════════════════════ -->
-    <div id="add-expense-sheet" onclick="if(event.target===this)closeAddSheet()" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0);transition:background 0.35s;">
-
-      <!-- MAIN CARD -->
-      <div id="add-sheet-card" style="
-        position:relative;width:94%;max-width:430px;
-        background:var(--paper-bg,#fff);
-        border-radius:32px;
-        box-shadow:0 32px 80px rgba(0,0,0,0.28),0 8px 24px rgba(0,0,0,0.1);
-        padding:0;max-height:92dvh;overflow:hidden;
-        opacity:0;transform:scale(0.86) translateY(20px);
-        transition:opacity 0.35s cubic-bezier(0.34,1.56,0.64,1),transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-        display:flex;flex-direction:column;
-      ">
-
-        <!-- ─── HEADER BAND ─── -->
-        <div id="ks-header" style="
-          background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#2563eb 100%);
-          padding:20px 20px 16px;border-radius:32px 32px 0 0;
-          position:relative;overflow:hidden;flex-shrink:0;
+    <div id="add-expense-sheet" onclick="if(event.target===this)closeAddSheet()" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0;transition:background 0.3s;">
+        <div id="add-sheet-card" style="
+            position:relative;
+            width:92%;max-width:460px;
+            background:var(--paper-bg,#fff);
+            border-radius:28px;
+            box-shadow:0 24px 64px rgba(0,0,0,0.22),0 8px 24px rgba(0,0,0,0.12);
+            padding:0;
+            max-height:88dvh;
+            overflow-y:auto;
+            -webkit-overflow-scrolling:touch;
+            overscroll-behavior:contain;
+            opacity:0;
+            transform:scale(0.88) translateY(16px);
+            transition:opacity 0.32s cubic-bezier(0.34,1.56,0.64,1),transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
         ">
-          <!-- decorative circles -->
-          <div style="position:absolute;top:-40px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
-          <div style="position:absolute;bottom:-50px;left:-20px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none;"></div>
+            <!-- HEADER -->
+            <div style="position:sticky;top:0;z-index:10;background:var(--paper-bg,#fff);padding:20px 20px 0;border-radius:28px 28px 0 0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(16,185,129,0.4);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="22" height="22"><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="12" x2="20" y2="12"/></svg>
+                        </div>
+                        <div>
+                            <h2 style="font-family:'Caveat',cursive;font-size:26px;font-weight:700;color:var(--text-main);margin:0;line-height:1;">Naya Kharcha</h2>
+                            <p style="font-size:11px;color:var(--text-muted,#94a3b8);font-weight:600;margin:2px 0 0;">Voice se bolo ya haath se likho</p>
+                        </div>
+                    </div>
+                    <button onclick="closeAddSheet()" style="width:36px;height:36px;border-radius:50%;background:var(--line-color,#f1f5f9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
 
-          <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;">
-            <div>
-              <p style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 2px;">GharManager</p>
-              <h2 style="font-family:'Caveat',cursive;font-size:28px;font-weight:700;color:white;margin:0;line-height:1;">Kharcha Add Karo</h2>
+                <!-- TAB SWITCHER -->
+                <div style="display:flex;background:var(--line-color,#f1f5f9);border-radius:16px;padding:4px;gap:4px;">
+                    <button id="tab-btn-voice" onclick="switchAddTab('voice')" style="flex:1;padding:10px;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:white;color:#10b981;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                        🎤 Voice
+                    </button>
+                    <button id="tab-btn-manual" onclick="switchAddTab('manual')" style="flex:1;padding:10px;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:transparent;color:#94a3b8;">
+                        ✍️ Manual
+                    </button>
+                </div>
+                <div style="height:1px;background:var(--line-color,#e2e8f0);margin:14px 0 0;"></div>
             </div>
-            <button onclick="closeAddSheet()" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;-webkit-tap-highlight-color:transparent;" onmouseenter="this.style.background='rgba(255,255,255,0.22)'" onmouseleave="this.style.background='rgba(255,255,255,0.12)'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-          </div>
 
-          <!-- STEP DOTS -->
-          <div style="display:flex;gap:6px;margin-top:14px;position:relative;z-index:1;" id="ks-step-dots">
-            <div class="ks-dot ks-dot-active" id="dot-0"></div>
-            <div class="ks-dot" id="dot-1"></div>
-            <div class="ks-dot" id="dot-2"></div>
-          </div>
+            <!-- ── VOICE TAB ── -->
+            <div id="add-tab-voice" style="padding:20px;">
+                <div style="text-align:center;padding:4px 0 16px;">
+                    <p style="font-size:13px;color:var(--text-muted,#64748b);font-weight:600;margin-bottom:22px;line-height:1.5;">Mic dabao aur bolो 🗣️<br><span style="color:#10b981;font-weight:700;">"Sabji 200"</span> · <span style="color:#10b981;font-weight:700;">"Petrol 500"</span> · <span style="color:#10b981;font-weight:700;">"Medical 350"</span></p>
 
-          <!-- STEP LABEL -->
-          <p id="ks-step-label" style="font-size:12px;color:rgba(255,255,255,0.65);font-weight:700;margin:8px 0 0;position:relative;z-index:1;letter-spacing:0.3px;transition:all 0.25s;">Step 1 of 3 — Category chunein</p>
+                    <!-- Mic Button with animated rings -->
+                    <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:22px;">
+                        <div id="mic-ring-1" style="position:absolute;width:120px;height:120px;border-radius:50%;border:2px solid rgba(16,185,129,0.15);transition:all 0.3s;pointer-events:none;"></div>
+                        <div id="mic-ring-2" style="position:absolute;width:96px;height:96px;border-radius:50%;border:2px solid rgba(16,185,129,0.22);transition:all 0.3s;pointer-events:none;"></div>
+                        <button id="sheet-mic-btn" onclick="toggleSheetVoice()" style="
+                            width:78px;height:78px;border-radius:50%;
+                            background:linear-gradient(145deg,#10b981,#059669);
+                            border:none;cursor:pointer;
+                            display:flex;align-items:center;justify-content:center;
+                            box-shadow:0 10px 28px rgba(16,185,129,0.5);
+                            transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.2s,background 0.2s;
+                            position:relative;z-index:1;
+                            -webkit-tap-highlight-color:transparent;
+                        ">
+                            <svg id="mic-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" width="32" height="32">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                <line x1="12" y1="19" x2="12" y2="23"/>
+                                <line x1="8" y1="23" x2="16" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Status text -->
+                    <p id="voice-sheet-status" style="font-size:13px;font-weight:700;color:var(--text-muted,#64748b);margin-bottom:16px;transition:color 0.2s;">Mic dabao baat karne ke liye 🎙️</p>
+
+                    <!-- Live transcript box -->
+                    <div id="voice-transcript-box" style="display:none;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:16px;padding:14px 16px;margin-bottom:16px;border:2px solid rgba(16,185,129,0.3);text-align:left;animation:fadeInUp 0.3s ease;">
+                        <p style="font-size:10px;color:#10b981;font-weight:800;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">🎙️ Sun raha hoon:</p>
+                        <p id="voice-transcript-text" style="font-size:17px;font-weight:700;color:var(--text-main);margin:0;min-height:26px;"></p>
+                    </div>
+
+                    <!-- Parsed preview card -->
+                    <div id="voice-parsed-card" style="display:none;border-radius:20px;padding:0;margin-bottom:16px;overflow:hidden;box-shadow:0 4px 20px rgba(16,185,129,0.18);animation:fadeInUp 0.35s ease;">
+                        <div style="background:linear-gradient(135deg,#10b981,#059669);padding:12px 16px;">
+                            <p style="font-size:11px;color:rgba(255,255,255,0.8);font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin:0;">✅ Samajh gaya — confirm karo</p>
+                        </div>
+                        <div style="background:var(--paper-bg,#fff);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;">
+                            <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:14px;padding:10px 16px;flex:1;min-width:80px;text-align:center;">
+                                <p style="font-size:9px;color:#059669;font-weight:800;margin:0 0 4px;text-transform:uppercase;">Kharcha</p>
+                                <p id="voice-parsed-desc" style="font-size:15px;font-weight:800;color:#0f172a;margin:0;">—</p>
+                            </div>
+                            <div style="background:linear-gradient(135deg,#f0fdf4,#bbf7d0);border-radius:14px;padding:10px 16px;flex:1;min-width:80px;text-align:center;">
+                                <p style="font-size:9px;color:#059669;font-weight:800;margin:0 0 4px;text-transform:uppercase;">Amount</p>
+                                <p id="voice-parsed-amount" style="font-size:18px;font-weight:900;color:#10b981;margin:0;">₹0</p>
+                            </div>
+                            <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:14px;padding:10px 16px;flex:1;min-width:80px;text-align:center;">
+                                <p style="font-size:9px;color:#2563eb;font-weight:800;margin:0 0 4px;text-transform:uppercase;">Category</p>
+                                <p id="voice-parsed-cat" style="font-size:14px;font-weight:800;color:#1e40af;margin:0;">Other</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save voice button -->
+                    <button id="voice-save-btn" onclick="saveVoiceExpense()" style="display:none;width:100%;padding:16px;border:none;border-radius:18px;background:linear-gradient(135deg,#10b981,#059669);color:white;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(16,185,129,0.45);letter-spacing:0.3px;animation:fadeInUp 0.4s ease;">
+                        ✅ Haan, Save Karo!
+                    </button>
+                    <button onclick="resetVoiceSheet()" style="margin-top:10px;width:100%;padding:11px;border:1.5px solid var(--line-color,#e2e8f0);border-radius:14px;background:transparent;color:var(--text-muted,#64748b);font-size:13px;font-weight:700;cursor:pointer;">🔄 Dobara Bolo</button>
+                </div>
+            </div>
+
+            <!-- ── MANUAL TAB ── -->
+            <div id="add-tab-manual" style="display:none;padding:20px 20px 32px;">
+
+                <!-- Member chips -->
+                <div style="margin-bottom:16px;">
+                    <p style="font-size:11px;font-weight:800;color:var(--text-muted,#64748b);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Kaun kharcha kar raha hai?</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sheet-member-chips">
+                        <button onclick="selectMemberChip(this,'Me')" class="sheet-chip active-chip" data-val="Me">👤 Me</button>
+                        <button onclick="selectMemberChip(this,'Papa')" class="sheet-chip" data-val="Papa">👨 Papa</button>
+                        <button onclick="selectMemberChip(this,'Mummy')" class="sheet-chip" data-val="Mummy">👩 Mummy</button>
+                        <button onclick="selectMemberChip(this,'Bhai/Behan')" class="sheet-chip" data-val="Bhai/Behan">🧑 Bhai/Behan</button>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div style="margin-bottom:14px;">
+                    <p style="font-size:11px;font-weight:800;color:var(--text-muted,#64748b);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Kya kharcha hua?</p>
+                    <input type="text" id="sheet-description" placeholder="e.g., Sabji, Petrol, Doctor..." style="
+                        width:100%;padding:14px 16px;border:2px solid var(--line-color,#e2e8f0);
+                        border-radius:16px;font-size:15px;font-weight:600;
+                        background:var(--paper-bg,#fff);color:var(--text-main);
+                        outline:none;box-sizing:border-box;transition:border 0.2s;
+                    " onfocus="this.style.border='2px solid #10b981'" onblur="this.style.border='2px solid var(--line-color,#e2e8f0)'">
+                </div>
+
+                <!-- Category chips -->
+                <div style="margin-bottom:16px;">
+                    <p style="font-size:11px;font-weight:800;color:var(--text-muted,#64748b);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Category</p>
+                    <div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;" id="sheet-cat-chips">
+                        <button onclick="selectCatChip(this,'Ration')" class="sheet-cat-chip active-cat" data-val="Ration">🛒 Ration</button>
+                        <button onclick="selectCatChip(this,'Food')" class="sheet-cat-chip" data-val="Food">🍱 Food</button>
+                        <button onclick="selectCatChip(this,'Medical')" class="sheet-cat-chip" data-val="Medical">💊 Medical</button>
+                        <button onclick="selectCatChip(this,'Petrol')" class="sheet-cat-chip" data-val="Petrol">⛽ Petrol</button>
+                        <button onclick="selectCatChip(this,'Bills')" class="sheet-cat-chip" data-val="Bills">⚡ Bills</button>
+                        <button onclick="selectCatChip(this,'Travel')" class="sheet-cat-chip" data-val="Travel">🚌 Travel</button>
+                        <button onclick="selectCatChip(this,'Shopping')" class="sheet-cat-chip" data-val="Shopping">🛍️ Shopping</button>
+                        <button onclick="selectCatChip(this,'Other')" class="sheet-cat-chip" data-val="Other">📝 Other</button>
+                    </div>
+                </div>
+
+                <!-- Amount (Big) -->
+                <div style="margin-bottom:14px;">
+                    <p style="font-size:11px;font-weight:800;color:var(--text-muted,#64748b);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Kitne Paise?</p>
+                    <div style="position:relative;">
+                        <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:800;color:#10b981;">₹</span>
+                        <input type="number" id="sheet-amount" placeholder="0" inputmode="decimal" style="
+                            width:100%;padding:14px 16px 14px 42px;
+                            border:2px solid var(--line-color,#e2e8f0);
+                            border-radius:16px;font-size:24px;font-weight:800;
+                            background:var(--paper-bg,#fff);color:var(--text-main);
+                            outline:none;box-sizing:border-box;transition:border 0.2s;
+                        " onfocus="this.style.border='2px solid #10b981'" onblur="this.style.border='2px solid var(--line-color,#e2e8f0)'">
+                    </div>
+                </div>
+
+                <!-- Date -->
+                <div style="margin-bottom:20px;">
+                    <p style="font-size:11px;font-weight:800;color:var(--text-muted,#64748b);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Kab hua?</p>
+                    <input type="date" id="sheet-date" style="
+                        width:100%;padding:13px 16px;border:2px solid var(--line-color,#e2e8f0);
+                        border-radius:16px;font-size:14px;font-weight:700;
+                        background:var(--paper-bg,#fff);color:var(--text-main);
+                        outline:none;box-sizing:border-box;transition:border 0.2s;
+                    " onfocus="this.style.border='2px solid #10b981'" onblur="this.style.border='2px solid var(--line-color,#e2e8f0)'">
+                </div>
+
+                <!-- Save Button -->
+                <button onclick="saveManualExpense()" style="
+                    width:100%;padding:16px;border:none;border-radius:18px;
+                    background:linear-gradient(135deg,#10b981,#059669);
+                    color:white;font-size:17px;font-weight:800;
+                    cursor:pointer;
+                    box-shadow:0 8px 24px rgba(16,185,129,0.45);
+                    letter-spacing:0.3px;
+                ">✅ Kharcha Save Karo</button>
+            </div>
         </div>
+    </div>
 
-        <!-- ─── SCROLLABLE CONTENT ─── -->
-        <div style="overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex:1;">
-
-          <!-- ═══════ STEP 1: CATEGORY ORBITAL ═══════ -->
-          <div id="ks-step-1" class="ks-step" style="padding:22px 20px 10px;">
-
-            <!-- WHO IS SPENDING — PILL ROW -->
-            <div style="margin-bottom:20px;">
-              <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;">Kaun? 👤</p>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;" id="ks-member-row">
-                <button onclick="ksMember(this,'Me')"      class="ks-member-pill ks-member-active">🙋 Me</button>
-                <button onclick="ksMember(this,'Papa')"    class="ks-member-pill">👨 Papa</button>
-                <button onclick="ksMember(this,'Mummy')"   class="ks-member-pill">👩 Mummy</button>
-                <button onclick="ksMember(this,'Bhai/Behan')" class="ks-member-pill">🧑 Bhai/Behan</button>
-              </div>
-            </div>
-
-            <!-- CATEGORY ORBITAL GRID -->
-            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;">Category Chunein ⚡</p>
-            <div id="ks-cat-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;">
-              <button onclick="ksCat(this,'Ration','🛒','#16a34a','#dcfce7')"   class="ks-cat-tile" data-cat="Ration">
-                <span class="ks-cat-icon" style="background:#dcfce7;color:#16a34a;">🛒</span><small>Ration</small>
-              </button>
-              <button onclick="ksCat(this,'Medical','💊','#dc2626','#fee2e2')"  class="ks-cat-tile" data-cat="Medical">
-                <span class="ks-cat-icon" style="background:#fee2e2;color:#dc2626;">💊</span><small>Medical</small>
-              </button>
-              <button onclick="ksCat(this,'Petrol','⛽','#d97706','#fef3c7')"   class="ks-cat-tile" data-cat="Petrol">
-                <span class="ks-cat-icon" style="background:#fef3c7;color:#d97706;">⛽</span><small>Petrol</small>
-              </button>
-              <button onclick="ksCat(this,'Bills','⚡','#7c3aed','#ede9fe')"    class="ks-cat-tile" data-cat="Bills">
-                <span class="ks-cat-icon" style="background:#ede9fe;color:#7c3aed;">⚡</span><small>Bills</small>
-              </button>
-              <button onclick="ksCat(this,'Food','🍱','#ea580c','#ffedd5')"     class="ks-cat-tile" data-cat="Food">
-                <span class="ks-cat-icon" style="background:#ffedd5;color:#ea580c;">🍱</span><small>Khaana</small>
-              </button>
-              <button onclick="ksCat(this,'Shopping','🛍️','#db2777','#fce7f3')" class="ks-cat-tile" data-cat="Shopping">
-                <span class="ks-cat-icon" style="background:#fce7f3;color:#db2777;">🛍️</span><small>Shopping</small>
-              </button>
-              <button onclick="ksCat(this,'Travel','✈️','#0891b2','#e0f2fe')"   class="ks-cat-tile" data-cat="Travel">
-                <span class="ks-cat-icon" style="background:#e0f2fe;color:#0891b2;">✈️</span><small>Travel</small>
-              </button>
-              <button onclick="ksCat(this,'Other','📝','#64748b','#f1f5f9')"    class="ks-cat-tile" data-cat="Other">
-                <span class="ks-cat-icon" style="background:#f1f5f9;color:#64748b;">📝</span><small>Other</small>
-              </button>
-            </div>
-
-            <!-- SELECTED CATEGORY BADGE -->
-            <div id="ks-cat-badge" style="display:none;align-items:center;gap:10px;background:var(--line-color,#f1f5f9);border-radius:16px;padding:12px 14px;margin-bottom:18px;animation:ksFadeIn 0.3s ease;">
-              <span id="ks-badge-icon" style="font-size:22px;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;"></span>
-              <div>
-                <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0;text-transform:uppercase;letter-spacing:0.5px;">Selected</p>
-                <p id="ks-badge-name" style="font-size:16px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
-              </div>
-              <div style="margin-left:auto;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" width="22" height="22"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
-            </div>
-
-            <!-- NEXT BUTTON -->
-            <button onclick="ksGoStep(2)" id="ks-next-1" style="
-              width:100%;padding:15px;border:none;border-radius:18px;
-              background:linear-gradient(135deg,#1e3a8a,#2563eb);
-              color:white;font-size:16px;font-weight:800;cursor:pointer;
-              box-shadow:0 8px 24px rgba(37,99,235,0.4);
-              letter-spacing:0.3px;margin-bottom:4px;
-              opacity:0.45;transition:opacity 0.2s,transform 0.15s;
-            " disabled>Aage Badho →</button>
-          </div>
-
-          <!-- ═══════ STEP 2: DESCRIPTION + AMOUNT ═══════ -->
-          <div id="ks-step-2" class="ks-step" style="display:none;padding:22px 20px 10px;">
-
-            <!-- Context pill showing selected category -->
-            <div id="ks-ctx-pill" style="display:inline-flex;align-items:center;gap:6px;background:var(--line-color,#f1f5f9);border-radius:20px;padding:6px 12px;margin-bottom:18px;">
-              <span id="ks-ctx-icon" style="font-size:16px;"></span>
-              <span id="ks-ctx-cat" style="font-size:12px;font-weight:800;color:var(--text-main,#0f172a);"></span>
-              <button onclick="ksGoStep(1)" style="background:none;border:none;color:#94a3b8;font-size:11px;font-weight:700;cursor:pointer;padding:0 0 0 4px;">← badlo</button>
-            </div>
-
-            <!-- DESCRIPTION with Voice -->
-            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Kya kharcha hua? 📝</p>
-            <div style="position:relative;margin-bottom:16px;">
-              <input type="text" id="ks-desc" placeholder="e.g., Sabji, Doctor, Diesel…" style="
-                width:100%;padding:14px 52px 14px 16px;
-                border:2px solid var(--line-color,#e2e8f0);
-                border-radius:16px;font-size:15px;font-weight:600;
-                background:var(--paper-bg,#fff);color:var(--text-main,#0f172a);
-                outline:none;box-sizing:border-box;transition:border 0.2s;
-              " onfocus="this.style.border='2px solid #2563eb'" onblur="this.style.border='2px solid var(--line-color,#e2e8f0)'"
-              oninput="ksAutoDetect(this.value)">
-              <button onclick="ksVoiceDesc()" id="ks-voice-btn" style="
-                position:absolute;right:8px;top:50%;transform:translateY(-50%);
-                width:36px;height:36px;border-radius:12px;
-                background:linear-gradient(135deg,#2563eb,#1e40af);
-                border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-                -webkit-tap-highlight-color:transparent;
-              ">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" width="17" height="17"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-              </button>
-            </div>
-            <p style="font-size:11px;color:#2563eb;font-weight:600;margin:-10px 0 16px;padding-left:4px;">💡 Mic dabao ya "Sabji 200" bolo — auto detect!</p>
-
-            <!-- AMOUNT NUMPAD -->
-            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;">Kitne Paise? 💰</p>
-
-            <!-- Amount display -->
-            <div id="ks-amount-display" style="
-              background:linear-gradient(135deg,#f0fdf4,#dcfce7);
-              border:2px solid rgba(16,185,129,0.25);
-              border-radius:20px;padding:16px 20px;
-              margin-bottom:14px;text-align:center;position:relative;
-            ">
-              <p style="font-size:11px;color:#059669;font-weight:800;margin:0 0 2px;text-transform:uppercase;letter-spacing:0.5px;">Amount</p>
-              <div style="display:flex;align-items:baseline;justify-content:center;gap:4px;">
-                <span style="font-size:28px;font-weight:800;color:#10b981;font-family:'Sora',sans-serif;">₹</span>
-                <span id="ks-amt-val" style="font-size:42px;font-weight:900;color:#0f172a;font-family:'Sora',sans-serif;letter-spacing:-1px;min-width:60px;">0</span>
-              </div>
-              <!-- Hidden actual input -->
-              <input type="hidden" id="ks-amount">
-            </div>
-
-            <!-- NUMPAD GRID -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;" id="ks-numpad">
-              <button class="ks-num-btn" onclick="ksNum('1')">1</button>
-              <button class="ks-num-btn" onclick="ksNum('2')">2</button>
-              <button class="ks-num-btn" onclick="ksNum('3')">3</button>
-              <button class="ks-num-btn" onclick="ksNum('4')">4</button>
-              <button class="ks-num-btn" onclick="ksNum('5')">5</button>
-              <button class="ks-num-btn" onclick="ksNum('6')">6</button>
-              <button class="ks-num-btn" onclick="ksNum('7')">7</button>
-              <button class="ks-num-btn" onclick="ksNum('8')">8</button>
-              <button class="ks-num-btn" onclick="ksNum('9')">9</button>
-              <button class="ks-num-btn ks-num-zero" onclick="ksNum('00')">00</button>
-              <button class="ks-num-btn" onclick="ksNum('0')">0</button>
-              <button class="ks-num-btn ks-num-del" onclick="ksNumDel()">⌫</button>
-            </div>
-
-            <!-- Quick amounts -->
-            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;">
-              <button class="ks-quick-amt" onclick="ksSetAmt(50)">₹50</button>
-              <button class="ks-quick-amt" onclick="ksSetAmt(100)">₹100</button>
-              <button class="ks-quick-amt" onclick="ksSetAmt(200)">₹200</button>
-              <button class="ks-quick-amt" onclick="ksSetAmt(500)">₹500</button>
-              <button class="ks-quick-amt" onclick="ksSetAmt(1000)">₹1K</button>
-              <button class="ks-quick-amt" onclick="ksSetAmt(2000)">₹2K</button>
-            </div>
-
-            <button onclick="ksGoStep(3)" id="ks-next-2" style="
-              width:100%;padding:15px;border:none;border-radius:18px;
-              background:linear-gradient(135deg,#1e3a8a,#2563eb);
-              color:white;font-size:16px;font-weight:800;cursor:pointer;
-              box-shadow:0 8px 24px rgba(37,99,235,0.4);
-              letter-spacing:0.3px;margin-bottom:4px;
-            ">Aage Badho →</button>
-          </div>
-
-          <!-- ═══════ STEP 3: DATE + CONFIRM ═══════ -->
-          <div id="ks-step-3" class="ks-step" style="display:none;padding:22px 20px 28px;">
-
-            <!-- Summary Card -->
-            <div id="ks-summary-card" style="
-              border-radius:24px;overflow:hidden;
-              box-shadow:0 8px 28px rgba(0,0,0,0.1);
-              margin-bottom:20px;
-            ">
-              <!-- Top colored band -->
-              <div id="ks-summary-top" style="padding:16px 18px;background:linear-gradient(135deg,#1e3a8a,#2563eb);">
-                <p style="font-size:10px;color:rgba(255,255,255,0.6);font-weight:800;text-transform:uppercase;margin:0 0 2px;">Kharcha Summary</p>
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <span id="ks-sum-icon" style="font-size:26px;"></span>
-                  <div>
-                    <p id="ks-sum-desc" style="font-size:17px;font-weight:800;color:white;margin:0;"></p>
-                    <p id="ks-sum-cat" style="font-size:12px;color:rgba(255,255,255,0.7);font-weight:600;margin:0;"></p>
-                  </div>
-                  <div style="margin-left:auto;text-align:right;">
-                    <p style="font-size:10px;color:rgba(255,255,255,0.6);margin:0;font-weight:600;">Amount</p>
-                    <p id="ks-sum-amt" style="font-size:22px;font-weight:900;color:white;margin:0;font-family:'Sora',sans-serif;"></p>
-                  </div>
-                </div>
-              </div>
-              <!-- Bottom details -->
-              <div style="background:var(--paper-bg,#fff);padding:14px 18px;display:flex;gap:8px;">
-                <div style="flex:1;background:var(--line-color,#f1f5f9);border-radius:12px;padding:10px;text-align:center;">
-                  <p style="font-size:9px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0 0 3px;text-transform:uppercase;">Member</p>
-                  <p id="ks-sum-member" style="font-size:13px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
-                </div>
-                <div style="flex:1;background:var(--line-color,#f1f5f9);border-radius:12px;padding:10px;text-align:center;">
-                  <p style="font-size:9px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0 0 3px;text-transform:uppercase;">Tarikh</p>
-                  <p id="ks-sum-date-label" style="font-size:13px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
-                </div>
-                <div style="flex:1;background:var(--line-color,#f1f5f9);border-radius:12px;padding:10px;text-align:center;">
-                  <p style="font-size:9px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0 0 3px;text-transform:uppercase;">Category</p>
-                  <p id="ks-sum-cat2" style="font-size:13px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Date picker -->
-            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Tarikh 📅</p>
-            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-              <button class="ks-date-btn ks-date-active" id="ks-date-today" onclick="ksPickDate('today',this)">📅 Aaj</button>
-              <button class="ks-date-btn" id="ks-date-yesterday" onclick="ksPickDate('yesterday',this)">⏪ Kal</button>
-              <button class="ks-date-btn" id="ks-date-custom" onclick="ksPickDate('custom',this)">🗓️ Custom</button>
-            </div>
-            <input type="date" id="ks-date" style="
-              width:100%;padding:12px 16px;border:2px solid var(--line-color,#e2e8f0);
-              border-radius:14px;font-size:14px;font-weight:700;
-              background:var(--paper-bg,#fff);color:var(--text-main,#0f172a);
-              outline:none;box-sizing:border-box;display:none;
-              transition:border 0.2s;margin-bottom:16px;
-            " onchange="ksUpdateDateLabel()">
-
-            <!-- GPS Row -->
-            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--line-color,#f1f5f9);border-radius:14px;padding:12px 14px;margin-bottom:20px;">
-              <span id="ks-gps-label" style="font-size:12px;color:var(--text-muted,#64748b);font-weight:700;">📍 Location optional</span>
-              <button onclick="ksGetGPS()" style="background:#2563eb;color:white;border:none;border-radius:10px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;">GPS 🌍</button>
-            </div>
-
-            <!-- SAVE BUTTON -->
-            <button onclick="ksSave()" style="
-              width:100%;padding:17px;border:none;border-radius:20px;
-              background:linear-gradient(135deg,#10b981,#059669);
-              color:white;font-size:18px;font-weight:900;cursor:pointer;
-              box-shadow:0 10px 32px rgba(16,185,129,0.5);
-              letter-spacing:0.3px;position:relative;overflow:hidden;
-              transition:transform 0.15s,box-shadow 0.15s;
-            " onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
-              ✅ Kharcha Save Karo!
-            </button>
-            <button onclick="ksGoStep(2)" style="
-              width:100%;padding:12px;margin-top:10px;border:1.5px solid var(--line-color,#e2e8f0);
-              border-radius:14px;background:transparent;color:var(--text-muted,#64748b);
-              font-size:13px;font-weight:700;cursor:pointer;
-            ">← Wapas Jao</button>
-          </div>
-
-        </div><!-- end scrollable -->
-      </div><!-- end card -->
-    </div><!-- end overlay -->
-
-    <!-- ── KS STYLES ── -->
     <style>
-      #add-expense-sheet { backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px); }
-      #add-expense-sheet.sheet-open { background:rgba(0,0,0,0.55); }
-      #add-sheet-card.sheet-open { opacity:1 !important;transform:scale(1) translateY(0) !important; }
+        /* ── ADD SHEET STYLES ── */
+        #add-expense-sheet { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        #add-expense-sheet.sheet-open { background: rgba(0,0,0,0.5); }
+        #add-sheet-card.sheet-open { opacity:1 !important; transform:scale(1) translateY(0) !important; }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)} }
+        /* Recording state */
+        #sheet-mic-btn.recording {
+            background: linear-gradient(145deg,#ef4444,#dc2626) !important;
+            box-shadow: 0 10px 28px rgba(239,68,68,0.55) !important;
+            animation: micPulse 0.8s ease-in-out infinite !important;
+        }
+        @keyframes micPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+        #mic-ring-1.recording { border-color:rgba(239,68,68,0.3) !important; animation:ringExpand 1.2s ease-out infinite !important; }
+        #mic-ring-2.recording { border-color:rgba(239,68,68,0.2) !important; animation:ringExpand 1.2s ease-out 0.4s infinite !important; }
+        @keyframes ringExpand { 0%{transform:scale(0.85);opacity:0.8} 100%{transform:scale(1.2);opacity:0} }
 
-      @keyframes ksFadeIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
-
-      /* Step dots */
-      .ks-dot {
-        height:4px;border-radius:4px;background:rgba(255,255,255,0.25);
-        transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
-        flex:1;
-      }
-      .ks-dot-active { background:white;flex:2.5 !important; }
-
-      /* Member pills */
-      .ks-member-pill {
-        padding:8px 14px;border-radius:20px;
-        border:2px solid var(--line-color,#e2e8f0);
-        background:var(--paper-bg,#fff);
-        font-size:13px;font-weight:700;cursor:pointer;
-        color:var(--text-muted,#64748b);
-        transition:all 0.2s;white-space:nowrap;
-        -webkit-tap-highlight-color:transparent;
-      }
-      .ks-member-active {
-        background:linear-gradient(135deg,#1e3a8a,#2563eb) !important;
-        color:white !important;border-color:#2563eb !important;
-        box-shadow:0 4px 14px rgba(37,99,235,0.35) !important;
-      }
-
-      /* Category tiles */
-      .ks-cat-tile {
-        display:flex;flex-direction:column;align-items:center;gap:7px;
-        padding:14px 6px;border-radius:18px;
-        border:2px solid var(--line-color,#e2e8f0);
-        background:var(--paper-bg,#fff);cursor:pointer;
-        transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
-        -webkit-tap-highlight-color:transparent;
-      }
-      .ks-cat-tile:active { transform:scale(0.93); }
-      .ks-cat-tile.ks-cat-selected {
-        border-color:currentColor;
-        box-shadow:0 6px 18px rgba(0,0,0,0.12);
-        transform:scale(1.06);
-      }
-      .ks-cat-icon {
-        width:42px;height:42px;border-radius:13px;
-        display:flex;align-items:center;justify-content:center;
-        font-size:20px;transition:transform 0.2s;
-      }
-      .ks-cat-tile small {
-        font-size:10px;font-weight:800;color:var(--text-muted,#64748b);
-        text-align:center;line-height:1.2;
-      }
-
-      /* Numpad */
-      .ks-num-btn {
-        padding:0;height:56px;border-radius:16px;
-        border:1.5px solid var(--line-color,#e2e8f0);
-        background:var(--paper-bg,#fff);
-        font-size:22px;font-weight:700;cursor:pointer;
-        color:var(--text-main,#0f172a);
-        transition:all 0.12s;
-        -webkit-tap-highlight-color:transparent;
-        font-family:'Sora',sans-serif;
-      }
-      .ks-num-btn:active { background:var(--line-color,#f1f5f9);transform:scale(0.93); }
-      .ks-num-zero { font-size:18px; }
-      .ks-num-del { font-size:18px;color:#ef4444; }
-
-      /* Quick amounts */
-      .ks-quick-amt {
-        padding:7px 13px;border-radius:20px;
-        border:1.5px solid var(--line-color,#e2e8f0);
-        background:var(--paper-bg,#fff);
-        font-size:12px;font-weight:800;cursor:pointer;
-        color:var(--text-main,#0f172a);
-        transition:all 0.18s;
-        -webkit-tap-highlight-color:transparent;
-      }
-      .ks-quick-amt:active { background:#dbeafe;border-color:#2563eb;color:#1e40af;transform:scale(0.94); }
-
-      /* Date buttons */
-      .ks-date-btn {
-        padding:9px 16px;border-radius:20px;
-        border:2px solid var(--line-color,#e2e8f0);
-        background:var(--paper-bg,#fff);
-        font-size:12px;font-weight:800;cursor:pointer;
-        color:var(--text-muted,#64748b);
-        transition:all 0.2s;
-        -webkit-tap-highlight-color:transparent;
-      }
-      .ks-date-active {
-        background:#dbeafe !important;border-color:#2563eb !important;color:#1e40af !important;
-      }
-
-      /* Voice recording state */
-      #ks-voice-btn.ks-recording {
-        background:linear-gradient(135deg,#ef4444,#dc2626) !important;
-        animation:ksMicPulse 0.9s ease-in-out infinite;
-      }
-      @keyframes ksMicPulse { 0%,100%{box-shadow:0 4px 12px rgba(239,68,68,0.4)}50%{box-shadow:0 4px 20px rgba(239,68,68,0.7)} }
+        .sheet-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--line-color, #e2e8f0);
+            background: var(--paper-bg, #fff);
+            font-size: 13px; font-weight: 700;
+            cursor: pointer; color: var(--text-muted, #64748b);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .sheet-chip.active-chip {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white; border-color: #10b981;
+            box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+        }
+        .sheet-cat-chip {
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 2px solid var(--line-color, #e2e8f0);
+            background: var(--paper-bg, #fff);
+            font-size: 12px; font-weight: 700;
+            cursor: pointer; color: var(--text-muted, #64748b);
+            transition: all 0.2s;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .sheet-cat-chip.active-cat {
+            background: #eff6ff;
+            color: #2563eb; border-color: #2563eb;
+        }
+        /* Mic recording animation */
+        @keyframes micPulse {
+            0%,100% { transform: scale(1); box-shadow: 0 8px 24px rgba(239,68,68,0.45); }
+            50% { transform: scale(1.08); box-shadow: 0 12px 32px rgba(239,68,68,0.65); }
+        }
+        @keyframes ringPulse {
+            0%,100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+        #sheet-mic-btn.recording {
+            background: linear-gradient(145deg, #ef4444, #dc2626) !important;
+            animation: micPulse 1s ease-in-out infinite;
+        }
+        #mic-ring-1.recording { animation: ringPulse 1.2s ease-in-out infinite; border-color: rgba(239,68,68,0.25) !important; }
+        #mic-ring-2.recording { animation: ringPulse 1.2s ease-in-out infinite 0.3s; border-color: rgba(239,68,68,0.35) !important; }
     </style>
 
-    <!-- ── KS JAVASCRIPT ── -->
     <script>
-    // ══ KHARCHA SMART SYSTEM ════════════════════════════════════
-    let ksStep = 1;
-    let ksData = { member:'Me', cat:'', catIcon:'', desc:'', amount:'0', date:'' };
-    let ksVoiceRec = null;
-    let ksVoicing = false;
-
-    // Init today
-    (function(){ const td = new Date().toISOString().split('T')[0]; ksData.date = td; })();
+    // ══ ADD EXPENSE SHEET LOGIC ══════════════════════════════════════
+    let sheetVoiceRecognition = null;
+    let sheetIsRecording = false;
+    let sheetParsedData = {};
+    let sheetSelectedMember = 'Me';
+    let sheetSelectedCat = 'Ration';
 
     function openAddSheet() {
-      const sheet = document.getElementById('add-expense-sheet');
-      const card  = document.getElementById('add-sheet-card');
-      // Reset
-      ksData = { member:'Me', cat:'', catIcon:'', desc:'', amount:'0', date: new Date().toISOString().split('T')[0] };
-      ksStep = 1;
-      document.getElementById('ks-amt-val').textContent = '0';
-      document.getElementById('ks-amount').value = '';
-      document.getElementById('ks-desc').value = '';
-      document.getElementById('ks-date-today').classList.add('ks-date-active');
-      document.getElementById('ks-date-yesterday').classList.remove('ks-date-active');
-      document.getElementById('ks-date-custom').classList.remove('ks-date-active');
-      document.getElementById('ks-date').style.display = 'none';
-      // Reset category tiles
-      document.querySelectorAll('.ks-cat-tile').forEach(t => { t.classList.remove('ks-cat-selected'); t.style.borderColor=''; t.style.background=''; });
-      document.getElementById('ks-cat-badge').style.display = 'none';
-      const nb = document.getElementById('ks-next-1');
-      nb.disabled = true; nb.style.opacity = '0.45';
-      // Reset member
-      document.querySelectorAll('.ks-member-pill').forEach(p => p.classList.remove('ks-member-active'));
-      document.querySelector('.ks-member-pill').classList.add('ks-member-active');
-      ksShowStep(1);
-      sheet.style.display = 'flex';
-      sheet.style.alignItems = 'center';
-      sheet.style.justifyContent = 'center';
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        sheet.classList.add('sheet-open');
-        card.classList.add('sheet-open');
-      }));
+        const sheet = document.getElementById('add-expense-sheet');
+        const card  = document.getElementById('add-sheet-card');
+        // set today's date
+        const td = new Date().toISOString().split('T')[0];
+        document.getElementById('sheet-date').value = td;
+        sheet.style.display = 'flex';
+        sheet.style.alignItems = 'center';
+        sheet.style.justifyContent = 'center';
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                sheet.classList.add('sheet-open');
+                card.classList.add('sheet-open');
+            });
+        });
+        switchAddTab('voice');
     }
 
     function closeAddSheet() {
-      const sheet = document.getElementById('add-expense-sheet');
-      const card  = document.getElementById('add-sheet-card');
-      sheet.classList.remove('sheet-open');
-      card.classList.remove('sheet-open');
-      if (ksVoiceRec) { try { ksVoiceRec.stop(); } catch(e){} }
-      setTimeout(() => { sheet.style.display = 'none'; }, 380);
+        const sheet = document.getElementById('add-expense-sheet');
+        const card  = document.getElementById('add-sheet-card');
+        sheet.classList.remove('sheet-open');
+        card.classList.remove('sheet-open');
+        stopSheetVoice();
+        setTimeout(() => { sheet.style.display = 'none'; }, 380);
     }
 
-    function ksShowStep(n) {
-      ksStep = n;
-      for(let i=1;i<=3;i++) {
-        const el = document.getElementById('ks-step-'+i);
-        if(el) el.style.display = (i===n) ? 'block' : 'none';
-      }
-      // Update dots
-      for(let i=0;i<3;i++) {
-        const d = document.getElementById('dot-'+i);
-        if(d) d.classList.toggle('ks-dot-active', i<n);
-      }
-      // Labels
-      const labels = ['Step 1 of 3 — Category chunein','Step 2 of 3 — Description & Amount','Step 3 of 3 — Confirm & Save'];
-      document.getElementById('ks-step-label').textContent = labels[n-1];
+    function switchAddTab(tab) {
+        const vPane = document.getElementById('add-tab-voice');
+        const mPane = document.getElementById('add-tab-manual');
+        const vBtn  = document.getElementById('tab-btn-voice');
+        const mBtn  = document.getElementById('tab-btn-manual');
+        const isVoice = (tab === 'voice');
+
+        vPane.style.display = isVoice ? 'block' : 'none';
+        mPane.style.display = isVoice ? 'none'  : 'block';
+
+        const activeStyle  = 'flex:1;padding:10px;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.08);';
+        const inactiveStyle = 'flex:1;padding:10px;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:transparent;color:#94a3b8;';
+
+        vBtn.style.cssText = activeStyle  + (isVoice  ? 'color:#10b981;' : '');
+        mBtn.style.cssText = activeStyle  + (!isVoice ? 'color:#2563eb;' : '');
+        if (isVoice)  { vBtn.style.cssText = activeStyle + 'color:#10b981;'; mBtn.style.cssText = inactiveStyle; }
+        else          { mBtn.style.cssText = activeStyle + 'color:#2563eb;'; vBtn.style.cssText = inactiveStyle; }
     }
 
-    function ksGoStep(n) {
-      if(n===2) {
-        if(!ksData.cat) return;
-        document.getElementById('ks-ctx-icon').textContent = ksData.catIcon;
-        document.getElementById('ks-ctx-cat').textContent  = ksData.cat;
-      }
-      if(n===3) {
-        // Build summary
-        const amt = document.getElementById('ks-amount').value || ksData.amount;
-        const desc = document.getElementById('ks-desc').value.trim() || ksData.cat + ' kharcha';
-        ksData.desc = desc; ksData.amount = amt;
-        document.getElementById('ks-sum-icon').textContent   = ksData.catIcon;
-        document.getElementById('ks-sum-desc').textContent   = desc;
-        document.getElementById('ks-sum-cat').textContent    = ksData.cat;
-        document.getElementById('ks-sum-cat2').textContent   = ksData.cat;
-        document.getElementById('ks-sum-amt').textContent    = '₹'+amt;
-        document.getElementById('ks-sum-member').textContent = ksData.member;
-        ksUpdateDateLabel();
-      }
-      ksShowStep(n);
+    // ── VOICE ──────────────────────────────────────────────────────
+    function toggleSheetVoice() {
+        if (sheetIsRecording) { stopSheetVoice(); return; }
+        startSheetVoice();
     }
 
-    function ksMember(btn, val) {
-      document.querySelectorAll('.ks-member-pill').forEach(p => p.classList.remove('ks-member-active'));
-      btn.classList.add('ks-member-active');
-      ksData.member = val;
-    }
-
-    function ksCat(btn, cat, icon, color, bg) {
-      ksData.cat = cat; ksData.catIcon = icon;
-      // Deselect all
-      document.querySelectorAll('.ks-cat-tile').forEach(t => {
-        t.classList.remove('ks-cat-selected');
-        t.style.borderColor = '';
-        t.style.background = '';
-      });
-      // Select this
-      btn.classList.add('ks-cat-selected');
-      btn.style.borderColor = color;
-      btn.style.background = bg;
-      btn.querySelector('.ks-cat-icon').style.transform = 'scale(1.1)';
-      // Badge
-      const badge = document.getElementById('ks-cat-badge');
-      badge.style.display = 'flex';
-      document.getElementById('ks-badge-icon').textContent = icon;
-      document.getElementById('ks-badge-icon').style.background = bg;
-      document.getElementById('ks-badge-icon').style.color = color;
-      document.getElementById('ks-badge-name').textContent = cat;
-      // Enable next
-      const nb = document.getElementById('ks-next-1');
-      nb.disabled = false; nb.style.opacity = '1';
-    }
-
-    // Numpad
-    function ksNum(d) {
-      let cur = document.getElementById('ks-amount').value || '0';
-      if(cur === '0') cur = '';
-      cur += d;
-      if(cur.length > 6) return;
-      document.getElementById('ks-amount').value = cur;
-      document.getElementById('ks-amt-val').textContent = cur || '0';
-    }
-    function ksNumDel() {
-      let cur = document.getElementById('ks-amount').value;
-      cur = cur.slice(0,-1);
-      document.getElementById('ks-amount').value = cur;
-      document.getElementById('ks-amt-val').textContent = cur || '0';
-    }
-    function ksSetAmt(v) {
-      document.getElementById('ks-amount').value = String(v);
-      document.getElementById('ks-amt-val').textContent = String(v);
-    }
-
-    // Auto detect category from description
-    function ksAutoDetect(val) {
-      if(!val) return;
-      const v = val.toLowerCase();
-      let detCat='', detIcon='', detColor='#64748b', detBg='#f1f5f9';
-      if(v.match(/dawa|doctor|hospital|medical|tablet|injection/)) { detCat='Medical';detIcon='💊';detColor='#dc2626';detBg='#fee2e2'; }
-      else if(v.match(/petrol|diesel|bike|fuel/)) { detCat='Petrol';detIcon='⛽';detColor='#d97706';detBg='#fef3c7'; }
-      else if(v.match(/sabji|ration|tel|daal|chawal|atta|grocer/)) { detCat='Ration';detIcon='🛒';detColor='#16a34a';detBg='#dcfce7'; }
-      else if(v.match(/bill|wifi|recharge|bijli|electric|gas/)) { detCat='Bills';detIcon='⚡';detColor='#7c3aed';detBg='#ede9fe'; }
-      else if(v.match(/pizza|food|khaana|restaurant|order|zomato|swiggy/)) { detCat='Food';detIcon='🍱';detColor='#ea580c';detBg='#ffedd5'; }
-      else if(v.match(/kapde|shoes|shopping|market|online/)) { detCat='Shopping';detIcon='🛍️';detColor='#db2777';detBg='#fce7f3'; }
-      else if(v.match(/train|bus|travel|ticket|cab|auto/)) { detCat='Travel';detIcon='✈️';detColor='#0891b2';detBg='#e0f2fe'; }
-      if(detCat) {
-        const tile = document.querySelector(`.ks-cat-tile[data-cat="${detCat}"]`);
-        if(tile) ksCat(tile, detCat, detIcon, detColor, detBg);
-      }
-    }
-
-    // Date helpers
-    function ksPickDate(type, btn) {
-      document.querySelectorAll('.ks-date-btn').forEach(b => b.classList.remove('ks-date-active'));
-      btn.classList.add('ks-date-active');
-      const today = new Date();
-      const dateInp = document.getElementById('ks-date');
-      if(type==='today') {
-        ksData.date = today.toISOString().split('T')[0];
-        dateInp.style.display='none';
-      } else if(type==='yesterday') {
-        const y = new Date(today); y.setDate(y.getDate()-1);
-        ksData.date = y.toISOString().split('T')[0];
-        dateInp.style.display='none';
-      } else {
-        dateInp.style.display='block';
-        dateInp.value = ksData.date;
-      }
-      ksUpdateDateLabel();
-    }
-    function ksUpdateDateLabel() {
-      const d = document.getElementById('ks-date').value || ksData.date;
-      if(d) ksData.date = d;
-      // Format for display
-      let label = ksData.date;
-      try { const dt = new Date(ksData.date+'T00:00:00'); const opts={day:'numeric',month:'short'}; label = dt.toLocaleDateString('hi-IN',opts); } catch(e){}
-      const el = document.getElementById('ks-sum-date-label');
-      if(el) el.textContent = label;
-    }
-
-    // GPS
-    function ksGetGPS() {
-      const lbl = document.getElementById('ks-gps-label');
-      lbl.textContent = '📍 Location le raha hai...';
-      if(!navigator.geolocation) { lbl.textContent='📍 GPS nahi mila'; return; }
-      navigator.geolocation.getCurrentPosition(pos => {
-        const { latitude: lat, longitude: lng } = pos.coords;
-        window.currentGPSLocation = { lat, lng };
-        lbl.textContent = `✅ GPS Mila (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
-      }, () => { lbl.textContent='❌ GPS permission do'; });
-    }
-
-    // Voice input for description
-    function ksVoiceDesc() {
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SpeechRec) { alert('Voice support nahi hai is browser mein'); return; }
-      const btn = document.getElementById('ks-voice-btn');
-      if(ksVoicing) {
-        ksVoicing=false; btn.classList.remove('ks-recording');
-        if(ksVoiceRec) { try{ksVoiceRec.stop();}catch(e){} }
-        return;
-      }
-      ksVoiceRec = new SpeechRec();
-      ksVoiceRec.lang = 'hi-IN';
-      ksVoiceRec.interimResults = true;
-      ksVoiceRec.continuous = false;
-      ksVoicing = true;
-      btn.classList.add('ks-recording');
-      ksVoiceRec.start();
-      ksVoiceRec.onresult = (e) => {
-        let transcript = '';
-        for(let i=e.resultIndex;i<e.results.length;i++) transcript += e.results[i][0].transcript;
-        document.getElementById('ks-desc').value = transcript;
-        ksAutoDetect(transcript);
-        // Try to extract amount
-        const numMatch = transcript.match(/\d+/);
-        if(numMatch) {
-          const amt = numMatch[0];
-          document.getElementById('ks-amount').value = amt;
-          document.getElementById('ks-amt-val').textContent = amt;
-          // Remove number from desc
-          const descOnly = transcript.replace(numMatch[0],'').replace(/(rupaye|rupay|rs|roopaye|ka|ki|ke)/gi,'').trim();
-          if(descOnly) document.getElementById('ks-desc').value = descOnly.charAt(0).toUpperCase()+descOnly.slice(1);
+    function startSheetVoice() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+            alert('Aapka browser voice recognition support nahi karta. Manual tab use karein.');
+            return;
         }
-      };
-      ksVoiceRec.onend = () => { ksVoicing=false; btn.classList.remove('ks-recording'); };
-      ksVoiceRec.onerror = () => { ksVoicing=false; btn.classList.remove('ks-recording'); };
+        resetVoiceSheet();
+        sheetVoiceRecognition = new SpeechRec();
+        sheetVoiceRecognition.lang = 'hi-IN';
+        sheetVoiceRecognition.interimResults = true;
+        sheetVoiceRecognition.continuous = false;
+
+        sheetIsRecording = true;
+        document.getElementById('sheet-mic-btn').classList.add('recording');
+        document.getElementById('mic-ring-1').classList.add('recording');
+        document.getElementById('mic-ring-2').classList.add('recording');
+        document.getElementById('voice-sheet-status').textContent = '🔴 Sun raha hoon... bolte rahein!';
+        document.getElementById('voice-sheet-status').style.color = '#ef4444';
+        document.getElementById('voice-transcript-box').style.display = 'block';
+
+        sheetVoiceRecognition.onresult = (e) => {
+            let transcript = '';
+            for (let i = e.resultIndex; i < e.results.length; i++) {
+                transcript += e.results[i][0].transcript;
+            }
+            document.getElementById('voice-transcript-text').textContent = transcript;
+            if (e.results[e.results.length-1].isFinal) {
+                parseVoiceInput(transcript);
+            }
+        };
+        sheetVoiceRecognition.onerror = () => stopSheetVoice();
+        sheetVoiceRecognition.onend   = () => {
+            if (sheetIsRecording) stopSheetVoice();
+        };
+        sheetVoiceRecognition.start();
     }
 
-    // Save
-    function ksSave() {
-      const desc   = document.getElementById('ks-desc').value.trim() || ksData.cat+' kharcha';
-      const amount = document.getElementById('ks-amount').value;
-      const date   = ksData.date || new Date().toISOString().split('T')[0];
-
-      if(!amount || amount==='0') {
-        document.getElementById('ks-amt-val').style.color='#ef4444';
-        setTimeout(()=>document.getElementById('ks-amt-val').style.color='#0f172a',1200);
-        ksGoStep(2); return;
-      }
-
-      // Sync to main hidden form
-      document.getElementById('description').value      = desc;
-      document.getElementById('amount').value           = amount;
-      document.getElementById('expense-category').value = ksData.cat || 'Other';
-      document.getElementById('member-name').value      = ksData.member || 'Me';
-      document.getElementById('date').value             = date;
-
-      closeAddSheet();
-      setTimeout(() => { if(typeof addExpense==='function') addExpense(); }, 150);
+    function stopSheetVoice() {
+        sheetIsRecording = false;
+        if (sheetVoiceRecognition) { try { sheetVoiceRecognition.stop(); } catch(e){} sheetVoiceRecognition = null; }
+        document.getElementById('sheet-mic-btn').classList.remove('recording');
+        document.getElementById('mic-ring-1').classList.remove('recording');
+        document.getElementById('mic-ring-2').classList.remove('recording');
+        document.getElementById('voice-sheet-status').textContent = sheetParsedData.desc
+            ? '✅ Samajh liya! Neeche confirm karo.' : 'Mic dabao baat karne ke liye 🎙️';
+        document.getElementById('voice-sheet-status').style.color = '';
     }
 
-    // Compatibility shims for old sheet functions
-    function switchAddTab(){}
-    function toggleSheetVoice(){ ksVoiceDesc(); }
-    function resetVoiceSheet(){}
-    function stopSheetVoice(){ if(ksVoiceRec){try{ksVoiceRec.stop();}catch(e){}} }
-    function saveVoiceExpense(){}
-    function saveManualExpense(){ ksSave(); }
-    function selectMemberChip(){}
-    function selectCatChip(){}
-    </script>
+    function parseVoiceInput(text) {
+        // Extract amount — find number in text
+        const numMatch = text.match(/\d+(\.\d+)?/);
+        const amount   = numMatch ? parseFloat(numMatch[0]) : 0;
+        // Remove number to get description
+        const desc = text.replace(/\d+(\.\d+)?/, '').replace(/rupay|rupaye|rupee|rs|₹/gi, '').trim() || text;
 
-
-    <!-- ── PSYCHOLOGY ENHANCER SCRIPT ── -->
-    <script>
-    // Show motivational greeting based on time of day
-    function updateGreeting() {
-        const hr = new Date().getHours();
-        const greetEl = document.getElementById('smart-greeting-display');
-        if (!greetEl) return;
-        let greet = '';
-        if (hr < 12)      greet = '🌅 Subah ki Shubhkamnayein!';
-        else if (hr < 17) greet = '☀️ Dopahar ka Namaskar!';
-        else if (hr < 20) greet = '🌆 Shaam ka Namaskar!';
-        else               greet = '🌙 Raat ka Namaskar!';
-        greetEl.textContent = greet;
-    }
-
-    // Show streak if > 0
-    function showStreak() {
-        const streakEl = document.getElementById('streak-display');
-        const streakCount = document.getElementById('streak-count');
-        const streak = parseInt(localStorage.getItem('dailyStreak') || '0');
-        if (streakEl && streak > 0) {
-            streakEl.style.display = 'block';
-            if (streakCount) streakCount.textContent = streak;
+        // Auto-detect category
+        const catMap = {
+            'sabji|chawal|daal|atta|namak|sugar|tel|ghee|masala|kiryana|kirana|grocery|milk|dudh': 'Ration',
+            'petrol|diesel|cng|fuel|gas': 'Petrol',
+            'doctor|dawai|medicine|medical|hospital|injection|tablet': 'Medical',
+            'bijli|bill|mobile|recharge|internet|light': 'Bills',
+            'khana|food|restaurant|dhaba|snack|chai|tea|pizza': 'Food',
+            'bus|train|auto|taxi|travel|ticket|uber|ola': 'Travel',
+            'kapda|jute|shopping|amazon|flipkart|online': 'Shopping'
+        };
+        let detectedCat = 'Other';
+        for (const [keywords, cat] of Object.entries(catMap)) {
+            if (new RegExp(keywords, 'i').test(text)) { detectedCat = cat; break; }
         }
+
+        sheetParsedData = { desc: desc.charAt(0).toUpperCase()+desc.slice(1), amount, cat: detectedCat };
+
+        document.getElementById('voice-parsed-desc').textContent   = sheetParsedData.desc || '—';
+        document.getElementById('voice-parsed-amount').textContent = '₹' + (amount || '0');
+        document.getElementById('voice-parsed-cat').textContent    = detectedCat;
+        document.getElementById('voice-parsed-card').style.display = 'block';
+        document.getElementById('voice-save-btn').style.display    = 'block';
     }
 
-    // Mood text based on budget
-    function updateMoodText() {
-        const moodEl = document.getElementById('month-mood-text');
-        if (!moodEl) return;
-        const budget = parseInt(localStorage.getItem('budgetLimit') || '20000');
-        const data = JSON.parse(localStorage.getItem('familyExpenses') || '[]');
-        const now = new Date();
-        const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-        const spent = data
-            .filter(e => e.date && e.date.startsWith(monthKey))
-            .reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
-        const pct = budget > 0 ? (spent / budget) * 100 : 0;
-        const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-        const daysPassed = now.getDate();
-        const daysLeft = daysInMonth - daysPassed;
-
-        if (pct < 50)       moodEl.textContent = '🎉 Budget ke andar hain — zabardast!';
-        else if (pct < 75)  moodEl.textContent = '⚡ ' + daysLeft + ' din baaki, thoda dhyan rakhein';
-        else if (pct < 90)  moodEl.textContent = '⚠️ Budget khatam hone wala hai!';
-        else                 moodEl.textContent = '🚨 Budget limit cross ho gayi!';
+    function resetVoiceSheet() {
+        stopSheetVoice();
+        sheetParsedData = {};
+        document.getElementById('voice-transcript-text').textContent = '';
+        document.getElementById('voice-transcript-box').style.display = 'none';
+        document.getElementById('voice-parsed-card').style.display    = 'none';
+        document.getElementById('voice-save-btn').style.display       = 'none';
+        document.getElementById('voice-sheet-status').textContent     = 'Mic dabao baat karne ke liye 🎙️';
+        document.getElementById('voice-sheet-status').style.color     = '';
     }
 
-    // Animate budget bar color transition (psychological zone coloring)
-    function animateBudgetBar() {
-        const bar = document.getElementById('budget-bar');
-        if (!bar) return;
-        const w = parseFloat(bar.style.width || '0');
-        bar.classList.remove('warn', 'danger');
-        if (w > 80) bar.classList.add('danger');
-        else if (w > 60) bar.classList.add('warn');
-    }
-
-    // Tools health bar sync
-    function syncToolsHealthBar() {
-        const bar = document.getElementById('tools-health-bar');
-        const lbl = document.getElementById('tools-health-label');
-        if (!bar) return;
-        const score = parseInt(document.getElementById('health-score-text')?.textContent?.split('/')[0] || '0');
-        bar.style.width = Math.min(score, 100) + '%';
-        if (lbl) {
-            if (score >= 75) lbl.textContent = '🟢 ' + score + '/100';
-            else if (score >= 50) lbl.textContent = '🟡 ' + score + '/100';
-            else lbl.textContent = '🔴 ' + score + '/100';
-        }
-    }
-
-    // Init all psychology hooks
-    document.addEventListener('DOMContentLoaded', function() {
-        updateGreeting();
-        showStreak();
-        updateMoodText();
-        // Watch budget bar
-        const obs = new MutationObserver(animateBudgetBar);
-        const budBar = document.getElementById('budget-bar');
-        if (budBar) obs.observe(budBar, { attributes: true, attributeFilter: ['style'] });
-        // Re-run after data loads
+    function saveVoiceExpense() {
+        if (!sheetParsedData.desc) return;
+        const today = new Date().toISOString().split('T')[0];
+        // Sync to existing form fields and call addExpense
+        document.getElementById('description').value       = sheetParsedData.desc;
+        document.getElementById('amount').value            = sheetParsedData.amount;
+        document.getElementById('expense-category').value = sheetParsedData.cat;
+        document.getElementById('date').value              = today;
+        closeAddSheet();
         setTimeout(() => {
-            updateMoodText();
-            syncToolsHealthBar();
-            showStreak();
-        }, 1800);
-        setInterval(syncToolsHealthBar, 3000);
-    });
+            if (typeof addExpense === 'function') addExpense();
+        }, 150);
+    }
+
+    // ── MANUAL ─────────────────────────────────────────────────────
+    function selectMemberChip(btn, val) {
+        document.querySelectorAll('#sheet-member-chips .sheet-chip').forEach(b => b.classList.remove('active-chip'));
+        btn.classList.add('active-chip');
+        sheetSelectedMember = val;
+    }
+    function selectCatChip(btn, val) {
+        document.querySelectorAll('#sheet-cat-chips .sheet-cat-chip').forEach(b => b.classList.remove('active-cat'));
+        btn.classList.add('active-cat');
+        sheetSelectedCat = val;
+    }
+
+    function saveManualExpense() {
+        const desc   = document.getElementById('sheet-description').value.trim();
+        const amount = document.getElementById('sheet-amount').value;
+        const date   = document.getElementById('sheet-date').value;
+        if (!desc)   { document.getElementById('sheet-description').focus(); return; }
+        if (!amount) { document.getElementById('sheet-amount').focus(); return; }
+        // Sync to main form
+        document.getElementById('description').value       = desc;
+        document.getElementById('amount').value            = amount;
+        document.getElementById('expense-category').value = sheetSelectedCat;
+        document.getElementById('member-name').value       = sheetSelectedMember;
+        document.getElementById('date').value              = date;
+        closeAddSheet();
+        setTimeout(() => {
+            if (typeof addExpense === 'function') addExpense();
+        }, 150);
+    }
     </script>
 
 </body>
