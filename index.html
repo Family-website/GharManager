@@ -16,7 +16,7 @@
     
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="stylesheet" href="./style.css?v=v6">
+    <link rel="stylesheet" href="./style.css?v=v5">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -557,37 +557,26 @@
             
             <div id="section-hisab" class="app-section active-section">
 
-                <!-- ① HEADER: Psychology-First Dual Stat Cards -->
-                <!-- Motivational greeting strip -->
-                <div style="padding:14px 14px 0;display:flex;align-items:center;justify-content:space-between;">
-                    <div>
-                        <p id="smart-greeting-display" style="font-size:13px;font-weight:700;color:var(--text-2);margin:0 0 2px;">Namaste! 🙏</p>
-                        <p style="font-size:10px;font-weight:600;color:var(--text-3);margin:0;" id="month-mood-text">Aaj ka hisaab shuru karein...</p>
-                    </div>
-                    <div id="streak-display" style="display:none;">
-                        <div class="streak-badge">🔥 <span id="streak-count">0</span> Din</div>
-                    </div>
-                </div>
-
+                <!-- ① HEADER: Dual Stat Cards -->
                 <div class="hx-header">
-                    <!-- KHARCHA CARD — reframed as "aaj tak" not total -->
                     <div class="hx-stat-card hx-kharcha">
-                        <p class="hx-stat-label translatable">💸 Mahine ka Kharcha</p>
-                        <h1 class="hx-stat-val" id="total-expense" style="font-size:28px;">₹0</h1>
+                        <p class="hx-stat-label translatable">Is Mahine Kharcha</p>
+                        <h1 class="hx-stat-val" id="total-expense">₹0</h1>
                         <p class="hx-stat-sub" id="month-comparison">📊 Calculating...</p>
+                        <!-- mini bar indicator -->
                         <div style="margin-top:10px;height:3px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;position:relative;z-index:1;">
                             <div id="hx-mini-bar" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(255,255,255,0.5),rgba(255,255,255,0.9));border-radius:99px;transition:width 0.8s cubic-bezier(0.22,1,0.36,1);"></div>
                         </div>
                     </div>
-                    <!-- BACHAT CARD — the hero number (positive psychology) -->
                     <div class="hx-stat-card hx-bachat">
-                        <p class="hx-stat-label" style="color:rgba(255,255,255,0.8);">✅ Abhi Bacha Hai</p>
-                        <h1 class="hx-stat-val" id="hx-budget-left" style="font-size:28px;">₹0</h1>
+                        <p class="hx-stat-label">💚 Budget Bacha</p>
+                        <h1 class="hx-stat-val" id="hx-budget-left">₹0</h1>
                         <p class="hx-stat-sub">Budget: ₹<span id="budget-display">20000</span></p>
+                        <!-- mini savings indicator -->
                         <div style="margin-top:10px;display:flex;gap:3px;position:relative;z-index:1;">
-                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.6);border-radius:99px;"></div>
+                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.55);border-radius:99px;"></div>
                             <div style="height:3px;flex:1;background:rgba(255,255,255,0.35);border-radius:99px;"></div>
-                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.18);border-radius:99px;"></div>
+                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.2);border-radius:99px;"></div>
                         </div>
                     </div>
                 </div>
@@ -616,7 +605,7 @@
                     </div>
                     <div class="hx-filters-row">
                         <select id="family-filter" onchange="updateHisabUI()" class="hx-filter-select">
-                            <option value="All">👥 Sabhi</option>
+                            <option value="All">👨‍👩‍👧 Sabhi</option>
                             <option value="Me">🙋 Me</option>
                             <option value="Papa">👨 Papa</option>
                             <option value="Mummy">👩 Mummy</option>
@@ -734,38 +723,30 @@
             </div>
 
             <div id="section-tools" class="app-section">
-                <!-- TOOLS HEADER — Psychology-First Dashboard Hero -->
-                <div class="tools-hero">
-                    <p style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;position:relative;z-index:1;">Smart Tools & Analytics</p>
-                    <h2 style="font-size:28px;font-weight:700;color:white;margin:0;font-family:'Caveat',cursive;position:relative;z-index:1;letter-spacing:0.5px;">Finance Dashboard</h2>
-                    <!-- Financial health indicator -->
-                    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;position:relative;z-index:1;">
-                        <div style="flex:1;height:6px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;">
-                            <div id="tools-health-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#34D399,#F59E0B,#EF4444);border-radius:99px;transition:width 0.8s;"></div>
-                        </div>
-                        <span id="tools-health-label" style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.7);white-space:nowrap;">Financial Health</span>
-                    </div>
+                <!-- TOOLS HEADER -->
+                <div style="background:linear-gradient(135deg,#0B1535 0%,#162040 55%,#1E2D52 100%);padding:22px 20px 18px;color:white;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-30px;right:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(240,165,0,0.18),transparent 70%);border-radius:50%;"></div>
+                    <div style="position:absolute;bottom:-40px;left:10px;width:100px;height:100px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);border-radius:50%;"></div>
+                    <p style="font-size:10px;color:rgba(255,255,255,0.45);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;position:relative;z-index:1;font-family:'DM Sans',sans-serif;">Smart Tools & Analytics</p>
+                    <h2 style="font-size:30px;font-weight:700;color:white;margin:0;font-family:'Caveat',cursive;position:relative;z-index:1;letter-spacing:0.5px;">Finance Dashboard</h2>
                 </div>
 
-                <!-- ① INCOME · KHARCHA · BACHAT ROW — Psychology: Savings First! -->
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:14px 14px 0;">
-                    <!-- BACHAT — shown first (positive framing) -->
-                    <div style="background:linear-gradient(145deg,#065F46,#10B981); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(16,185,129,0.28);">
-                        <p style="font-size:8px; color:rgba(255,255,255,0.8); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">💚 Bachat</p>
-                        <h3 id="tools-bachat" style="font-size:15px; color:white; font-weight:900; margin:0; font-family:'Sora',sans-serif;">₹0</h3>
-                        <p id="tools-bachat-pct" style="font-size:9px; color:rgba(255,255,255,0.7); margin-top:4px; font-weight:700;">0% bachat dar</p>
+                <!-- ① INCOME · KHARCHA · BACHAT ROW -->
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:15px 15px 0;">
+                    <div style="background:linear-gradient(135deg,#dcfce7,#bbf7d0); border-radius:16px; padding:12px; border:1px solid #86efac;">
+                        <p style="font-size:9px; color:#166534; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Income</p>
+                        <h3 id="tools-income" style="font-size:16px; color:#15803d; font-weight:900; margin:0;">₹0</h3>
+                        <button onclick="setIncome()" style="margin-top:6px; background:#16a34a; color:white; border:none; border-radius:8px; padding:4px 8px; font-size:10px; font-weight:800; cursor:pointer; width:100%;">+ Edit</button>
                     </div>
-                    <!-- INCOME -->
-                    <div style="background:linear-gradient(145deg,#1E3A8A,#2563EB); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(37,99,235,0.28);">
-                        <p style="font-size:8px; color:rgba(255,255,255,0.8); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">💰 Aamdani</p>
-                        <h3 id="tools-income" style="font-size:15px; color:white; font-weight:900; margin:0; font-family:'Sora',sans-serif;">₹0</h3>
-                        <button onclick="setIncome()" style="margin-top:4px; background:rgba(255,255,255,0.18); color:white; border:none; border-radius:8px; padding:4px 8px; font-size:9px; font-weight:800; cursor:pointer; width:100%;">+ Set</button>
+                    <div style="background:linear-gradient(135deg,#fee2e2,#fecaca); border-radius:16px; padding:12px; border:1px solid #fca5a5;">
+                        <p style="font-size:9px; color:#b91c1c; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Kharcha</p>
+                        <h3 id="tools-kharcha" style="font-size:16px; color:#dc2626; font-weight:900; margin:0;">₹0</h3>
+                        <p style="font-size:9px; color:#ef4444; margin-top:6px; font-weight:700;">This month</p>
                     </div>
-                    <!-- KHARCHA — shown last (de-emphasize expense) -->
-                    <div style="background:linear-gradient(145deg,#7F1D1D,#EF4444); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(239,68,68,0.28);">
-                        <p style="font-size:8px; color:rgba(255,255,255,0.8); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">💸 Kharcha</p>
-                        <h3 id="tools-kharcha" style="font-size:15px; color:white; font-weight:900; margin:0; font-family:'Sora',sans-serif;">₹0</h3>
-                        <p style="font-size:9px; color:rgba(255,255,255,0.7); margin-top:4px; font-weight:700;">Is mahine</p>
+                    <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe); border-radius:16px; padding:12px; border:1px solid #93c5fd;">
+                        <p style="font-size:9px; color:#1d4ed8; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Bachat</p>
+                        <h3 id="tools-bachat" style="font-size:16px; color:#1e40af; font-weight:900; margin:0;">₹0</h3>
+                        <p id="tools-bachat-pct" style="font-size:9px; color:#3b82f6; margin-top:6px; font-weight:700;">0% rate</p>
                     </div>
                 </div>
 
@@ -2001,98 +1982,6 @@
     function saveManualExpense(){ ksSave(); }
     function selectMemberChip(){}
     function selectCatChip(){}
-    </script>
-
-
-    <!-- ── PSYCHOLOGY ENHANCER SCRIPT ── -->
-    <script>
-    // Show motivational greeting based on time of day
-    function updateGreeting() {
-        const hr = new Date().getHours();
-        const greetEl = document.getElementById('smart-greeting-display');
-        if (!greetEl) return;
-        let greet = '';
-        if (hr < 12)      greet = '🌅 Subah ki Shubhkamnayein!';
-        else if (hr < 17) greet = '☀️ Dopahar ka Namaskar!';
-        else if (hr < 20) greet = '🌆 Shaam ka Namaskar!';
-        else               greet = '🌙 Raat ka Namaskar!';
-        greetEl.textContent = greet;
-    }
-
-    // Show streak if > 0
-    function showStreak() {
-        const streakEl = document.getElementById('streak-display');
-        const streakCount = document.getElementById('streak-count');
-        const streak = parseInt(localStorage.getItem('dailyStreak') || '0');
-        if (streakEl && streak > 0) {
-            streakEl.style.display = 'block';
-            if (streakCount) streakCount.textContent = streak;
-        }
-    }
-
-    // Mood text based on budget
-    function updateMoodText() {
-        const moodEl = document.getElementById('month-mood-text');
-        if (!moodEl) return;
-        const budget = parseInt(localStorage.getItem('budgetLimit') || '20000');
-        const data = JSON.parse(localStorage.getItem('familyExpenses') || '[]');
-        const now = new Date();
-        const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-        const spent = data
-            .filter(e => e.date && e.date.startsWith(monthKey))
-            .reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
-        const pct = budget > 0 ? (spent / budget) * 100 : 0;
-        const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-        const daysPassed = now.getDate();
-        const daysLeft = daysInMonth - daysPassed;
-
-        if (pct < 50)       moodEl.textContent = '🎉 Budget ke andar hain — zabardast!';
-        else if (pct < 75)  moodEl.textContent = '⚡ ' + daysLeft + ' din baaki, thoda dhyan rakhein';
-        else if (pct < 90)  moodEl.textContent = '⚠️ Budget khatam hone wala hai!';
-        else                 moodEl.textContent = '🚨 Budget limit cross ho gayi!';
-    }
-
-    // Animate budget bar color transition (psychological zone coloring)
-    function animateBudgetBar() {
-        const bar = document.getElementById('budget-bar');
-        if (!bar) return;
-        const w = parseFloat(bar.style.width || '0');
-        bar.classList.remove('warn', 'danger');
-        if (w > 80) bar.classList.add('danger');
-        else if (w > 60) bar.classList.add('warn');
-    }
-
-    // Tools health bar sync
-    function syncToolsHealthBar() {
-        const bar = document.getElementById('tools-health-bar');
-        const lbl = document.getElementById('tools-health-label');
-        if (!bar) return;
-        const score = parseInt(document.getElementById('health-score-text')?.textContent?.split('/')[0] || '0');
-        bar.style.width = Math.min(score, 100) + '%';
-        if (lbl) {
-            if (score >= 75) lbl.textContent = '🟢 ' + score + '/100';
-            else if (score >= 50) lbl.textContent = '🟡 ' + score + '/100';
-            else lbl.textContent = '🔴 ' + score + '/100';
-        }
-    }
-
-    // Init all psychology hooks
-    document.addEventListener('DOMContentLoaded', function() {
-        updateGreeting();
-        showStreak();
-        updateMoodText();
-        // Watch budget bar
-        const obs = new MutationObserver(animateBudgetBar);
-        const budBar = document.getElementById('budget-bar');
-        if (budBar) obs.observe(budBar, { attributes: true, attributeFilter: ['style'] });
-        // Re-run after data loads
-        setTimeout(() => {
-            updateMoodText();
-            syncToolsHealthBar();
-            showStreak();
-        }, 1800);
-        setInterval(syncToolsHealthBar, 3000);
-    });
     </script>
 
 </body>
