@@ -82,7 +82,7 @@
             transition: background 0.3s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
         }
         .nav-btn.active-nav .nav-icon-wrap {
-            background: linear-gradient(135deg, rgba(37,99,235,0.13), rgba(99,102,241,0.09));
+            background: linear-gradient(135deg, rgba(79,70,229,0.13), rgba(99,102,241,0.09));
             transform: translateY(-2px);
         }
         .nav-icon-wrap svg {
@@ -90,7 +90,7 @@
             filter: drop-shadow(0 0 0 transparent);
         }
         .nav-btn.active-nav .nav-icon-wrap svg {
-            filter: drop-shadow(0 2px 6px rgba(37,99,235,0.35));
+            filter: drop-shadow(0 2px 6px rgba(79,70,229,0.35));
             transform: scale(1.12);
         }
         .nav-btn:active .nav-icon-wrap svg { transform: scale(0.82) rotate(-6deg); }
@@ -237,7 +237,7 @@
         
         /* Nav glow on active */
         .nav-btn.active-nav .nav-icon-wrap {
-            background: rgba(37,99,235,0.1) !important;
+            background: rgba(79,70,229,0.1) !important;
         }
         
         /* Profile modal bottom sheet */
@@ -311,27 +311,27 @@
 
     <div id="offline-banner" style="display: none; background: #ef4444; color: white; text-align: center; font-size: 12px; font-weight: bold; padding: 5px; position: fixed; top: 0; width: 100%; z-index: 99999999;">📶 You are offline. Data will sync when connected.</div>
 
-    <div id="splash-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999999;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;background:linear-gradient(160deg,#0f172a 0%,#1e3a8a 55%,#312e81 100%);">
+    <div id="splash-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999999;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;background:linear-gradient(160deg,#F7F8FC 0%,#EEF2FF 55%,#F5F3FF 100%);">
         <!-- Animated rings -->
-        <div style="position:absolute;width:500px;height:500px;border-radius:50%;border:1px solid rgba(99,102,241,0.15);animation:splashRingPulse 3s ease-out infinite;"></div>
-        <div style="position:absolute;width:380px;height:380px;border-radius:50%;border:1px solid rgba(99,102,241,0.2);animation:splashRingPulse 3s ease-out infinite 0.5s;"></div>
-        <div style="position:absolute;width:260px;height:260px;border-radius:50%;border:1px solid rgba(99,102,241,0.3);animation:splashRingPulse 3s ease-out infinite 1s;"></div>
+        <div style="position:absolute;width:500px;height:500px;border-radius:50%;border:1px solid rgba(79,70,229,0.10);animation:splashRingPulse 3s ease-out infinite;"></div>
+        <div style="position:absolute;width:380px;height:380px;border-radius:50%;border:1px solid rgba(79,70,229,0.14);animation:splashRingPulse 3s ease-out infinite 0.5s;"></div>
+        <div style="position:absolute;width:260px;height:260px;border-radius:50%;border:1px solid rgba(79,70,229,0.18);animation:splashRingPulse 3s ease-out infinite 1s;"></div>
         <!-- Glow blob -->
-        <div style="position:absolute;width:220px;height:220px;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);border-radius:50%;"></div>
+        <div style="position:absolute;width:220px;height:220px;background:radial-gradient(circle,rgba(79,70,229,0.16),transparent 70%);border-radius:50%;"></div>
 
         <!-- Logo container with bounce-in -->
         <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;animation:splashLogoIn 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;">
-            <div style="width:100px;height:100px;border-radius:30px;background:linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05));border:2px solid rgba(255,255,255,0.2);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.2);margin-bottom:18px;">
+            <div style="width:100px;height:100px;border-radius:30px;background:#FFFFFF;border:1px solid rgba(79,70,229,0.12);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(79,70,229,0.14);margin-bottom:18px;">
                 <img src="./icon.png" style="width:70px;height:70px;border-radius:20px;object-fit:cover;">
             </div>
-            <h1 style="font-family:'Caveat',cursive;font-size:48px;font-weight:700;color:white;margin:0 0 6px;letter-spacing:1px;">GharManager</h1>
-            <p style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:32px;">Smart Household Finance</p>
+            <h1 style="font-family:'Caveat',cursive;font-size:48px;font-weight:700;color:#1E2433;margin:0 0 6px;letter-spacing:1px;">GharManager</h1>
+            <p style="font-size:11px;color:#6B7280;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:32px;">Smart Household Finance</p>
 
             <!-- Loading bar -->
-            <div style="width:160px;height:3px;background:rgba(255,255,255,0.15);border-radius:3px;overflow:hidden;">
-                <div id="splash-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#6366f1,#a78bfa);border-radius:3px;transition:width 0.3s ease;"></div>
+            <div style="width:160px;height:3px;background:rgba(79,70,229,0.12);border-radius:3px;overflow:hidden;">
+                <div id="splash-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#4F46E5,#818CF8);border-radius:3px;transition:width 0.3s ease;"></div>
             </div>
-            <p id="splash-loading-text" style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;margin-top:10px;letter-spacing:0.5px;">Initializing...</p>
+            <p id="splash-loading-text" style="font-size:11px;color:#9AA3B2;font-weight:700;margin-top:10px;letter-spacing:0.5px;">Initializing...</p>
         </div>
 
         <style>
@@ -347,79 +347,79 @@
             <div class="anim-premium-icon" style="font-size: 70px; margin-bottom: 15px; line-height: 1;">📱</div>
             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; color: var(--ink-blue); font-weight: 800; font-size: 26px; margin-bottom: 10px;">Welcome to<br><span style="font-family: 'Caveat', cursive; font-size: 40px;">GharManager</span></h2>
             <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px; font-weight: 600; line-height: 1.5;">Track expenses, recharges, split bills, talk to AI, and grow your Net Worth! 🚀</p>
-            <button onclick="finishOnboarding()" class="expense-btn" style="background: linear-gradient(135deg, #2563eb, #6366f1); color: white; font-size: 18px !important; padding: 15px; border-radius: 15px; width: 100%; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);">Start Journey 🚀</button>
+            <button onclick="finishOnboarding()" class="expense-btn" style="background: linear-gradient(135deg, #4F46E5, #818CF8); color: white; font-size: 18px !important; padding: 15px; border-radius: 15px; width: 100%; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.28);">Start Journey 🚀</button>
         </div>
     </div>
 
-    <div id="login-screen" class="lock-overlay" style="display: none; background: linear-gradient(145deg, #0f172a 0%, #1e3a8a 50%, #1e1b4b 100%); overflow: hidden;">
+    <div id="login-screen" class="lock-overlay" style="display: none; background: linear-gradient(160deg, #F7F8FC 0%, #EEF2FF 55%, #F5F3FF 100%); overflow: hidden;">
         <!-- Animated background blobs -->
-        <div style="position:absolute;top:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(99,102,241,0.35),transparent 70%);border-radius:50%;animation:loginBlob1 6s ease-in-out infinite;"></div>
-        <div style="position:absolute;bottom:-100px;right:-60px;width:350px;height:350px;background:radial-gradient(circle,rgba(37,99,235,0.3),transparent 70%);border-radius:50%;animation:loginBlob2 8s ease-in-out infinite;"></div>
-        <div style="position:absolute;top:40%;left:60%;width:200px;height:200px;background:radial-gradient(circle,rgba(139,92,246,0.2),transparent 70%);border-radius:50%;animation:loginBlob1 5s ease-in-out infinite reverse;"></div>
+        <div style="position:absolute;top:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(79,70,229,0.14),transparent 70%);border-radius:50%;animation:loginBlob1 6s ease-in-out infinite;"></div>
+        <div style="position:absolute;bottom:-100px;right:-60px;width:350px;height:350px;background:radial-gradient(circle,rgba(79,70,229,0.12),transparent 70%);border-radius:50%;animation:loginBlob2 8s ease-in-out infinite;"></div>
+        <div style="position:absolute;top:40%;left:60%;width:200px;height:200px;background:radial-gradient(circle,rgba(139,92,246,0.10),transparent 70%);border-radius:50%;animation:loginBlob1 5s ease-in-out infinite reverse;"></div>
 
-        <div style="position:relative;z-index:2;width:92%;max-width:380px;padding:36px 28px;background:rgba(255,255,255,0.07);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.15);border-radius:32px;box-shadow:0 32px 80px rgba(0,0,0,0.45);animation:loginCardIn 0.6s cubic-bezier(0.34,1.56,0.64,1);">
+        <div style="position:relative;z-index:2;width:92%;max-width:380px;padding:36px 28px;background:rgba(255,255,255,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(79,70,229,0.10);border-radius:32px;box-shadow:0 24px 60px rgba(79,70,229,0.14);animation:loginCardIn 0.6s cubic-bezier(0.34,1.56,0.64,1);">
             <!-- Logo Area -->
             <div style="text-align:center;margin-bottom:24px;">
                 <div style="position:relative;display:inline-block;margin-bottom:14px;">
-                    <div style="position:absolute;inset:-8px;border-radius:30px;background:radial-gradient(circle,rgba(240,165,0,0.25),transparent 70%);animation:loginLogoFloat 3s ease-in-out infinite;"></div>
-                    <div style="width:76px;height:76px;border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));border:1.5px solid rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.14);position:relative;">
+                    <div style="position:absolute;inset:-8px;border-radius:30px;background:radial-gradient(circle,rgba(245,158,11,0.16),transparent 70%);animation:loginLogoFloat 3s ease-in-out infinite;"></div>
+                    <div style="width:76px;height:76px;border-radius:22px;background:#FFFFFF;border:1.5px solid rgba(79,70,229,0.12);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(79,70,229,0.14);position:relative;">
                         <img src="./icon.png" style="width:54px;height:54px;border-radius:16px;object-fit:cover;">
                     </div>
                 </div>
-                <h1 style="font-family:'Caveat',cursive;font-size:42px;font-weight:700;color:white;margin:0 0 3px;text-shadow:0 2px 16px rgba(240,165,0,0.25);">GharManager</h1>
-                <p style="font-size:10px;color:rgba(255,255,255,0.42);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;">Aapka Smart Ghar Ledger</p>
+                <h1 style="font-family:'Caveat',cursive;font-size:42px;font-weight:700;color:#1E2433;margin:0 0 3px;">GharManager</h1>
+                <p style="font-size:10px;color:#9AA3B2;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;">Aapka Smart Ghar Ledger</p>
             </div>
 
             <!-- Tab Switcher -->
-            <div id="login-tab-bar" style="display:flex;background:rgba(0,0,0,0.25);border-radius:14px;padding:4px;margin-bottom:22px;gap:4px;">
-                <button onclick="switchLoginTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:white;color:#1e3a8a;">Login</button>
-                <button onclick="switchLoginTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:transparent;color:rgba(255,255,255,0.6);">Register</button>
+            <div id="login-tab-bar" style="display:flex;background:#F1F2F8;border-radius:14px;padding:4px;margin-bottom:22px;gap:4px;">
+                <button onclick="switchLoginTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:white;color:#4338CA;box-shadow:0 1px 4px rgba(30,36,51,0.08);">Login</button>
+                <button onclick="switchLoginTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:transparent;color:#9AA3B2;">Register</button>
             </div>
 
             <!-- Input Fields -->
             <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
                 <div style="position:relative;">
-                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    <input type="email" id="email-input" placeholder="Email ID" style="width:100%;padding:13px 14px 13px 44px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.1);color:white;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(99,102,241,0.8)'" onblur="this.style.border='1.5px solid rgba(255,255,255,0.15)'" placeholder="Email ID">
+                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9AA3B2" stroke-width="2" width="18" height="18"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <input type="email" id="email-input" placeholder="Email ID" style="width:100%;padding:13px 14px 13px 44px;border-radius:14px;border:1.5px solid #EEF0F6;background:#F7F8FC;color:#1E2433;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(79,70,229,0.6)'" onblur="this.style.border='1.5px solid #EEF0F6'" placeholder="Email ID">
                 </div>
                 <div style="position:relative;">
-                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    <input type="password" id="password-input" placeholder="Password (Min 6)" style="width:100%;padding:13px 44px 13px 44px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.1);color:white;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(99,102,241,0.8)'" onblur="this.style.border='1.5px solid rgba(255,255,255,0.15)'">
+                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9AA3B2" stroke-width="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="password" id="password-input" placeholder="Password (Min 6)" style="width:100%;padding:13px 44px 13px 44px;border-radius:14px;border:1.5px solid #EEF0F6;background:#F7F8FC;color:#1E2433;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(79,70,229,0.6)'" onblur="this.style.border='1.5px solid #EEF0F6'">
                     <button onclick="togglePasswordVisibility()" type="button" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:0;" id="pw-eye">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9AA3B2" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                 </div>
                 <!-- Name field for register only -->
                 <div id="name-field-wrap" style="display:none;position:relative;">
-                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <input type="text" id="name-input-reg" placeholder="Aapka Naam (Optional)" style="width:100%;padding:13px 14px 13px 44px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.1);color:white;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(99,102,241,0.8)'" onblur="this.style.border='1.5px solid rgba(255,255,255,0.15)'">
+                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9AA3B2" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <input type="text" id="name-input-reg" placeholder="Aapka Naam (Optional)" style="width:100%;padding:13px 14px 13px 44px;border-radius:14px;border:1.5px solid #EEF0F6;background:#F7F8FC;color:#1E2433;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(79,70,229,0.6)'" onblur="this.style.border='1.5px solid #EEF0F6'">
                 </div>
             </div>
 
             <!-- Forgot Password (login tab only) -->
             <div id="forgot-wrap" style="text-align:right;margin:-8px 0 14px;">
-                <button onclick="forgotPassword()" type="button" style="background:none;border:none;color:rgba(99,162,241,0.8);font-size:12px;font-weight:700;cursor:pointer;padding:0;">Forgot Password?</button>
+                <button onclick="forgotPassword()" type="button" style="background:none;border:none;color:#4F46E5;font-size:12px;font-weight:700;cursor:pointer;padding:0;">Forgot Password?</button>
             </div>
 
             <!-- Main CTA Button -->
-            <button type="button" id="main-login-btn" onclick="loginWithEmail()" style="width:100%;padding:14px;border:none;border-radius:16px;background:linear-gradient(135deg,#2563eb,#6366f1);color:white;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(99,102,241,0.5);transition:transform 0.15s,box-shadow 0.15s;margin-bottom:14px;letter-spacing:0.3px;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+            <button type="button" id="main-login-btn" onclick="loginWithEmail()" style="width:100%;padding:14px;border:none;border-radius:16px;background:linear-gradient(135deg,#4F46E5,#818CF8);color:white;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(79,70,229,0.30);transition:transform 0.15s,box-shadow 0.15s;margin-bottom:14px;letter-spacing:0.3px;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
                 🚀 Login Karein
             </button>
 
             <!-- Divider -->
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-                <div style="flex:1;height:1px;background:rgba(255,255,255,0.15);"></div>
-                <span style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;">YA PHIR</span>
-                <div style="flex:1;height:1px;background:rgba(255,255,255,0.15);"></div>
+                <div style="flex:1;height:1px;background:#EEF0F6;"></div>
+                <span style="font-size:11px;color:#9AA3B2;font-weight:700;">YA PHIR</span>
+                <div style="flex:1;height:1px;background:#EEF0F6;"></div>
             </div>
 
             <!-- Google Sign-In -->
-            <button type="button" onclick="loginWithGoogle()" style="width:100%;padding:13px;border:1.5px solid rgba(255,255,255,0.2);border-radius:16px;background:rgba(255,255,255,0.08);color:white;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.14)'" onmouseleave="this.style.background='rgba(255,255,255,0.08)'">
+            <button type="button" onclick="loginWithGoogle()" style="width:100%;padding:13px;border:1.5px solid #EEF0F6;border-radius:16px;background:#FFFFFF;color:#1E2433;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.2s;" onmouseenter="this.style.background='#F7F8FC'" onmouseleave="this.style.background='#FFFFFF'">
                 <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                 Google se Login Karein
             </button>
 
-            <p id="login-status" style="margin-top:14px;font-size:13px;color:#93c5fd;display:none;font-weight:700;text-align:center;">Connecting... ⏳</p>
+            <p id="login-status" style="margin-top:14px;font-size:13px;color:#4F46E5;display:none;font-weight:700;text-align:center;">Connecting... ⏳</p>
         </div>
 
         <style>
@@ -427,21 +427,21 @@
             @keyframes loginBlob2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-20px,-30px) scale(1.08)} }
             @keyframes loginCardIn { from{opacity:0;transform:translateY(40px) scale(0.94)} to{opacity:1;transform:translateY(0) scale(1)} }
             @keyframes loginLogoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-            #email-input::placeholder, #password-input::placeholder, #name-input-reg::placeholder { color: rgba(255,255,255,0.38); }
+            #email-input::placeholder, #password-input::placeholder, #name-input-reg::placeholder { color: #9AA3B2; }
         </style>
     </div>
 
     <!-- ══════════════════════════════════════
          🔐 PREMIUM LOCK SCREEN v3 — Real Biometric
          ══════════════════════════════════════ -->
-    <div id="pin-screen" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#0f172a 0%,#1e3a8a 55%,#312e81 100%);overflow:hidden;">
+    <div id="pin-screen" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#F7F8FC 0%,#EEF2FF 55%,#F5F3FF 100%);overflow:hidden;">
 
         <!-- Animated rings (decorative) -->
         <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
-            <div style="position:absolute;top:50%;left:50%;width:600px;height:600px;margin:-300px 0 0 -300px;border-radius:50%;border:1px solid rgba(99,102,241,0.12);animation:lkRing 4s ease-out infinite;"></div>
-            <div style="position:absolute;top:50%;left:50%;width:400px;height:400px;margin:-200px 0 0 -200px;border-radius:50%;border:1px solid rgba(99,102,241,0.18);animation:lkRing 4s ease-out infinite 1s;"></div>
-            <div style="position:absolute;top:50%;left:50%;width:240px;height:240px;margin:-120px 0 0 -120px;border-radius:50%;border:1px solid rgba(99,102,241,0.25);animation:lkRing 4s ease-out infinite 2s;"></div>
-            <div style="position:absolute;top:35%;left:50%;width:280px;height:280px;margin:-140px 0 0 -140px;background:radial-gradient(circle,rgba(99,102,241,0.2),transparent 70%);border-radius:50%;"></div>
+            <div style="position:absolute;top:50%;left:50%;width:600px;height:600px;margin:-300px 0 0 -300px;border-radius:50%;border:1px solid rgba(79,70,229,0.08);animation:lkRing 4s ease-out infinite;"></div>
+            <div style="position:absolute;top:50%;left:50%;width:400px;height:400px;margin:-200px 0 0 -200px;border-radius:50%;border:1px solid rgba(79,70,229,0.12);animation:lkRing 4s ease-out infinite 1s;"></div>
+            <div style="position:absolute;top:50%;left:50%;width:240px;height:240px;margin:-120px 0 0 -120px;border-radius:50%;border:1px solid rgba(79,70,229,0.16);animation:lkRing 4s ease-out infinite 2s;"></div>
+            <div style="position:absolute;top:35%;left:50%;width:280px;height:280px;margin:-140px 0 0 -140px;background:radial-gradient(circle,rgba(79,70,229,0.12),transparent 70%);border-radius:50%;"></div>
         </div>
 
         <style>
@@ -450,18 +450,18 @@
             @keyframes lkDot{0%{transform:scale(0)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
             @keyframes lkKeyPop{0%{transform:scale(1)}40%{transform:scale(.85)}100%{transform:scale(1)}}
             @keyframes lkIn{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:scale(1)}}
-            @keyframes lkBio{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,.6)}70%{box-shadow:0 0 0 14px rgba(99,102,241,0)}}
-            .lk-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.4);background:transparent;transition:all .2s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;}
-            .lk-dot.on{background:white;border-color:white;animation:lkDot .25s ease;}
+            @keyframes lkBio{0%,100%{box-shadow:0 0 0 0 rgba(79,70,229,.35)}70%{box-shadow:0 0 0 14px rgba(79,70,229,0)}}
+            .lk-dot{width:14px;height:14px;border-radius:50%;border:2px solid #C7CBE0;background:transparent;transition:all .2s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;}
+            .lk-dot.on{background:#4F46E5;border-color:#4F46E5;animation:lkDot .25s ease;}
             .lk-dot.err{background:#f87171;border-color:#f87171;}
             .lk-dot.ok{background:#34d399;border-color:#34d399;}
-            .lk-key{width:72px;height:72px;border-radius:50%;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;gap:1px;backdrop-filter:blur(8px);}
-            .lk-key:active{background:rgba(255,255,255,.22);animation:lkKeyPop .16s ease;}
+            .lk-key{width:72px;height:72px;border-radius:50%;border:1.5px solid #EEF0F6;background:#FFFFFF;color:#1E2433;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;gap:1px;box-shadow:0 2px 8px rgba(30,36,51,0.05);}
+            .lk-key:active{background:#EEF2FF;animation:lkKeyPop .16s ease;}
             .lk-key-num{font-size:22px;font-weight:700;line-height:1;}
-            .lk-key-abc{font-size:8px;font-weight:600;letter-spacing:1.4px;color:rgba(255,255,255,.4);text-transform:uppercase;}
-            .lk-abar{height:3px;border-radius:2px;flex:1;background:rgba(255,255,255,.12);transition:background .3s;}
+            .lk-key-abc{font-size:8px;font-weight:600;letter-spacing:1.4px;color:#9AA3B2;text-transform:uppercase;}
+            .lk-abar{height:3px;border-radius:2px;flex:1;background:#EEF0F6;transition:background .3s;}
             .lk-abar.hit{background:#f87171;}
-            .lk-bio-ring{width:68px;height:68px;border-radius:50%;border:1.5px solid rgba(99,102,241,.5);background:rgba(99,102,241,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+            .lk-bio-ring{width:68px;height:68px;border-radius:50%;border:1.5px solid rgba(79,70,229,.35);background:rgba(79,70,229,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
             .lk-bio-ring.scanning{animation:lkBio 1s ease-out 3;}
             #pin-screen{animation:lkIn .45s ease;}
         </style>
@@ -470,14 +470,14 @@
 
             <!-- Lock icon -->
             <div id="lk-icon" style="margin-bottom:14px;transition:transform .3s;">
-                <div style="width:68px;height:68px;border-radius:22px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,.3);">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <div style="width:68px;height:68px;border-radius:22px;background:#FFFFFF;border:1.5px solid rgba(79,70,229,.12);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(79,70,229,.14);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 </div>
             </div>
 
             <!-- Title -->
-            <h1 style="font-family:'Caveat',cursive;font-size:32px;font-weight:700;color:white;margin:0 0 4px;letter-spacing:.5px;">GharManager</h1>
-            <p id="lk-msg" style="font-size:12px;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:.4px;margin:0 0 22px;min-height:18px;transition:color .2s;">Enter your PIN</p>
+            <h1 style="font-family:'Caveat',cursive;font-size:32px;font-weight:700;color:#1E2433;margin:0 0 4px;letter-spacing:.5px;">GharManager</h1>
+            <p id="lk-msg" style="font-size:12px;color:#6B7280;font-weight:700;letter-spacing:.4px;margin:0 0 22px;min-height:18px;transition:color .2s;">Enter your PIN</p>
 
             <!-- PIN dots -->
             <div id="lk-dots" style="display:flex;gap:18px;margin-bottom:10px;">
@@ -505,20 +505,20 @@
                 <button class="lk-key" onclick="lkPress('9')"><span class="lk-key-num">9</span><span class="lk-key-abc">WXYZ</span></button>
                 <!-- Bio -->
                 <button class="lk-bio-ring" id="lk-bio-btn" onclick="biometricUnlock()" title="Fingerprint / Face ID">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,1)" stroke-width="1.8" stroke-linecap="round" width="28" height="28"><path d="M12 10a2 2 0 0 0-2 2v4"/><path d="M12 10a2 2 0 0 1 2 2v4"/><path d="M7.5 7.5A6.5 6.5 0 0 0 5.5 12v3"/><path d="M16.5 7.5A6.5 6.5 0 0 1 18.5 12v3"/><path d="M10 19.5a3 3 0 0 0 4 0"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.8" stroke-linecap="round" width="28" height="28"><path d="M12 10a2 2 0 0 0-2 2v4"/><path d="M12 10a2 2 0 0 1 2 2v4"/><path d="M7.5 7.5A6.5 6.5 0 0 0 5.5 12v3"/><path d="M16.5 7.5A6.5 6.5 0 0 1 18.5 12v3"/><path d="M10 19.5a3 3 0 0 0 4 0"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>
                 </button>
                 <button class="lk-key" onclick="lkPress('0')"><span class="lk-key-num">0</span></button>
                 <!-- Delete -->
-                <button class="lk-key" onclick="lkDel()" style="border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.08);">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" width="22" height="22"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+                <button class="lk-key" onclick="lkDel()" style="border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.06);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" width="22" height="22"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
                 </button>
             </div>
 
             <!-- Setup PIN button (only when no PIN) -->
-            <button onclick="lkStartSetup()" id="btn-setup-pin" style="display:none;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);padding:11px 28px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;">🔐 Setup New PIN</button>
+            <button onclick="lkStartSetup()" id="btn-setup-pin" style="display:none;background:#FFFFFF;border:1.5px solid #EEF0F6;color:#1E2433;padding:11px 28px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;box-shadow:0 2px 8px rgba(30,36,51,0.05);">🔐 Setup New PIN</button>
 
             <!-- Forgot PIN -->
-            <button onclick="lkForgot()" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;font-weight:600;cursor:pointer;padding:6px 16px;margin-top:4px;">Forgot PIN?</button>
+            <button onclick="lkForgot()" style="background:none;border:none;color:#9AA3B2;font-size:12px;font-weight:600;cursor:pointer;padding:6px 16px;margin-top:4px;">Forgot PIN?</button>
         </div>
     </div>
 
@@ -529,7 +529,7 @@
         <div id="top-bar-fixed" style="position:fixed;top:0;left:0;right:0;z-index:9000;max-width:600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:10px 18px 10px;background:var(--paper-bg);border-bottom:1px solid var(--line-color);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
             <!-- Brand Logo -->
             <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0B1535,#1E2D52);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(11,21,53,0.3);">
+                <div style="width:34px;height:34px;border-radius:10px;background:#FFFFFF;border:1px solid rgba(79,70,229,0.12);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(79,70,229,0.10);">
                     <img src="./icon.png" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">
                 </div>
                 <span style="font-family:'Caveat',cursive;font-size:22px;font-weight:700;color:var(--text-main);letter-spacing:0.5px;">GharManager</span>
@@ -724,11 +724,11 @@
 
             <div id="section-tools" class="app-section">
                 <!-- TOOLS HEADER -->
-                <div style="background:linear-gradient(135deg,#0B1535 0%,#162040 55%,#1E2D52 100%);padding:22px 20px 18px;color:white;position:relative;overflow:hidden;">
-                    <div style="position:absolute;top:-30px;right:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(240,165,0,0.18),transparent 70%);border-radius:50%;"></div>
-                    <div style="position:absolute;bottom:-40px;left:10px;width:100px;height:100px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);border-radius:50%;"></div>
-                    <p style="font-size:10px;color:rgba(255,255,255,0.45);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;position:relative;z-index:1;font-family:'DM Sans',sans-serif;">Smart Tools & Analytics</p>
-                    <h2 style="font-size:30px;font-weight:700;color:white;margin:0;font-family:'Caveat',cursive;position:relative;z-index:1;letter-spacing:0.5px;">Finance Dashboard</h2>
+                <div style="background:linear-gradient(135deg,#EEF2FF 0%,#E0E7FF 55%,#F5F3FF 100%);padding:22px 20px 18px;color:#1E2433;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-30px;right:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(245,158,11,0.14),transparent 70%);border-radius:50%;"></div>
+                    <div style="position:absolute;bottom:-40px;left:10px;width:100px;height:100px;background:radial-gradient(circle,rgba(79,70,229,0.12),transparent 70%);border-radius:50%;"></div>
+                    <p style="font-size:10px;color:#6B7280;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;position:relative;z-index:1;font-family:'DM Sans',sans-serif;">Smart Tools & Analytics</p>
+                    <h2 style="font-size:30px;font-weight:700;color:#4338CA;margin:0;font-family:'Caveat',cursive;position:relative;z-index:1;letter-spacing:0.5px;">Finance Dashboard</h2>
                 </div>
 
                 <!-- ① INCOME · KHARCHA · BACHAT ROW -->
@@ -888,7 +888,7 @@
                         <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="15" height="15"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                         <input type="text" id="ration-search" placeholder="Kuch dhundo..." oninput="updateRationUI()" style="width:100%;padding:10px 10px 10px 33px;border:1.5px solid var(--line-color);border-radius:12px;font-size:13px;font-weight:700;background:var(--paper-bg);color:var(--text-main);box-sizing:border-box;outline:none;" onfocus="this.style.border='1.5px solid #a855f7'" onblur="this.style.border='1.5px solid var(--line-color)'">
                     </div>
-                    <select id="ration-sort" onchange="updateRationUI()" style="padding:10px 36px 10px 12px;border:1.5px solid var(--line-color);border-radius:12px;font-size:12px;font-weight:800;background-color:var(--paper-bg);background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 10px center;color:var(--text-main);outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;">
+                    <select id="ration-sort" onchange="updateRationUI()" style="padding:10px 12px;border:1.5px solid var(--line-color);border-radius:12px;font-size:12px;font-weight:800;background:var(--paper-bg);color:var(--text-main);outline:none;cursor:pointer;">
                         <option value="date">📅 Date</option>
                         <option value="name">🔤 Naam</option>
                         <option value="amount">💰 Price</option>
@@ -1097,7 +1097,7 @@
 
                 <!-- 4-STAT GRID (upgraded) -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
-                    <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(37,99,235,0.25);">
+                    <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(79,70,229,0.25);">
                         <p style="font-size:10px;color:rgba(255,255,255,0.7);font-weight:800;margin-bottom:4px;text-transform:uppercase;">💸 Total Kharcha</p>
                         <h3 id="profile-total-expense" style="font-size:18px;color:white;font-weight:900;margin:0;">₹0</h3>
                     </div>
@@ -1119,7 +1119,7 @@
                     <p style="font-size:11px; color:var(--text-muted); font-weight:800; padding:14px 16px 8px; text-transform:uppercase; letter-spacing:0.5px;">📱 Sections</p>
 
                     <button onclick="openSection('tools','Finance Dashboard'); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
-                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#0f172a,#334155);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#4F46E5,#4338CA);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
                         <span style="font-size:14px;font-weight:700;color:var(--text-main);">Finance Dashboard</span>
                         <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
                     </button>
@@ -1431,7 +1431,7 @@
               width:100%;padding:15px;border:none;border-radius:18px;
               background:linear-gradient(135deg,#1e3a8a,#2563eb);
               color:white;font-size:16px;font-weight:800;cursor:pointer;
-              box-shadow:0 8px 24px rgba(37,99,235,0.4);
+              box-shadow:0 8px 24px rgba(79,70,229,0.4);
               letter-spacing:0.3px;margin-bottom:4px;
               opacity:0.45;transition:opacity 0.2s,transform 0.15s;
             " disabled>Aage Badho →</button>
@@ -1519,7 +1519,7 @@
               width:100%;padding:15px;border:none;border-radius:18px;
               background:linear-gradient(135deg,#1e3a8a,#2563eb);
               color:white;font-size:16px;font-weight:800;cursor:pointer;
-              box-shadow:0 8px 24px rgba(37,99,235,0.4);
+              box-shadow:0 8px 24px rgba(79,70,229,0.4);
               letter-spacing:0.3px;margin-bottom:4px;
             ">Aage Badho →</button>
           </div>
@@ -1637,7 +1637,7 @@
       .ks-member-active {
         background:linear-gradient(135deg,#1e3a8a,#2563eb) !important;
         color:white !important;border-color:#2563eb !important;
-        box-shadow:0 4px 14px rgba(37,99,235,0.35) !important;
+        box-shadow:0 4px 14px rgba(79,70,229,0.35) !important;
       }
 
       /* Category tiles */
