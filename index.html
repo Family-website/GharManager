@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GharManager Pro</title>
+    
+    <link rel="icon" href="./icon.png">
+    <link rel="apple-touch-icon" href="./icon.png">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#5F259F">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="./style.css?v=v5">
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    
+    <style>
+        #pull-to-refresh { text-align: center; color: var(--ink-blue); font-weight: bold; font-size: 14px; padding: 10px; display: none; transition: 0.3s; }
+        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+        .skeleton-box { animation: shimmer 2s infinite linear; background: linear-gradient(to right, var(--line-color) 4%, var(--paper-bg) 25%, var(--line-color) 36%); background-size: 1000px 100%; border-radius: 12px; }
+        /* ══ PREMIUM FLOATING NAVBAR ══ */
+        .bottom-nav {
+            position: fixed !important;
+            bottom: 16px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: calc(100% - 32px) !important;
+            max-width: 400px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 6px 16px 8px !important;
+            background: rgba(255,255,255,0.88) !important;
+            backdrop-filter: blur(28px) saturate(2) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(2) !important;
+            border: 1.5px solid rgba(255,255,255,0.95) !important;
+            border-radius: 30px !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.95) !important;
+            z-index: 9990 !important;
+            gap: 0 !important;
+        }
+        /* Dark mode nav */
+        [data-theme="night"] .bottom-nav, [data-theme="cyberpunk"] .bottom-nav {
+            background: rgba(15,23,42,0.88) !important;
+            border-color: rgba(255,255,255,0.1) !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07) !important;
+        }
+        .nav-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            color: #94a3b8;
+            transition: color 0.25s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-btn.active-nav { color: #5F259F; }
+        /* Icon pill container */
+        .nav-icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 34px;
+            border-radius: 14px;
+            position: relative;
+            transition: background 0.3s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .nav-btn.active-nav .nav-icon-wrap {
+            background: linear-gradient(135deg, rgba(95,37,159,0.14), rgba(140,62,219,0.09));
+            transform: translateY(-2px);
+        }
+        .nav-icon-wrap svg {
+            transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), stroke 0.25s;
+            filter: drop-shadow(0 0 0 transparent);
+        }
+        .nav-btn.active-nav .nav-icon-wrap svg {
+            filter: drop-shadow(0 2px 6px rgba(95,37,159,0.35));
+            transform: scale(1.12);
+        }
+        .nav-btn:active .nav-icon-wrap svg { transform: scale(0.82) rotate(-6deg); }
+        /* Label */
+        .nav-label {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            margin-top: 3px;
+            opacity: 0.55;
+            transition: opacity 0.25s, color 0.25s;
+        }
+        .nav-btn.active-nav .nav-label {
+            opacity: 1;
+            color: #5F259F;
+        }
+        /* Active dot */
+        .nav-active-dot {
+            width: 4px; height: 4px; border-radius: 50%;
+            background: #5F259F;
+            margin-top: 2px;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.25s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .nav-btn.active-nav .nav-active-dot { opacity: 1; transform: scale(1); }
+
+        /* CENTER FAB */
+        .nav-center-fab {
+            flex: 0 0 80px;
+            margin: 0 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            padding: 0;
+            position: relative;
+        }
+        .nav-fab-inner {
+            width: 56px; height: 56px;
+            background: linear-gradient(145deg, #8C3EDB 0%, #5F259F 55%, #4A1D7E 100%);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow:
+                0 8px 24px rgba(95,37,159,0.55),
+                0 3px 10px rgba(95,37,159,0.3),
+                inset 0 1.5px 0 rgba(255,255,255,0.32);
+            margin-top: 0;
+            border: 3px solid var(--paper-bg, #fff);
+            transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+            position: relative;
+            overflow: visible;
+        }
+        .nav-fab-inner::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 28px;
+            background: radial-gradient(ellipse at center, rgba(95,37,159,0.24) 0%, transparent 68%);
+            animation: fabPulse 2.8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes fabPulse {
+            0%,100%{ transform:scale(0.9); opacity:0.4; }
+            50%{ transform:scale(1.1); opacity:0.9; }
+        }
+        .nav-center-fab:active .nav-fab-inner {
+            transform: scale(0.85) rotate(-8deg);
+            box-shadow: 0 3px 10px rgba(95,37,159,0.3);
+        }
+        .nav-fab-label {
+            font-size: 9px; font-weight: 900; letter-spacing: 0.6px;
+            color: #5F259F; margin-top: 5px; opacity: 1;
+            text-transform: uppercase;
+        }
+        
+        /* RUBBER CLICK for all buttons */
+        button:active { transform: scale(0.95); }
+        
+
+        /* ── v4 PREMIUM UPGRADES ── */
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+        
+        body { font-family: 'DM Sans', sans-serif !important; }
+        h1,h2,h3 { font-family: 'Sora', sans-serif !important; }
+        
+        /* Offline banner upgrade */
+        #offline-banner {
+            font-family: 'DM Sans', sans-serif !important;
+            font-size: 13px !important;
+            padding: 8px 16px !important;
+            background: linear-gradient(90deg, #DC2626, #EF4444) !important;
+            letter-spacing: 0.3px !important;
+        }
+        
+        /* Hisab history section header */
+        .hx-history h3 {
+            font-family: 'Sora', sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 800 !important;
+            color: var(--text-main) !important;
+            margin: 0 !important;
+        }
+        
+        /* Budget warning text */
+        #budget-warning {
+            font-family: 'DM Sans', sans-serif !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+        }
+        
+        /* List item date text */
+        .list-date {
+            font-size: 11px !important;
+            color: var(--text-faint) !important;
+            font-weight: 500 !important;
+        }
+        
+        /* Amount text in list */
+        .list-amount {
+            font-family: 'Sora', sans-serif !important;
+            font-weight: 800 !important;
+            font-size: 16px !important;
+        }
+        
+        /* Section subheadings */
+        .section-sub {
+            font-size: 10px !important;
+            color: var(--text-faint) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        
+        /* Add sheet card upgrade */
+        #add-sheet-card {
+            border-radius: 28px !important;
+            box-shadow: 0 28px 72px rgba(0,0,0,0.24), 0 8px 24px rgba(0,0,0,0.12) !important;
+        }
+        
+        /* Nav glow on active */
+        .nav-btn.active-nav .nav-icon-wrap {
+            background: rgba(95,37,159,0.1) !important;
+        }
+        
+        /* Profile modal bottom sheet */
+        #profile-modal > .lock-card {
+            border-radius: 28px 28px 0 0 !important;
+        }
+        
+        /* Recharge / EMI section balance cards  */
+        #section-recharge .balance-card {
+            background: linear-gradient(135deg,#064E3B,#065F46,#047857) !important;
+        }
+        #section-emi .balance-card:first-child {
+            background: linear-gradient(135deg,#831843,#9D174D,#BE185D) !important;
+        }
+        #section-vyaj .balance-card {
+            background: linear-gradient(135deg,#064E3B,#065F46) !important;
+        }
+        #section-dudh .balance-card {
+            background: linear-gradient(135deg,#1E3A5F,#1D4ED8,#2563EB) !important;
+        }
+        #section-invest .balance-card {
+            background: linear-gradient(135deg,#0E4D6E,#0891B2,#06B6D4) !important;
+        }
+        
+        /* Profile modal stat cards — already styled inline but ensure font */
+        #profile-total-expense, #profile-net-worth, #health-score-text {
+            font-family: 'Sora', sans-serif !important;
+        }
+        
+        /* Better form spacing on recharge/emi/etc */
+        .form-section label {
+            font-family: 'DM Sans', sans-serif !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            color: var(--text-muted) !important;
+        }
+        
+        /* Search results count */
+        #search-results-count {
+            font-family: 'DM Sans', sans-serif !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: var(--text-faint) !important;
+        }
+        
+        /* Quick stats row cards */
+        #quick-stats-row > div {
+            border-radius: 18px !important;
+            box-shadow: 0 4px 16px rgba(15,23,42,0.08) !important;
+        }
+        
+        /* Add expense bottom sheet mic btn */
+        #sheet-mic-btn {
+            border-radius: 50% !important;
+            box-shadow: 0 10px 28px rgba(16,185,129,0.5) !important;
+        }
+        
+        /* Ration hero card gradient upgrade */
+        #section-ration > div:first-child {
+            background: linear-gradient(135deg, #4A1D7E 0%, #5F259F 50%, #8C3EDB 100%) !important;
+        }
+
+        /* PROFILE MODAL — bottom sheet scroll fix */
+        #profile-modal { align-items: flex-end !important; padding: 0 !important; }
+        #profile-modal > .lock-card { border-radius: 28px 28px 0 0 !important; width: 100% !important; max-width: 600px !important; max-height: 92dvh !important; height: 92dvh !important; margin: 0 auto !important; position: fixed !important; bottom: 0 !important; left: 50% !important; transform: translateX(-50%) !important; box-shadow: 0 -10px 40px rgba(0,0,0,0.18) !important; overflow-y: scroll !important; overflow-x: hidden !important; -webkit-overflow-scrolling: touch !important; overscroll-behavior-y: contain !important; padding: 0 !important; }
+    </style>
+</head>
+<body style="overscroll-behavior-y: contain;">
+
+    <div id="offline-banner" style="display: none; background: #ef4444; color: white; text-align: center; font-size: 12px; font-weight: bold; padding: 5px; position: fixed; top: 0; width: 100%; z-index: 99999999;">📶 You are offline. Data will sync when connected.</div>
+
+    <div id="splash-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999999;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;background:linear-gradient(160deg,#2E1259 0%,#4A1D7E 55%,#5F259F 100%);">
+        <!-- Animated rings -->
+        <div style="position:absolute;width:500px;height:500px;border-radius:50%;border:1px solid rgba(140,62,219,0.18);animation:splashRingPulse 3s ease-out infinite;"></div>
+        <div style="position:absolute;width:380px;height:380px;border-radius:50%;border:1px solid rgba(140,62,219,0.24);animation:splashRingPulse 3s ease-out infinite 0.5s;"></div>
+        <div style="position:absolute;width:260px;height:260px;border-radius:50%;border:1px solid rgba(140,62,219,0.35);animation:splashRingPulse 3s ease-out infinite 1s;"></div>
+        <!-- Glow blob -->
+        <div style="position:absolute;width:220px;height:220px;background:radial-gradient(circle,rgba(140,62,219,0.45),transparent 70%);border-radius:50%;"></div>
+
+        <!-- Logo container with bounce-in -->
+        <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;animation:splashLogoIn 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;">
+            <div style="width:100px;height:100px;border-radius:30px;background:linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05));border:2px solid rgba(255,255,255,0.2);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.2);margin-bottom:18px;">
+                <img src="./icon.png" style="width:70px;height:70px;border-radius:20px;object-fit:cover;">
+            </div>
+            <h1 style="font-family:'Caveat',cursive;font-size:48px;font-weight:700;color:white;margin:0 0 6px;letter-spacing:1px;">GharManager</h1>
+            <p style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:32px;">Smart Household Finance</p>
+
+            <!-- Loading bar -->
+            <div style="width:160px;height:3px;background:rgba(255,255,255,0.15);border-radius:3px;overflow:hidden;">
+                <div id="splash-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#8C3EDB,#C4A6F0);border-radius:3px;transition:width 0.3s ease;"></div>
+            </div>
+            <p id="splash-loading-text" style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;margin-top:10px;letter-spacing:0.5px;">Initializing...</p>
+        </div>
+
+        <style>
+            @keyframes splashRingPulse { 0%{transform:scale(0.8);opacity:0} 50%{opacity:1} 100%{transform:scale(1.2);opacity:0} }
+            @keyframes splashLogoIn { from{opacity:0;transform:scale(0.6) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+            @keyframes goldGlow { 0%,100%{transform:scale(0.9);opacity:0.5} 50%{transform:scale(1.1);opacity:1} }
+            @keyframes goldShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        </style>
+    </div>
+
+    <div id="onboarding-screen" class="lock-overlay" style="display: none; z-index: 9999998; background: var(--bg-color);">
+        <div class="lock-card profile-card-anim" style="width: 90%; max-width: 350px; text-align: center; padding: 40px 20px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
+            <div class="anim-premium-icon" style="font-size: 70px; margin-bottom: 15px; line-height: 1;">📱</div>
+            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; color: var(--ink-blue); font-weight: 800; font-size: 26px; margin-bottom: 10px;">Welcome to<br><span style="font-family: 'Caveat', cursive; font-size: 40px;">GharManager</span></h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px; font-weight: 600; line-height: 1.5;">Track expenses, recharges, split bills, talk to AI, and grow your Net Worth! 🚀</p>
+            <button onclick="finishOnboarding()" class="expense-btn" style="background: linear-gradient(135deg, #5F259F, #8C3EDB); color: white; font-size: 18px !important; padding: 15px; border-radius: 15px; width: 100%; box-shadow: 0 10px 25px rgba(95, 37, 159, 0.4);">Start Journey 🚀</button>
+        </div>
+    </div>
+
+    <div id="login-screen" class="lock-overlay" style="display: none; background: linear-gradient(145deg, #2E1259 0%, #4A1D7E 50%, #2A0F4D 100%); overflow: hidden;">
+        <!-- Animated background blobs -->
+        <div style="position:absolute;top:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(140,62,219,0.38),transparent 70%);border-radius:50%;animation:loginBlob1 6s ease-in-out infinite;"></div>
+        <div style="position:absolute;bottom:-100px;right:-60px;width:350px;height:350px;background:radial-gradient(circle,rgba(95,37,159,0.32),transparent 70%);border-radius:50%;animation:loginBlob2 8s ease-in-out infinite;"></div>
+        <div style="position:absolute;top:40%;left:60%;width:200px;height:200px;background:radial-gradient(circle,rgba(196,132,252,0.22),transparent 70%);border-radius:50%;animation:loginBlob1 5s ease-in-out infinite reverse;"></div>
+
+        <div style="position:relative;z-index:2;width:92%;max-width:380px;padding:36px 28px;background:rgba(255,255,255,0.07);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.15);border-radius:32px;box-shadow:0 32px 80px rgba(0,0,0,0.45);animation:loginCardIn 0.6s cubic-bezier(0.34,1.56,0.64,1);">
+            <!-- Logo Area -->
+            <div style="text-align:center;margin-bottom:24px;">
+                <div style="position:relative;display:inline-block;margin-bottom:14px;">
+                    <div style="position:absolute;inset:-8px;border-radius:30px;background:radial-gradient(circle,rgba(196,132,252,0.3),transparent 70%);animation:loginLogoFloat 3s ease-in-out infinite;"></div>
+                    <div style="width:76px;height:76px;border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));border:1.5px solid rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.14);position:relative;">
+                        <img src="./icon.png" style="width:54px;height:54px;border-radius:16px;object-fit:cover;">
+                    </div>
+                </div>
+                <h1 style="font-family:'Caveat',cursive;font-size:42px;font-weight:700;color:white;margin:0 0 3px;text-shadow:0 2px 16px rgba(196,132,252,0.3);">GharManager</h1>
+                <p style="font-size:10px;color:rgba(255,255,255,0.42);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;">Aapka Smart Ghar Ledger</p>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div id="login-tab-bar" style="display:flex;background:rgba(0,0,0,0.25);border-radius:14px;padding:4px;margin-bottom:22px;gap:4px;">
+                <button onclick="switchLoginTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:white;color:#4A1D7E;">Login</button>
+                <button onclick="switchLoginTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.25s;background:transparent;color:rgba(255,255,255,0.6);">Register</button>
+            </div>
+
+            <!-- Input Fields -->
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
+                <div style="position:relative;">
+                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <input type="email" id="email-input" placeholder="Email ID" style="width:100%;padding:13px 14px 13px 44px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.1);color:white;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(140,62,219,0.85)'" onblur="this.style.border='1.5px solid rgba(255,255,255,0.15)'" placeholder="Email ID">
+                </div>
+                <div style="position:relative;">
+                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="password" id="password-input" placeholder="Password (Min 6)" style="width:100%;padding:13px 44px 13px 44px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.1);color:white;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(140,62,219,0.85)'" onblur="this.style.border='1.5px solid rgba(255,255,255,0.15)'">
+                    <button onclick="togglePasswordVisibility()" type="button" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:0;" id="pw-eye">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+                <!-- Name field for register only -->
+                <div id="name-field-wrap" style="display:none;position:relative;">
+                    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <input type="text" id="name-input-reg" placeholder="Aapka Naam (Optional)" style="width:100%;padding:13px 14px 13px 44px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.1);color:white;font-size:14px;font-weight:600;outline:none;box-sizing:border-box;transition:border 0.2s;" onfocus="this.style.border='1.5px solid rgba(140,62,219,0.85)'" onblur="this.style.border='1.5px solid rgba(255,255,255,0.15)'">
+                </div>
+            </div>
+
+            <!-- Forgot Password (login tab only) -->
+            <div id="forgot-wrap" style="text-align:right;margin:-8px 0 14px;">
+                <button onclick="forgotPassword()" type="button" style="background:none;border:none;color:rgba(196,132,252,0.9);font-size:12px;font-weight:700;cursor:pointer;padding:0;">Forgot Password?</button>
+            </div>
+
+            <!-- Main CTA Button -->
+            <button type="button" id="main-login-btn" onclick="loginWithEmail()" style="width:100%;padding:14px;border:none;border-radius:16px;background:linear-gradient(135deg,#5F259F,#8C3EDB);color:white;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(140,62,219,0.5);transition:transform 0.15s,box-shadow 0.15s;margin-bottom:14px;letter-spacing:0.3px;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+                🚀 Login Karein
+            </button>
+
+            <!-- Divider -->
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <div style="flex:1;height:1px;background:rgba(255,255,255,0.15);"></div>
+                <span style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;">YA PHIR</span>
+                <div style="flex:1;height:1px;background:rgba(255,255,255,0.15);"></div>
+            </div>
+
+            <!-- Google Sign-In -->
+            <button type="button" onclick="loginWithGoogle()" style="width:100%;padding:13px;border:1.5px solid rgba(255,255,255,0.2);border-radius:16px;background:rgba(255,255,255,0.08);color:white;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.14)'" onmouseleave="this.style.background='rgba(255,255,255,0.08)'">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Google se Login Karein
+            </button>
+
+            <p id="login-status" style="margin-top:14px;font-size:13px;color:#D8B4FE;display:none;font-weight:700;text-align:center;">Connecting... ⏳</p>
+        </div>
+
+        <style>
+            @keyframes loginBlob1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,20px) scale(1.1)} }
+            @keyframes loginBlob2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-20px,-30px) scale(1.08)} }
+            @keyframes loginCardIn { from{opacity:0;transform:translateY(40px) scale(0.94)} to{opacity:1;transform:translateY(0) scale(1)} }
+            @keyframes loginLogoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+            #email-input::placeholder, #password-input::placeholder, #name-input-reg::placeholder { color: rgba(255,255,255,0.38); }
+        </style>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         🔐 PREMIUM LOCK SCREEN v3 — Real Biometric
+         ══════════════════════════════════════ -->
+    <div id="pin-screen" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2E1259 0%,#4A1D7E 55%,#5F259F 100%);overflow:hidden;">
+
+        <!-- Animated rings (decorative) -->
+        <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+            <div style="position:absolute;top:50%;left:50%;width:600px;height:600px;margin:-300px 0 0 -300px;border-radius:50%;border:1px solid rgba(140,62,219,0.15);animation:lkRing 4s ease-out infinite;"></div>
+            <div style="position:absolute;top:50%;left:50%;width:400px;height:400px;margin:-200px 0 0 -200px;border-radius:50%;border:1px solid rgba(140,62,219,0.22);animation:lkRing 4s ease-out infinite 1s;"></div>
+            <div style="position:absolute;top:50%;left:50%;width:240px;height:240px;margin:-120px 0 0 -120px;border-radius:50%;border:1px solid rgba(140,62,219,0.3);animation:lkRing 4s ease-out infinite 2s;"></div>
+            <div style="position:absolute;top:35%;left:50%;width:280px;height:280px;margin:-140px 0 0 -140px;background:radial-gradient(circle,rgba(140,62,219,0.25),transparent 70%);border-radius:50%;"></div>
+        </div>
+
+        <style>
+            @keyframes lkRing{0%{transform:scale(.85);opacity:0}50%{opacity:1}100%{transform:scale(1.12);opacity:0}}
+            @keyframes lkShake{0%,100%{transform:translateX(0)}15%{transform:translateX(-10px)}30%{transform:translateX(10px)}45%{transform:translateX(-7px)}60%{transform:translateX(7px)}80%{transform:translateX(-3px)}}
+            @keyframes lkDot{0%{transform:scale(0)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
+            @keyframes lkKeyPop{0%{transform:scale(1)}40%{transform:scale(.85)}100%{transform:scale(1)}}
+            @keyframes lkIn{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:scale(1)}}
+            @keyframes lkBio{0%,100%{box-shadow:0 0 0 0 rgba(140,62,219,.6)}70%{box-shadow:0 0 0 14px rgba(140,62,219,0)}}
+            .lk-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.4);background:transparent;transition:all .2s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;}
+            .lk-dot.on{background:white;border-color:white;animation:lkDot .25s ease;}
+            .lk-dot.err{background:#f87171;border-color:#f87171;}
+            .lk-dot.ok{background:#34d399;border-color:#34d399;}
+            .lk-key{width:72px;height:72px;border-radius:50%;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;gap:1px;backdrop-filter:blur(8px);}
+            .lk-key:active{background:rgba(255,255,255,.22);animation:lkKeyPop .16s ease;}
+            .lk-key-num{font-size:22px;font-weight:700;line-height:1;}
+            .lk-key-abc{font-size:8px;font-weight:600;letter-spacing:1.4px;color:rgba(255,255,255,.4);text-transform:uppercase;}
+            .lk-abar{height:3px;border-radius:2px;flex:1;background:rgba(255,255,255,.12);transition:background .3s;}
+            .lk-abar.hit{background:#f87171;}
+            .lk-bio-ring{width:68px;height:68px;border-radius:50%;border:1.5px solid rgba(140,62,219,.55);background:rgba(140,62,219,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+            .lk-bio-ring.scanning{animation:lkBio 1s ease-out 3;}
+            #pin-screen{animation:lkIn .45s ease;}
+        </style>
+
+        <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;width:100%;padding:0 24px;gap:0;box-sizing:border-box;">
+
+            <!-- Lock icon -->
+            <div id="lk-icon" style="margin-bottom:14px;transition:transform .3s;">
+                <div style="width:68px;height:68px;border-radius:22px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,.3);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h1 style="font-family:'Caveat',cursive;font-size:32px;font-weight:700;color:white;margin:0 0 4px;letter-spacing:.5px;">GharManager</h1>
+            <p id="lk-msg" style="font-size:12px;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:.4px;margin:0 0 22px;min-height:18px;transition:color .2s;">Enter your PIN</p>
+
+            <!-- PIN dots -->
+            <div id="lk-dots" style="display:flex;gap:18px;margin-bottom:10px;">
+                <div class="lk-dot" id="lkd0"></div>
+                <div class="lk-dot" id="lkd1"></div>
+                <div class="lk-dot" id="lkd2"></div>
+                <div class="lk-dot" id="lkd3"></div>
+            </div>
+
+            <!-- Attempt bars (5) -->
+            <div style="display:flex;gap:5px;width:80px;margin-bottom:26px;">
+                <div class="lk-abar" id="lkab0"></div><div class="lk-abar" id="lkab1"></div><div class="lk-abar" id="lkab2"></div><div class="lk-abar" id="lkab3"></div><div class="lk-abar" id="lkab4"></div>
+            </div>
+
+            <!-- Keypad 3×4 -->
+            <div style="display:grid;grid-template-columns:repeat(3,72px);gap:13px;margin-bottom:18px;">
+                <button class="lk-key" onclick="lkPress('1')"><span class="lk-key-num">1</span></button>
+                <button class="lk-key" onclick="lkPress('2')"><span class="lk-key-num">2</span><span class="lk-key-abc">ABC</span></button>
+                <button class="lk-key" onclick="lkPress('3')"><span class="lk-key-num">3</span><span class="lk-key-abc">DEF</span></button>
+                <button class="lk-key" onclick="lkPress('4')"><span class="lk-key-num">4</span><span class="lk-key-abc">GHI</span></button>
+                <button class="lk-key" onclick="lkPress('5')"><span class="lk-key-num">5</span><span class="lk-key-abc">JKL</span></button>
+                <button class="lk-key" onclick="lkPress('6')"><span class="lk-key-num">6</span><span class="lk-key-abc">MNO</span></button>
+                <button class="lk-key" onclick="lkPress('7')"><span class="lk-key-num">7</span><span class="lk-key-abc">PQRS</span></button>
+                <button class="lk-key" onclick="lkPress('8')"><span class="lk-key-num">8</span><span class="lk-key-abc">TUV</span></button>
+                <button class="lk-key" onclick="lkPress('9')"><span class="lk-key-num">9</span><span class="lk-key-abc">WXYZ</span></button>
+                <!-- Bio -->
+                <button class="lk-bio-ring" id="lk-bio-btn" onclick="biometricUnlock()" title="Fingerprint / Face ID">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,1)" stroke-width="1.8" stroke-linecap="round" width="28" height="28"><path d="M12 10a2 2 0 0 0-2 2v4"/><path d="M12 10a2 2 0 0 1 2 2v4"/><path d="M7.5 7.5A6.5 6.5 0 0 0 5.5 12v3"/><path d="M16.5 7.5A6.5 6.5 0 0 1 18.5 12v3"/><path d="M10 19.5a3 3 0 0 0 4 0"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>
+                </button>
+                <button class="lk-key" onclick="lkPress('0')"><span class="lk-key-num">0</span></button>
+                <!-- Delete -->
+                <button class="lk-key" onclick="lkDel()" style="border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.08);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" width="22" height="22"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+                </button>
+            </div>
+
+            <!-- Setup PIN button (only when no PIN) -->
+            <button onclick="lkStartSetup()" id="btn-setup-pin" style="display:none;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);padding:11px 28px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;">🔐 Setup New PIN</button>
+
+            <!-- Forgot PIN -->
+            <button onclick="lkForgot()" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;font-weight:600;cursor:pointer;padding:6px 16px;margin-top:4px;">Forgot PIN?</button>
+        </div>
+    </div>
+
+    <div class="app-container" id="main-app" style="display: none;">
+        <div id="pull-to-refresh">🔄 Upar khincho sync karne ke liye...</div>
+
+        <!-- Premium Top Bar -->
+        <div id="top-bar-fixed" style="position:fixed;top:0;left:0;right:0;z-index:9000;max-width:600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:10px 18px 10px;background:var(--paper-bg);border-bottom:1px solid var(--line-color);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
+            <!-- Brand Logo -->
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#2E1259,#5F259F);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(46,18,89,0.3);">
+                    <img src="./icon.png" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">
+                </div>
+                <span style="font-family:'Caveat',cursive;font-size:22px;font-weight:700;color:var(--text-main);letter-spacing:0.5px;">GharManager</span>
+            </div>
+            <!-- Right side: streak + profile -->
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div id="daily-streak" style="font-size:11px;font-weight:800;color:var(--amber);display:none;"></div>
+                <button onclick="openProfile()" id="three-dot-btn" style="background:var(--line-color);border:none;cursor:pointer;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px var(--shadow-color);transition:transform 0.15s;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="color:var(--text-main);">
+                        <circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Spacer for fixed top bar -->
+        <div style="height:60px;"></div>
+        <!-- Hidden JS hooks -->
+        <div style="display:none;">
+            <p id="smart-greeting"></p><h2 id="app-title"></h2>
+            <p id="sync-status"></p><p id="role-badge"></p>
+            <p id="daily-streak"></p><div id="user-avatar"></div>
+        </div>
+
+        <div class="content-area" style="padding-bottom: 100px;">
+            
+            <div id="section-hisab" class="app-section active-section">
+
+                <!-- ① HEADER: Dual Stat Cards -->
+                <div class="hx-header">
+                    <div class="hx-stat-card hx-kharcha">
+                        <p class="hx-stat-label translatable">Is Mahine Kharcha</p>
+                        <h1 class="hx-stat-val" id="total-expense">₹0</h1>
+                        <p class="hx-stat-sub" id="month-comparison">📊 Calculating...</p>
+                        <!-- mini bar indicator -->
+                        <div style="margin-top:10px;height:3px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;position:relative;z-index:1;">
+                            <div id="hx-mini-bar" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(255,255,255,0.5),rgba(255,255,255,0.9));border-radius:99px;transition:width 0.8s cubic-bezier(0.22,1,0.36,1);"></div>
+                        </div>
+                    </div>
+                    <div class="hx-stat-card hx-bachat">
+                        <p class="hx-stat-label">💚 Budget Bacha</p>
+                        <h1 class="hx-stat-val" id="hx-budget-left">₹0</h1>
+                        <p class="hx-stat-sub">Budget: ₹<span id="budget-display">20000</span></p>
+                        <!-- mini savings indicator -->
+                        <div style="margin-top:10px;display:flex;gap:3px;position:relative;z-index:1;">
+                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.55);border-radius:99px;"></div>
+                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.35);border-radius:99px;"></div>
+                            <div style="height:3px;flex:1;background:rgba(255,255,255,0.2);border-radius:99px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ② BUDGET PROGRESS STRIP -->
+                <div class="hx-budget-strip">
+                    <div class="hx-budget-top">
+                        <div>
+                            <span class="hx-budget-lbl">Monthly Budget</span>
+                            <span id="budget-pct-label" style="font-size:10px;font-weight:800;color:var(--text-faint);margin-left:8px;"></span>
+                        </div>
+                        <button type="button" onclick="setBudget()" class="hx-edit-btn">✏️ Edit</button>
+                    </div>
+                    <div class="hx-budget-track">
+                        <div id="budget-bar" class="hx-budget-fill" style="width:0%"></div>
+                    </div>
+                    <p id="budget-warning" style="display:none; font-size:12px; font-weight:700; margin-top:8px;"></p>
+                </div>
+
+                <!-- ③ SEARCH ENGINE -->
+                <div class="hx-search-wrap">
+                    <div class="hx-search-box-wrap">
+                        <svg class="hx-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="search-expense" placeholder="Search: sabji, petrol, amount..." oninput="smartSearch(this.value)" onfocus="this.closest('.hx-search-box-wrap').classList.add('focused')" onblur="this.closest('.hx-search-box-wrap').classList.remove('focused')">
+                        <button id="search-clear-btn" onclick="clearSearch()" class="hx-search-clear" style="display:none;">✕</button>
+                    </div>
+                    <div class="hx-filters-row">
+                        <select id="family-filter" onchange="updateHisabUI()" class="hx-filter-select">
+                            <option value="All">👨‍👩‍👧 Sabhi</option>
+                            <option value="Me">🙋 Me</option>
+                            <option value="Papa">👨 Papa</option>
+                            <option value="Mummy">👩 Mummy</option>
+                        </select>
+                        <select id="sort-expense" onchange="updateHisabUI()" class="hx-filter-select hx-sort">
+                            <option value="date-desc">↓ Nayi</option>
+                            <option value="date-asc">↑ Purani</option>
+                            <option value="amt-desc">₹ Zyada</option>
+                            <option value="amt-asc">₹ Kam</option>
+                        </select>
+                        <select id="cat-filter" onchange="updateHisabUI()" class="hx-filter-select">
+                            <option value="All">Sab Cat</option>
+                            <option value="Ration">Ration</option>
+                            <option value="Medical">Medical</option>
+                            <option value="Petrol">Petrol</option>
+                            <option value="Bills">Bills</option>
+                            <option value="Food">Food</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="hx-chips-row">
+                        <button id="chip-all"    onclick="applyChip('All',this)"    class="hx-chip" style="background:var(--ink-blue);color:white;">Sab</button>
+                        <button id="chip-today"  onclick="applyChip('Today',this)"  class="hx-chip">Aaj</button>
+                        <button id="chip-week"   onclick="applyChip('Week',this)"   class="hx-chip">Is Hafte</button>
+                        <button id="chip-high"   onclick="applyChip('High',this)"   class="hx-chip">₹500+</button>
+                        <button id="chip-food"   onclick="applyChip('Food',this)"   class="hx-chip">🍕 Food</button>
+                        <button id="chip-petrol" onclick="applyChip('Petrol',this)" class="hx-chip">⛽ Petrol</button>
+                    </div>
+                    <p id="search-results-count" style="font-size:11px; color:var(--text-muted); font-weight:700; display:none; margin-top:6px;"></p>
+                </div>
+
+                <!-- ④ ADD EXPENSE FORM CARD -->
+                <div class="hx-form-card">
+                    <div class="hx-form-hdr">
+                        <h3 class="hx-form-title">➕ Kharcha Add Karein</h3>
+                        <select id="member-name" class="hx-member-select">
+                            <option value="Papa">👨 Papa</option>
+                            <option value="Mummy">👩 Mummy</option>
+                            <option value="Me" selected>🙋 Me</option>
+                            <option value="Bhai/Behan">👦 Bhai/Behan</option>
+                        </select>
+                    </div>
+
+                    <p class="hx-field-label">Category चुनें (Auto-Detect ⚡)</p>
+                    <div class="hx-cat-grid" id="hx-cat-grid">
+                        <button type="button" class="hx-cat-btn" data-cat="Ration"   onclick="hxSelCat(this)"><span>🛒</span><small>Ration</small></button>
+                        <button type="button" class="hx-cat-btn" data-cat="Medical"  onclick="hxSelCat(this)"><span>💊</span><small>Medical</small></button>
+                        <button type="button" class="hx-cat-btn" data-cat="Petrol"   onclick="hxSelCat(this)"><span>⛽</span><small>Petrol</small></button>
+                        <button type="button" class="hx-cat-btn" data-cat="Bills"    onclick="hxSelCat(this)"><span>⚡</span><small>Bills</small></button>
+                        <button type="button" class="hx-cat-btn" data-cat="Food"     onclick="hxSelCat(this)"><span>🍕</span><small>Khaana</small></button>
+                        <button type="button" class="hx-cat-btn" data-cat="Shopping" onclick="hxSelCat(this)"><span>🛍️</span><small>Shopping</small></button>
+                        <button type="button" class="hx-cat-btn" data-cat="Travel"   onclick="hxSelCat(this)"><span>✈️</span><small>Travel</small></button>
+                        <button type="button" class="hx-cat-btn" data-cat="Other"    onclick="hxSelCat(this)"><span>📝</span><small>Other</small></button>
+                    </div>
+                    <select id="expense-category" style="display:none;">
+                        <option value="Ration">Ration</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Food">Food</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <p class="hx-field-label translatable">Kharcha kis cheez par hua?</p>
+                    <div class="hx-desc-row">
+                        <input type="text" id="description" placeholder="e.g., Sabji, Petrol, Dawa" class="hx-input">
+                        <button type="button" id="mic-btn" onclick="startVoice()" class="hx-mic-btn" title="Voice input">🎤</button>
+                    </div>
+                    <p class="hx-tip-text">💡 Mic se bolo <i>"Sabji 500"</i></p>
+
+                    <div class="hx-two-col">
+                        <div>
+                            <p class="hx-field-label translatable">Kitne paise lage?</p>
+                            <input type="number" id="amount" placeholder="₹ Amount" class="hx-input">
+                        </div>
+                        <div>
+                            <p class="hx-field-label translatable">Kis din?</p>
+                            <input type="date" id="date" class="hx-input">
+                        </div>
+                    </div>
+
+                    <details class="hx-receipt-details">
+                        <summary class="hx-receipt-summary">📸 Receipt Photo (Optional)</summary>
+                        <div class="hx-receipt-body">
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <input type="file" id="receipt-img" accept="image/*" style="flex:2; font-size:12px; padding:5px;">
+                                <button type="button" onclick="scanReceipt()" id="scan-btn" style="display:none; background:#8b5cf6; color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; flex:1; padding:8px; font-size:11px;">📸 AI Scan</button>
+                            </div>
+                            <img id="receipt-preview" style="display:none; width:100%; max-height:140px; object-fit:contain; margin-top:8px; border-radius:10px;">
+                        </div>
+                    </details>
+
+                    <div class="hx-gps-row">
+                        <span id="loc-status" class="hx-gps-label">📍 Location Not Saved</span>
+                        <button type="button" onclick="captureLocation()" class="hx-gps-btn">Get GPS 🌍</button>
+                    </div>
+
+                    <button type="button" class="expense-btn" id="btn-add-expense" onclick="addExpense()">Kharcha Save Karein ✅</button>
+                </div>
+
+                <!-- ⑤ HISTORY SECTION -->
+                <div class="history-section hx-history">
+                    <div class="hx-history-hdr">
+                        <h3 class="translatable">📋 Hisaab & Reports</h3>
+                        <input type="month" id="month-filter" class="hx-month-input" onchange="renderHistoryWithSkeleton()">
+                    </div>
+                    <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px; font-style:italic;">✌️ Double-tap karke edit karein</p>
+                    <ul id="history-list"></ul>
+                </div>
+
+            </div>
+
+            <div id="section-tools" class="app-section">
+                <!-- TOOLS HEADER -->
+                <div style="background:linear-gradient(135deg,#0B1535 0%,#162040 55%,#1E2D52 100%);padding:22px 20px 18px;color:white;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-30px;right:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(240,165,0,0.18),transparent 70%);border-radius:50%;"></div>
+                    <div style="position:absolute;bottom:-40px;left:10px;width:100px;height:100px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);border-radius:50%;"></div>
+                    <p style="font-size:10px;color:rgba(255,255,255,0.45);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;position:relative;z-index:1;font-family:'DM Sans',sans-serif;">Smart Tools & Analytics</p>
+                    <h2 style="font-size:30px;font-weight:700;color:white;margin:0;font-family:'Caveat',cursive;position:relative;z-index:1;letter-spacing:0.5px;">Finance Dashboard</h2>
+                </div>
+
+                <!-- ① INCOME · KHARCHA · BACHAT ROW -->
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:15px 15px 0;">
+                    <div style="background:linear-gradient(135deg,#dcfce7,#bbf7d0); border-radius:16px; padding:12px; border:1px solid #86efac;">
+                        <p style="font-size:9px; color:#166534; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Income</p>
+                        <h3 id="tools-income" style="font-size:16px; color:#15803d; font-weight:900; margin:0;">₹0</h3>
+                        <button onclick="setIncome()" style="margin-top:6px; background:#16a34a; color:white; border:none; border-radius:8px; padding:4px 8px; font-size:10px; font-weight:800; cursor:pointer; width:100%;">+ Edit</button>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#fee2e2,#fecaca); border-radius:16px; padding:12px; border:1px solid #fca5a5;">
+                        <p style="font-size:9px; color:#b91c1c; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Kharcha</p>
+                        <h3 id="tools-kharcha" style="font-size:16px; color:#dc2626; font-weight:900; margin:0;">₹0</h3>
+                        <p style="font-size:9px; color:#ef4444; margin-top:6px; font-weight:700;">This month</p>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe); border-radius:16px; padding:12px; border:1px solid #93c5fd;">
+                        <p style="font-size:9px; color:#1d4ed8; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Bachat</p>
+                        <h3 id="tools-bachat" style="font-size:16px; color:#1e40af; font-weight:900; margin:0;">₹0</h3>
+                        <p id="tools-bachat-pct" style="font-size:9px; color:#3b82f6; margin-top:6px; font-weight:700;">0% rate</p>
+                    </div>
+                </div>
+
+                <!-- ② INVESTMENT CARD -->
+                <div style="margin:12px 15px 0; background:linear-gradient(135deg,#ecfeff,#cffafe); border-radius:16px; padding:14px; border:1px solid #a5f3fc; display:flex; align-items:center; justify-content:space-between;">
+                    <div>
+                        <p style="font-size:10px; color:#0891b2; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Total Investments</p>
+                        <h3 id="tools-invest" style="font-size:20px; color:#0e7490; font-weight:900; margin:0;">₹0</h3>
+                    </div>
+                    <button onclick="openSection('invest','Investments')" style="background:linear-gradient(135deg,#0891b2,#0e7490); color:white; border:none; border-radius:12px; padding:10px 16px; font-weight:800; font-size:12px; cursor:pointer;">View →</button>
+                </div>
+
+                <!-- ③ AI SMART TIP -->
+                <div id="ai-tip-card" style="background:linear-gradient(135deg,#6366f1,#a855f7); border-radius:18px; padding:14px 16px; margin:12px 15px 0; box-shadow:0 8px 20px rgba(99,102,241,0.3); position:relative; overflow:hidden;">
+                    <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>
+                    <p style="font-size:10px; color:rgba(255,255,255,0.75); font-weight:800; text-transform:uppercase; margin-bottom:4px; letter-spacing:0.5px;">✨ AI Smart Tip</p>
+                    <p id="ai-tip-text" style="font-size:13px; color:white; font-weight:700; line-height:1.5; margin:0;">Analyzing your spending patterns...</p>
+                </div>
+
+                <!-- ④ AI PREDICTION -->
+                <div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1)); border:1.5px solid #6366f1; padding:14px 16px; border-radius:18px; margin:12px 15px 0; display:flex; align-items:center; justify-content:space-between;">
+                    <div>
+                        <p style="font-size:10px; color:#4338ca; font-weight:800; margin-bottom:4px;">🔮 AI Prediction (Month End)</p>
+                        <h3 id="predicted-expense" style="color:#3730a3; font-size:22px; font-weight:900; margin:0;">₹0</h3>
+                    </div>
+                    <div style="width:48px;height:48px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:14px;display:flex;align-items:center;justify-content:center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="24" height="24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    </div>
+                </div>
+
+                <!-- ⑤ 50-30-20 RULE -->
+                <div id="smart-budget-planner" style="background:var(--paper-bg); border-radius:18px; padding:16px; margin:12px 15px 0; box-shadow:0 4px 15px var(--shadow-color);">
+                    <p style="font-size:11px; color:var(--text-muted); font-weight:800; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">🧠 AI 50-30-20 Rule</p>
+                    <div style="display:flex; gap:8px;">
+                        <div style="flex:1; background:linear-gradient(135deg,#dcfce7,#bbf7d0); padding:12px 8px; border-radius:14px; text-align:center; border:1px solid #86efac;">
+                            <p style="font-size:9px; color:#166534; font-weight:800; margin-bottom:4px;">NEEDS (50%)</p>
+                            <span id="rule-needs" style="font-size:15px; font-weight:900; color:#15803d;">₹0</span>
+                        </div>
+                        <div style="flex:1; background:linear-gradient(135deg,#fef3c7,#fde68a); padding:12px 8px; border-radius:14px; text-align:center; border:1px solid #fde68a;">
+                            <p style="font-size:9px; color:#b45309; font-weight:800; margin-bottom:4px;">WANTS (30%)</p>
+                            <span id="rule-wants" style="font-size:15px; font-weight:900; color:#b45309;">₹0</span>
+                        </div>
+                        <div style="flex:1; background:linear-gradient(135deg,#dbeafe,#bfdbfe); padding:12px 8px; border-radius:14px; text-align:center; border:1px solid #93c5fd;">
+                            <p style="font-size:9px; color:#1d4ed8; font-weight:800; margin-bottom:4px;">SAVE (20%)</p>
+                            <span id="rule-saves" style="font-size:15px; font-weight:900; color:#1d4ed8;">₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⑥ SMART EXPENSE CALENDAR -->
+                <div style="background:var(--paper-bg); border-radius:18px; padding:16px; margin:12px 15px 0; box-shadow:0 4px 15px var(--shadow-color);">
+                    <p style="font-size:11px; color:var(--text-muted); font-weight:800; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">📅 Smart Expense Calendar</p>
+                    <div id="expense-calendar" style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; text-align:center;"></div>
+                </div>
+
+                <!-- ⑦ QUICK STATS (4-CARD) -->
+                <div id="quick-stats-row" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 15px 0;"></div>
+
+                <!-- ⑧ BILL SPLITTER + TODO + CSV -->
+                <div style="margin:12px 15px 0;">
+                    <div style="background:#f0fdf4; border:1.5px dashed #22c55e; padding:15px; border-radius:15px; margin-bottom:12px;">
+                        <p style="font-size:12px; color:#166534; font-weight:800; margin-bottom:10px; text-transform:uppercase;">✂️ Bill Splitter</p>
+                        <div style="display:flex; gap:10px;"><input type="number" id="split-amount" placeholder="Total Bill (₹)" style="flex:2; margin-bottom:0;"><input type="number" id="split-people" placeholder="Persons" style="flex:1; margin-bottom:0;"><button onclick="calculateSplit()" style="background:#22c55e; color:white; border:none; border-radius:10px; font-weight:bold; padding:0 15px; cursor:pointer;">Split</button></div>
+                        <p id="split-result" style="font-size:14px; font-weight:bold; color:#15803d; margin-top:10px; display:none;"></p>
+                    </div>
+                    <div style="background:#fef3c7; border:1.5px dashed #f59e0b; padding:15px; border-radius:15px; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><p style="font-size:12px; color:#b45309; font-weight:800; text-transform:uppercase;">📝 Pending Tasks</p><button onclick="addToDo()" style="background:#f59e0b; color:white; border:none; padding:4px 10px; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;">+ Add</button></div>
+                        <ul id="todo-list" style="margin:0; padding:0;"></ul>
+                    </div>
+                    <div style="background:#eff6ff; border:1.5px dashed #3b82f6; padding:15px; border-radius:15px; margin-bottom:12px;">
+                        <p style="font-size:12px; color:#1d4ed8; font-weight:800; margin-bottom:10px; text-transform:uppercase;">🏦 Import Bank CSV</p>
+                        <div style="display:flex; gap:10px; align-items:center;"><input type="file" id="bank-csv-file" accept=".csv" style="flex:2; margin-bottom:0; font-size:11px; padding:5px;"><button onclick="importBankCSV()" style="background:#3b82f6; color:white; border:none; border-radius:10px; font-weight:bold; padding:8px 15px; cursor:pointer; font-size:12px;">Upload ⬆️</button></div>
+                    </div>
+                </div>
+            </div>
+                
+            <div id="section-recharge" class="app-section"><div class="balance-card" style="background: #dcfce7;"><p class="translatable">Mobile & DTH Recharge</p><div class="anim-premium-icon" style="font-size: 45px; margin: 10px 0 0 0; line-height: 1;">📱</div></div><div class="form-section"><label>Kiska Number / Naam?</label><input type="text" id="rech-name" placeholder="e.g., Papa Jio, WiFi"><div style="display: flex; gap: 8px;"><div style="flex: 1;"><label>Amount (₹)</label><input type="number" id="rech-amt" placeholder="e.g., 299"></div><div style="flex: 1;"><label>Validity (Din)</label><input type="number" id="rech-days" placeholder="e.g., 28"></div></div><label>Recharge Date</label><input type="date" id="rech-date"><button type="button" class="expense-btn" style="background:#22c55e; border:none;" onclick="addRecharge()">Save Recharge ⚡</button></div><div class="history-section"><h3>Active Plans 📡</h3><ul id="recharge-list"></ul></div></div>
+            <div id="section-emi" class="app-section"><div class="balance-card" style="background: #fbcfe8;"><p class="translatable">Debt Manager & EMI</p><div class="anim-premium-icon" style="font-size: 45px; margin: 10px 0 0 0; line-height: 1;">🏦</div></div><div class="form-section"><label>Loan Ka Naam</label><input type="text" id="emi-name" placeholder="e.g., Bike Loan"><div style="display: flex; gap: 8px;"><div style="flex: 1;"><label>Amount (₹)</label><input type="number" id="emi-principal" placeholder="e.g., 50000"></div><div style="flex: 1;"><label>Rate (%)</label><input type="number" id="emi-rate" placeholder="e.g., 10"></div></div><div style="display: flex; gap: 8px;"><div style="flex: 1;"><label>Mahine?</label><input type="number" id="emi-time" placeholder="e.g., 12"></div><div style="flex: 1;"><label>Due Date?</label><input type="number" id="emi-due-date" placeholder="Tarikh" min="1" max="31"></div></div><button type="button" class="expense-btn" style="background:#f472b6; border:none;" onclick="calculateEMI()">Check EMI</button></div><div class="result-card" id="emi-result" style="display:none; text-align:center; border: 1.5px dashed #f472b6;"><h3 style="color: var(--text-main); margin-bottom: 5px;">Har Mahine Ki EMI</h3><h1 id="emi-amount" style="color: #e74c3c;">₹0</h1><div style="background: var(--line-color); border-radius: 12px; padding: 10px; margin-top: 15px; text-align: left;"><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 5px;"><span style="color: #10b981;">Loan: ₹<span id="emi-break-principal">0</span></span><span style="color: #ef4444;">Bank ka Byaj: ₹<span id="emi-break-interest">0</span></span></div><div style="width:100%; background:#fecaca; border-radius:10px; height:8px; overflow:hidden; display: flex;"><div id="emi-break-bar" style="height:100%; width:0%; background:#10b981;"></div></div></div><button type="button" class="expense-btn" style="background:#ec4899; border:none; margin-top: 15px;" onclick="saveLoan()">Save This Loan 💾</button></div><div class="history-section"><h3>Active Loans 🏦</h3><ul id="loan-list"></ul></div><div class="balance-card" style="background: #e0e7ff; margin-top: 30px;"><p style="color: #3730a3;">Recurring Subscriptions</p><div class="anim-premium-icon" style="font-size: 45px; margin: 10px 0 0 0; line-height: 1;">🔁</div></div><div class="form-section"><label>Subscription Name</label><input type="text" id="sub-name" placeholder="e.g., Netflix, Gym"><div style="display: flex; gap: 8px;"><div style="flex: 2;"><label>Amount (₹)</label><input type="number" id="sub-amount" placeholder="e.g., 499"></div><div style="flex: 1;"><label>Due Date</label><input type="number" id="sub-due" placeholder="Tarikh" min="1" max="31"></div></div><button type="button" class="expense-btn" style="background:#6366f1; border:none;" onclick="addSubscription()">Save Subscription 🔁</button></div><div class="history-section"><h3>Active Subscriptions 📡</h3><ul id="sub-list"></ul></div></div>
+            <div id="section-vyaj" class="app-section"><div class="balance-card" style="background: #bbf7d0;"><p>Gaon Ka Vyaj</p><div class="anim-premium-icon" style="font-size: 45px; margin: 10px 0 0 0; line-height: 1;">₹</div></div><div class="form-section"><label>Muldhan</label><input type="number" id="vyaj-principal" placeholder="e.g., 10000"><label>Dar (%)</label><input type="number" id="vyaj-rate" placeholder="e.g., 5"><label>Samay (Months)</label><input type="number" id="vyaj-time" placeholder="e.g., 4"><button type="button" class="expense-btn" style="background:#4ade80; border:none;" onclick="calculateVyaj()">Vyaj Nikalein</button></div><div class="result-card" id="vyaj-result" style="display:none; text-align:center; border: 1.5px dashed #4ade80;"><h3 style="color: var(--text-main); margin-bottom: 5px;">Interest Amount</h3><h1 id="vyaj-only" style="color: #e74c3c;">₹0</h1></div></div>
+            <div id="section-dudh" class="app-section"><div class="balance-card" style="background: #bfdbfe;"><p>Total Dudh Bill</p><h1 id="dudh-total-bill">₹0</h1><p style="margin-top: 5px; font-weight: bold; font-size: 14px; color: #1e3a8a;">Total Dudh: <span id="dudh-total-liter">0</span> Ltr</p></div><div class="form-section"><label>Date & Rate</label><input type="date" id="dudh-date"><input type="number" id="dudh-rate" placeholder="Rate (₹/Ltr)"><label>Kitna Dudh aaya?</label><input type="number" id="dudh-morning" placeholder="Morning Ltr" step="0.1"><input type="number" id="dudh-evening" placeholder="Evening Ltr" step="0.1"><button type="button" id="btn-add-dudh" class="expense-btn" style="background:#60a5fa; border:none;" onclick="addDudh()">Dudh Add Karein</button></div><div class="history-section"><h3>Daily Dudh Record</h3><ul id="dudh-list"></ul></div></div>
+            <div id="section-ration" class="app-section">
+
+                <!-- ═══ RATION HERO CARD ═══ -->
+                <div style="background:linear-gradient(135deg,#5F259F 0%,#8C3EDB 60%,#C4A6F0 100%);border-radius:24px;padding:20px 18px 16px;margin-bottom:14px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-20px;right:-20px;width:110px;height:110px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>
+                    <div style="position:absolute;bottom:-30px;left:30px;width:80px;height:80px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                        <div>
+                            <p style="color:rgba(255,255,255,0.75);font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 2px;">Kirana & Ration</p>
+                            <h2 id="ration-hero-title" style="color:white;font-size:26px;font-weight:900;margin:0;font-family:'Plus Jakarta Sans',sans-serif;">₹0</h2>
+                            <p id="ration-hero-sub" style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:700;margin:2px 0 0;">Is mahine ka total</p>
+                        </div>
+                        <div style="font-size:48px;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2));">🛒</div>
+                    </div>
+                    <!-- Stats Row -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+                        <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 8px;text-align:center;backdrop-filter:blur(6px);">
+                            <p id="ration-stat-total" style="color:white;font-size:18px;font-weight:900;margin:0;font-family:'Plus Jakarta Sans';">0</p>
+                            <p style="color:rgba(255,255,255,0.65);font-size:9px;font-weight:800;margin:2px 0 0;letter-spacing:0.5px;text-transform:uppercase;">Total Items</p>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 8px;text-align:center;backdrop-filter:blur(6px);">
+                            <p id="ration-stat-bought" style="color:#86efac;font-size:18px;font-weight:900;margin:0;font-family:'Plus Jakarta Sans';">0</p>
+                            <p style="color:rgba(255,255,255,0.65);font-size:9px;font-weight:800;margin:2px 0 0;letter-spacing:0.5px;text-transform:uppercase;">Kharida</p>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 8px;text-align:center;backdrop-filter:blur(6px);">
+                            <p id="ration-stat-pending" style="color:#fde68a;font-size:18px;font-weight:900;margin:0;font-family:'Plus Jakarta Sans';">0</p>
+                            <p style="color:rgba(255,255,255,0.65);font-size:9px;font-weight:800;margin:2px 0 0;letter-spacing:0.5px;text-transform:uppercase;">Baaki</p>
+                        </div>
+                    </div>
+                    <!-- Budget Progress -->
+                    <div id="ration-budget-bar-wrap" style="margin-top:12px;display:none;">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                            <span style="color:rgba(255,255,255,0.75);font-size:10px;font-weight:800;">Budget Progress</span>
+                            <span id="ration-budget-label" style="color:white;font-size:10px;font-weight:900;"></span>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.18);border-radius:6px;height:6px;overflow:hidden;">
+                            <div id="ration-budget-fill" style="height:100%;border-radius:6px;background:linear-gradient(90deg,#86efac,#4ade80);transition:width 0.5s ease;width:0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ QUICK ACTION BUTTONS ═══ -->
+                <div style="display:flex;gap:8px;margin-bottom:14px;">
+                    <button type="button" onclick="openRationAddForm()" style="flex:1;padding:11px;background:linear-gradient(135deg,#5F259F,#8C3EDB);color:white;border:none;border-radius:14px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(95,37,159,0.35);display:flex;align-items:center;justify-content:center;gap:6px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Item Add Karo
+                    </button>
+                    <button type="button" onclick="openRationTemplate()" style="padding:11px 14px;background:var(--paper-bg);color:#5F259F;border:1.5px solid #C4A6F0;border-radius:14px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px;">
+                        📋 Template
+                    </button>
+                    <button type="button" onclick="setRationBudget()" style="padding:11px 14px;background:var(--paper-bg);color:#5F259F;border:1.5px solid #C4A6F0;border-radius:14px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px;">
+                        🎯 Budget
+                    </button>
+                </div>
+
+                <!-- ═══ SEARCH + SORT ═══ -->
+                <div style="display:flex;gap:8px;margin-bottom:10px;">
+                    <div style="flex:1;position:relative;">
+                        <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="15" height="15"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="ration-search" placeholder="Kuch dhundo..." oninput="updateRationUI()" style="width:100%;padding:10px 10px 10px 33px;border:1.5px solid var(--line-color);border-radius:12px;font-size:13px;font-weight:700;background:var(--paper-bg);color:var(--text-main);box-sizing:border-box;outline:none;" onfocus="this.style.border='1.5px solid #8C3EDB'" onblur="this.style.border='1.5px solid var(--line-color)'">
+                    </div>
+                    <select id="ration-sort" onchange="updateRationUI()" style="padding:10px 12px;border:1.5px solid var(--line-color);border-radius:12px;font-size:12px;font-weight:800;background:var(--paper-bg);color:var(--text-main);outline:none;cursor:pointer;">
+                        <option value="date">📅 Date</option>
+                        <option value="name">🔤 Naam</option>
+                        <option value="amount">💰 Price</option>
+                        <option value="cat">🏷️ Category</option>
+                    </select>
+                </div>
+
+                <!-- ═══ CATEGORY FILTER CHIPS ═══ -->
+                <div id="ration-cat-filter" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none;">
+                    <button type="button" onclick="filterRation('All')" class="rcat-chip active-rcat" data-cat="All">🛒 Sab</button>
+                    <button type="button" onclick="filterRation('Anaj')" class="rcat-chip" data-cat="Anaj">🌾 Anaj</button>
+                    <button type="button" onclick="filterRation('Dal')" class="rcat-chip" data-cat="Dal">🟡 Dal</button>
+                    <button type="button" onclick="filterRation('Oil')" class="rcat-chip" data-cat="Oil">🫙 Tel/Oil</button>
+                    <button type="button" onclick="filterRation('Masala')" class="rcat-chip" data-cat="Masala">🌶️ Masala</button>
+                    <button type="button" onclick="filterRation('Sabzi')" class="rcat-chip" data-cat="Sabzi">🥬 Sabzi</button>
+                    <button type="button" onclick="filterRation('Dairy')" class="rcat-chip" data-cat="Dairy">🥛 Dairy</button>
+                    <button type="button" onclick="filterRation('Other')" class="rcat-chip" data-cat="Other">📦 Other</button>
+                </div>
+
+                <!-- ═══ ADD FORM (Collapsible) ═══ -->
+                <div id="ration-add-form" style="display:none;background:var(--paper-bg);border:1.5px solid #E4D3F7;border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 4px 16px rgba(95,37,159,0.1);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                        <h3 style="font-size:15px;font-weight:900;color:#5F259F;margin:0;">✨ Naya Item</h3>
+                        <button type="button" onclick="closeRationAddForm()" style="background:#F3EAFB;border:none;border-radius:8px;padding:5px 10px;font-size:18px;cursor:pointer;line-height:1;">×</button>
+                    </div>
+                    <!-- Item name -->
+                    <input type="text" id="ration-item" placeholder="Samaan ka naam (e.g. Chawal, Daal Arhar)" style="width:100%;padding:12px;border:1.5px solid var(--line-color);border-radius:14px;font-size:14px;font-weight:700;background:var(--bg-color);color:var(--text-main);box-sizing:border-box;margin-bottom:10px;outline:none;" onfocus="this.style.border='1.5px solid #8C3EDB'" onblur="this.style.border='1.5px solid var(--line-color)'">
+                    <!-- Qty + Unit + Price -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
+                        <div>
+                            <label style="font-size:10px;font-weight:800;color:#5F259F;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Matra</label>
+                            <input type="number" id="ration-qty" placeholder="e.g. 5" step="0.5" min="0" style="width:100%;padding:10px;border:1.5px solid var(--line-color);border-radius:12px;font-size:14px;font-weight:800;background:var(--bg-color);color:var(--text-main);box-sizing:border-box;outline:none;" onfocus="this.style.border='1.5px solid #8C3EDB'" onblur="this.style.border='1.5px solid var(--line-color)'">
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:800;color:#5F259F;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Unit</label>
+                            <select id="ration-unit" style="width:100%;padding:10px;border:1.5px solid var(--line-color);border-radius:12px;font-size:13px;font-weight:800;background:var(--bg-color);color:var(--text-main);box-sizing:border-box;outline:none;cursor:pointer;">
+                                <option value="kg">kg</option>
+                                <option value="g">gram</option>
+                                <option value="L">Litre</option>
+                                <option value="ml">ml</option>
+                                <option value="pcs">pcs</option>
+                                <option value="dozen">dozen</option>
+                                <option value="packet">packet</option>
+                                <option value="bottle">bottle</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:800;color:#5F259F;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">₹ Price</label>
+                            <input type="number" id="ration-amount" placeholder="₹0" min="0" style="width:100%;padding:10px;border:1.5px solid var(--line-color);border-radius:12px;font-size:14px;font-weight:800;background:var(--bg-color);color:var(--text-main);box-sizing:border-box;outline:none;" onfocus="this.style.border='1.5px solid #8C3EDB'" onblur="this.style.border='1.5px solid var(--line-color)'">
+                        </div>
+                    </div>
+                    <!-- Category chips -->
+                    <label style="font-size:10px;font-weight:800;color:#5F259F;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Category</label>
+                    <div id="ration-form-cats" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+                        <button type="button" onclick="selectRationCat(this,'Anaj')" class="rcat-form-chip active-rcat-form">🌾 Anaj</button>
+                        <button type="button" onclick="selectRationCat(this,'Dal')" class="rcat-form-chip">🟡 Dal</button>
+                        <button type="button" onclick="selectRationCat(this,'Oil')" class="rcat-form-chip">🫙 Tel</button>
+                        <button type="button" onclick="selectRationCat(this,'Masala')" class="rcat-form-chip">🌶️ Masala</button>
+                        <button type="button" onclick="selectRationCat(this,'Sabzi')" class="rcat-form-chip">🥬 Sabzi</button>
+                        <button type="button" onclick="selectRationCat(this,'Dairy')" class="rcat-form-chip">🥛 Dairy</button>
+                        <button type="button" onclick="selectRationCat(this,'Other')" class="rcat-form-chip">📦 Other</button>
+                    </div>
+                    <!-- Date + Note -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                        <div>
+                            <label style="font-size:10px;font-weight:800;color:#5F259F;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Date</label>
+                            <input type="date" id="ration-date" style="width:100%;padding:10px;border:1.5px solid var(--line-color);border-radius:12px;font-size:13px;font-weight:700;background:var(--bg-color);color:var(--text-main);box-sizing:border-box;outline:none;">
+                        </div>
+                        <div>
+                            <label style="font-size:10px;font-weight:800;color:#5F259F;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Note</label>
+                            <input type="text" id="ration-note" placeholder="Optional..." style="width:100%;padding:10px;border:1.5px solid var(--line-color);border-radius:12px;font-size:13px;font-weight:700;background:var(--bg-color);color:var(--text-main);box-sizing:border-box;outline:none;">
+                        </div>
+                    </div>
+                    <button type="button" onclick="addRation()" style="width:100%;padding:13px;background:linear-gradient(135deg,#5F259F,#8C3EDB);color:white;border:none;border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 6px 18px rgba(95,37,159,0.4);letter-spacing:0.3px;">
+                        ✅ List Mein Jodo
+                    </button>
+                </div>
+
+                <!-- ═══ RATION LIST ═══ -->
+                <div class="history-section" style="padding:0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <h3 style="font-size:15px;font-weight:900;color:var(--text-main);margin:0;">📋 Ration List</h3>
+                        <div style="display:flex;gap:6px;">
+                            <button type="button" onclick="clearBoughtRation()" style="font-size:10px;font-weight:800;padding:5px 10px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:8px;cursor:pointer;">✓ Kharida Clear</button>
+                            <button type="button" onclick="exportRationList()" style="font-size:10px;font-weight:800;padding:5px 10px;background:#F8F3FC;color:#5F259F;border:1px solid #DCC6F5;border-radius:8px;cursor:pointer;">📤 Share</button>
+                        </div>
+                    </div>
+                    <ul id="ration-list" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;"></ul>
+                    <div id="ration-running-total" style="display:none;margin-top:12px;padding:12px 16px;background:linear-gradient(135deg,#F8F3FC,#EDE0FA);border-radius:14px;border:1px solid #DCC6F5;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:13px;font-weight:800;color:#4A1D7E;">🛒 Running Total (Pending)</span>
+                            <span id="ration-running-amount" style="font-size:18px;font-weight:900;color:#5F259F;">₹0</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                            <span style="font-size:11px;font-weight:700;color:#8C3EDB;">Kharida gaya</span>
+                            <span id="ration-spent-amount" style="font-size:13px;font-weight:900;color:#10b981;">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="section-invest" class="app-section"><div class="balance-card" style="background: #cffafe;"><p style="color: #0891b2;">Total Investments</p><h1 id="invest-total-amount" style="color: #0e7490;">₹0</h1></div><div class="form-section"><label>Kahan Invest Kiya?</label><select id="invest-type"><option value="SIP">📈 Mutual Fund (SIP)</option><option value="FD">🏦 Bank FD / RD</option><option value="Stock">📊 Stocks / Share Market</option><option value="Gold">🪙 Gold / Silver</option><option value="Crypto">₿ Crypto</option></select><label>Kitne paise lagaye?</label><input type="number" id="invest-amount" placeholder="Amount (₹)"><label>Date</label><input type="date" id="invest-date"><button type="button" class="expense-btn" style="background:#06b6d4; border:none;" onclick="addInvestment()">Invest Add Karein</button></div><div class="history-section"><h3>Investment Portfolio</h3><ul id="invest-list"></ul></div></div>
+        </div>
+
+        <div class="bottom-nav">
+            <!-- HISAB TAB -->
+            <button type="button" class="nav-btn active-nav" id="nav-hisab" onclick="openSection('hisab', 'Hisaab')">
+                <div class="nav-icon-wrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                    </svg>
+                </div>
+                <span class="nav-label">HISAB</span>
+                <div class="nav-active-dot"></div>
+            </button>
+
+            <!-- CENTER ADD FAB -->
+            <button type="button" class="nav-center-fab" id="nav-add-fab" onclick="openAddSheet()">
+                <div class="nav-fab-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30">
+                        <line x1="12" y1="4" x2="12" y2="20"/>
+                        <line x1="4" y1="12" x2="20" y2="12"/>
+                    </svg>
+                </div>
+                <span class="nav-fab-label">✦ ADD</span>
+            </button>
+
+            <!-- RATION TAB -->
+            <button type="button" class="nav-btn" id="nav-ration" onclick="openSection('ration', 'Ration List')">
+                <div class="nav-icon-wrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                </div>
+                <span class="nav-label">RATION</span>
+                <div class="nav-active-dot"></div>
+            </button>
+        </div>
+    </div>
+
+
+
+    <div id="profile-modal" class="lock-overlay" style="display: none; z-index: 1000000; align-items: flex-end; justify-content: center; padding: 0;">
+        <div class="lock-card profile-card-anim" style="width: 100%; max-width: 600px; height: 92dvh; max-height: 92dvh; overflow-y: scroll; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; margin: 0 auto; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); padding: 0; border-radius: 28px 28px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.18);">
+            <!-- DRAG HANDLE -->
+            <div style="position:sticky;top:0;z-index:20;background:var(--paper-bg);padding:10px 0 6px;text-align:center;border-radius:28px 28px 0 0;">
+                <div style="width:40px;height:4px;background:var(--line-color);border-radius:4px;margin:0 auto;"></div>
+            </div>
+
+            <!-- COVER / HERO GRADIENT BANNER -->
+            <div id="profile-cover" style="height:130px;background:linear-gradient(135deg,#2E1259 0%,#5F259F 60%,#8C3EDB 100%);position:relative;overflow:hidden;">
+                <!-- Decorative pattern -->
+                <div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
+                <div style="position:absolute;bottom:-40px;left:20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.05);"></div>
+                <div style="position:absolute;top:10px;left:50%;width:80px;height:80px;border-radius:50%;background:rgba(196,166,240,0.25);"></div>
+                <!-- Close button -->
+                <button onclick="closeProfile()" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.3);border:none;cursor:pointer;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(6px);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <!-- AVATAR (overlaps cover) -->
+            <div style="padding:0 20px 0 20px;margin-top:-42px;position:relative;z-index:2;">
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px;">
+                    <!-- Avatar with upload -->
+                    <div style="position:relative;" onclick="updateProfilePhoto()">
+                        <div id="profile-avatar-large" style="width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,#5F259F,#8C3EDB);color:white;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,0.3);border:3px solid var(--paper-bg);cursor:pointer;overflow:hidden;">A</div>
+                        <div style="position:absolute;bottom:-4px;right:-4px;width:26px;height:26px;background:#5F259F;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--paper-bg);cursor:pointer;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="12" height="12"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                        </div>
+                        <input type="file" id="profile-photo-input" accept="image/*" style="display:none;" onchange="handleProfilePhotoUpload(event)">
+                    </div>
+                    <!-- Edit + Badge row -->
+                    <div style="display:flex;gap:8px;margin-bottom:6px;">
+                        <button onclick="updateProfileName()" style="background:linear-gradient(135deg,#5F259F,#8C3EDB);border:none;cursor:pointer;padding:8px 14px;border-radius:12px;display:flex;align-items:center;gap:6px;color:white;font-size:12px;font-weight:700;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Name, email, badges -->
+                <div style="margin-bottom:14px;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <h2 id="profile-name" style="font-size:22px;color:var(--text-main);font-weight:800;margin:0;">User</h2>
+                        <span id="profile-level-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;">Level 1 | Beginner</span>
+                        <span id="role-badge-profile" style="background:var(--pp-purple-tint);color:#5F259F;border:1px solid #DCC6F5;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800;">Admin</span>
+                    </div>
+                    <p id="profile-email" style="color:#94a3b8;font-size:12px;font-weight:600;margin:3px 0 0 0;">email@domain.com</p>
+                </div>
+
+                <!-- XP Progress Bar -->
+                <div style="background:var(--line-color);border-radius:14px;padding:12px 14px;margin-bottom:14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+                        <span style="font-size:11px;color:var(--text-muted);font-weight:800;">⚡ XP Progress</span>
+                        <span id="xp-label-profile" style="font-size:11px;color:#f59e0b;font-weight:800;">0 / 100 XP</span>
+                    </div>
+                    <div style="background:rgba(0,0,0,0.06);border-radius:8px;height:8px;overflow:hidden;">
+                        <div id="xp-bar-profile" style="height:100%;width:0%;background:linear-gradient(90deg,#f59e0b,#f97316);transition:width 0.6s ease;border-radius:8px;"></div>
+                    </div>
+                </div>
+
+                <!-- 4-STAT GRID (upgraded) -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+                    <div style="background:linear-gradient(135deg,#4A1D7E,#5F259F);border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(95,37,159,0.25);">
+                        <p style="font-size:10px;color:rgba(255,255,255,0.7);font-weight:800;margin-bottom:4px;text-transform:uppercase;">💸 Total Kharcha</p>
+                        <h3 id="profile-total-expense" style="font-size:18px;color:white;font-weight:900;margin:0;">₹0</h3>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#065f46,#10b981);border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(16,185,129,0.25);">
+                        <p style="font-size:10px;color:rgba(255,255,255,0.7);font-weight:800;margin-bottom:4px;text-transform:uppercase;">📈 Net Worth</p>
+                        <h3 id="profile-net-worth" style="font-size:18px;color:white;font-weight:900;margin:0;">₹0</h3>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#78350f,#d97706);border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(217,119,6,0.25);">
+                        <p style="font-size:10px;color:rgba(255,255,255,0.7);font-weight:800;margin-bottom:4px;text-transform:uppercase;">💵 Net Worth ($)</p>
+                        <button onclick="convertToUSD()" id="usd-btn" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:900;color:white;padding:0;text-align:left;">Tap to see</button>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#0e4d6e,#0891b2);border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(8,145,178,0.25);">
+                        <p style="font-size:10px;color:rgba(255,255,255,0.7);font-weight:800;margin-bottom:4px;text-transform:uppercase;">❤️ Health Score</p>
+                        <h3 id="health-score-text" style="font-size:18px;color:white;font-weight:900;margin:0;">0/100</h3>
+                    </div>
+                </div>
+                                <!-- SECTIONS (previously in navbar) -->
+                <div style="background:var(--line-color); border-radius:20px; overflow:hidden; margin-bottom:16px;">
+                    <p style="font-size:11px; color:var(--text-muted); font-weight:800; padding:14px 16px 8px; text-transform:uppercase; letter-spacing:0.5px;">📱 Sections</p>
+
+                    <button onclick="openSection('tools','Finance Dashboard'); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#0f172a,#334155);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Finance Dashboard</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openSection('recharge','Recharges'); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Recharge</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openSection('invest','Investments'); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#059669,#065f46);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Investments</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openSection('emi','EMI & Bills'); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#dc2626,#b91c1c);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">EMI & Bills</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openSection('vyaj','Gaon Vyaj'); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#d97706,#b45309);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Gaon Vyaj (Interest)</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openSection('dudh','Milk Tracker'); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#60a5fa,#2563eb);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M8 2h8l2 6H6L8 2z"/><path d="M6 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Milk Tracker (Dudh)</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+
+                <!-- QUICK ACTIONS GRID (Apple Settings style) -->
+                <div style="background:var(--line-color); border-radius:20px; overflow:hidden; margin-bottom:16px;">
+                    <button onclick="openThemeStore(); closeProfile();" style="width:100%; display:flex; align-items:center; gap:14px; padding:14px 16px; background:transparent; border:none; border-bottom:1px solid rgba(0,0,0,0.05); cursor:pointer; text-align:left;">
+                        <div style="width:32px; height:32px; background:linear-gradient(135deg,#8b5cf6,#6366f1); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                        </div>
+                        <span style="font-size:14px; font-weight:700; color:var(--text-main);">Themes & Appearance</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <button onclick="toggleLanguage()" style="width:100%; display:flex; align-items:center; gap:14px; padding:14px 16px; background:transparent; border:none; border-bottom:1px solid rgba(0,0,0,0.05); cursor:pointer; text-align:left;">
+                        <div style="width:32px; height:32px; background:linear-gradient(135deg,#10b981,#059669); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </div>
+                        <span style="font-size:14px; font-weight:700; color:var(--text-main);">Language: Hindi / English</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <button onclick="openInviteSystem(); closeProfile();" style="width:100%; display:flex; align-items:center; gap:14px; padding:14px 16px; background:transparent; border:none; border-bottom:1px solid rgba(0,0,0,0.05); cursor:pointer; text-align:left;">
+                        <div style="width:32px; height:32px; background:linear-gradient(135deg,#f59e0b,#d97706); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                        </div>
+                        <span style="font-size:14px; font-weight:700; color:var(--text-main);">Family Invite System</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <button onclick="openMembersPanel(); closeProfile();" style="width:100%; display:flex; align-items:center; gap:14px; padding:14px 16px; background:transparent; border:none; border-bottom:1px solid rgba(0,0,0,0.05); cursor:pointer; text-align:left;">
+                        <div style="width:32px; height:32px; background:linear-gradient(135deg,#6366f1,#4f46e5); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <span style="font-size:14px; font-weight:700; color:var(--text-main);">Members & Roles</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+
+                <!-- GOAL CARD -->
+                <div style="background:linear-gradient(135deg,#F8F3FC,#F3EAFB); border:1.5px solid #C4A6F0; border-radius:20px; padding:16px; margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:12px; font-weight:800; color:#5F259F;">Dream Goal</span>
+                        <button onclick="setGoal()" style="background:#5F259F; color:white; border:none; padding:4px 12px; border-radius:10px; font-weight:800; font-size:11px; cursor:pointer;">Set Goal</button>
+                    </div>
+                    <p id="goal-name" style="font-size:14px; font-weight:800; color:#4A1D7E; margin-bottom:8px;">No Goal Set</p>
+                    <div style="width:100%; background:#E4D3F7; border-radius:10px; height:6px; overflow:hidden;"><div id="goal-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#4A1D7E,#8C3EDB); transition:width 0.5s;"></div></div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#5F259F; margin-top:5px;"><span>Saved: ₹<span id="goal-saved">0</span></span><span>Target: ₹<span id="goal-target">0</span></span></div>
+                </div>
+
+                <!-- DATA & REPORTS -->
+                <div style="background:var(--line-color); border-radius:20px; overflow:hidden; margin-bottom:16px;">
+                    <p style="font-size:11px; color:var(--text-muted); font-weight:800; padding:14px 16px 8px; text-transform:uppercase; letter-spacing:0.5px;">Data & Reports</p>
+                    <div style="display:flex; gap:8px; padding:0 16px 12px;">
+                        <button type="button" onclick="exportToPDF()" style="flex:1; padding:10px 5px; background:white; color:#e74c3c; border:1.5px solid #e74c3c; border-radius:12px; cursor:pointer; font-weight:800; font-size:11px;">PDF</button>
+                        <button type="button" onclick="exportToExcel()" style="flex:1; padding:10px 5px; background:white; color:#10b981; border:1.5px solid #10b981; border-radius:12px; cursor:pointer; font-weight:800; font-size:11px;">Excel</button>
+                        <button type="button" onclick="printReport()" style="flex:1; padding:10px 5px; background:white; color:#0f172a; border:1.5px solid #0f172a; border-radius:12px; cursor:pointer; font-weight:800; font-size:11px;">Print</button>
+                    </div>
+                    <div style="display:flex; gap:8px; padding:0 16px 14px;">
+                        <button type="button" onclick="backupData()" style="flex:1; padding:10px; background:#1e293b; color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer; font-size:12px;">Backup</button>
+                        <label style="flex:1; padding:10px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer; text-align:center; font-size:12px; margin:0;">Restore <input type="file" accept=".txt,.json" style="display:none;" onchange="restoreData(event)"></label>
+                    </div>
+                </div>
+                <!-- ═══ 10 NEW PROFILE FEATURES ═══ -->
+                <div style="background:var(--line-color); border-radius:20px; overflow:hidden; margin-bottom:16px;">
+                    <p style="font-size:11px; color:var(--text-muted); font-weight:800; padding:14px 16px 8px; text-transform:uppercase; letter-spacing:0.5px;">More Features</p>
+
+                    <button onclick="shareMonthlySummary(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Share Monthly Summary</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="showSpendingPersonality(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">My Spending Personality</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="manageCustomCategories(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Custom Categories</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="changePIN(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#0891b2,#0e7490);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Change App PIN</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openJarSystem(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#10b981,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Savings Jars</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openIOwe(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">I Owe / U Owe (Udhar)</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openWarRoom(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#1e293b,#334155);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Family War Room</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openGiftTracker(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#ec4899,#db2777);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Khushi Fund (Gift Tracker)</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openFutureSim(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">SIP Future Simulator</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <button onclick="openNeighbourhood(); closeProfile();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;background:transparent;border:none;cursor:pointer;text-align:left;">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#d97706,#b45309);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                        <span style="font-size:14px;font-weight:700;color:var(--text-main);">Area Benchmark</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-left:auto;" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+
+                <!-- LOGOUT -->
+                <button type="button" onclick="logout(); closeProfile();" style="width:100%; padding:14px; background:rgba(239,68,68,0.08); color:#ef4444; border:1.5px solid #fecaca; border-radius:16px; font-weight:800; font-size:14px; cursor:pointer; margin-bottom:30px;">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="theme-modal" class="lock-overlay" style="display: none; z-index: 1000001; align-items: center;">
+        <div class="lock-card profile-card-anim" style="width: 90%; max-width: 350px; margin: 0 auto; position: relative; padding: 30px 20px; background: var(--paper-bg); border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <button onclick="closeThemeStore()" style="position: absolute; top: 15px; right: 15px; background: var(--line-color); border: none; font-size: 14px; cursor: pointer; color: #64748b; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">❌</button>
+            <div class="anim-premium-icon" style="font-size: 50px; margin-bottom: 5px; line-height: 1;">🎨</div><h2 style="font-family: 'Caveat', cursive !important; font-size: 32px !important; color: var(--text-main); margin-bottom: 5px;">Theme Store</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button onclick="applyTheme('default')" class="theme-btn" style="background: #f8fafc; border: 2px solid #2563eb; color: #2563eb;">📘 Classic Blue</button><button onclick="applyTheme('nature')" class="theme-btn" style="background: #f0fdf4; border: 2px solid #16a34a; color: #16a34a;">🌿 Nature Green</button><button onclick="applyTheme('sunset')" class="theme-btn" style="background: #faf5ff; border: 2px solid #9333ea; color: #9333ea;">🌆 Sunset Purple</button><button onclick="applyTheme('night')" class="theme-btn" style="background: #1e293b; border: 2px solid #cbd5e1; color: #f1f5f9;">🌙 Night Mode</button><button onclick="applyTheme('cyberpunk')" class="theme-btn" style="background: #fce7f3; border: 2px solid #db2777; color: #db2777;">🤖 Cyberpunk</button><button onclick="applyTheme('glass')" class="theme-btn" style="background: #e0f2fe; border: 2px solid #0284c7; color: #0284c7;">🧊 Glass UI</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="sound-success" src="https://actions.google.com/sounds/v1/foley/cash_register_kaching.ogg" preload="auto"></audio>
+    <audio id="sound-click" src="https://actions.google.com/sounds/v1/ui/click.ogg" preload="auto"></audio>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+// Nav active state handler for the 2-tab navbar
+(function() {
+    const origOpen = window.openSection;
+    document.addEventListener('DOMContentLoaded', function() {
+        // patch openSection to update nav active states
+        if (typeof openSection === 'function') {
+            const _orig = openSection;
+            window.openSection = function(id, title) {
+                _orig(id, title);
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+                if (id === 'hisab') document.getElementById('nav-hisab')?.classList.add('active-nav');
+                if (id === 'ration') document.getElementById('nav-ration')?.classList.add('active-nav');
+            };
+        }
+    });
+})();
+</script>
+<script src="./script.js?v=ai_fix_final"></script>
+
+
+    <!-- ══════════════════════════════════════════
+         🔥 UPGRADED: SMART KHARCHA ADD SYSTEM
+         ══════════════════════════════════════════ -->
+    <div id="add-expense-sheet" onclick="if(event.target===this)closeAddSheet()" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0);transition:background 0.35s;">
+
+      <!-- MAIN CARD -->
+      <div id="add-sheet-card" style="
+        position:relative;width:94%;max-width:430px;
+        background:var(--paper-bg,#fff);
+        border-radius:32px;
+        box-shadow:0 32px 80px rgba(0,0,0,0.28),0 8px 24px rgba(0,0,0,0.1);
+        padding:0;max-height:92dvh;overflow:hidden;
+        opacity:0;transform:scale(0.86) translateY(20px);
+        transition:opacity 0.35s cubic-bezier(0.34,1.56,0.64,1),transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        display:flex;flex-direction:column;
+      ">
+
+        <!-- ─── HEADER BAND ─── -->
+        <div id="ks-header" style="
+          background:linear-gradient(135deg,#2E1259 0%,#4A1D7E 60%,#5F259F 100%);
+          padding:20px 20px 16px;border-radius:32px 32px 0 0;
+          position:relative;overflow:hidden;flex-shrink:0;
+        ">
+          <!-- decorative circles -->
+          <div style="position:absolute;top:-40px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
+          <div style="position:absolute;bottom:-50px;left:-20px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none;"></div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;">
+            <div>
+              <p style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 2px;">GharManager</p>
+              <h2 style="font-family:'Caveat',cursive;font-size:28px;font-weight:700;color:white;margin:0;line-height:1;">Kharcha Add Karo</h2>
+            </div>
+            <button onclick="closeAddSheet()" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;-webkit-tap-highlight-color:transparent;" onmouseenter="this.style.background='rgba(255,255,255,0.22)'" onmouseleave="this.style.background='rgba(255,255,255,0.12)'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <!-- STEP DOTS -->
+          <div style="display:flex;gap:6px;margin-top:14px;position:relative;z-index:1;" id="ks-step-dots">
+            <div class="ks-dot ks-dot-active" id="dot-0"></div>
+            <div class="ks-dot" id="dot-1"></div>
+            <div class="ks-dot" id="dot-2"></div>
+          </div>
+
+          <!-- STEP LABEL -->
+          <p id="ks-step-label" style="font-size:12px;color:rgba(255,255,255,0.65);font-weight:700;margin:8px 0 0;position:relative;z-index:1;letter-spacing:0.3px;transition:all 0.25s;">Step 1 of 3 — Category chunein</p>
+        </div>
+
+        <!-- ─── SCROLLABLE CONTENT ─── -->
+        <div style="overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex:1;">
+
+          <!-- ═══════ STEP 1: CATEGORY ORBITAL ═══════ -->
+          <div id="ks-step-1" class="ks-step" style="padding:22px 20px 10px;">
+
+            <!-- WHO IS SPENDING — PILL ROW -->
+            <div style="margin-bottom:20px;">
+              <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;">Kaun? 👤</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;" id="ks-member-row">
+                <button onclick="ksMember(this,'Me')"      class="ks-member-pill ks-member-active">🙋 Me</button>
+                <button onclick="ksMember(this,'Papa')"    class="ks-member-pill">👨 Papa</button>
+                <button onclick="ksMember(this,'Mummy')"   class="ks-member-pill">👩 Mummy</button>
+                <button onclick="ksMember(this,'Bhai/Behan')" class="ks-member-pill">🧑 Bhai/Behan</button>
+              </div>
+            </div>
+
+            <!-- CATEGORY ORBITAL GRID -->
+            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;">Category Chunein ⚡</p>
+            <div id="ks-cat-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;">
+              <button onclick="ksCat(this,'Ration','🛒','#16a34a','#dcfce7')"   class="ks-cat-tile" data-cat="Ration">
+                <span class="ks-cat-icon" style="background:#dcfce7;color:#16a34a;">🛒</span><small>Ration</small>
+              </button>
+              <button onclick="ksCat(this,'Medical','💊','#dc2626','#fee2e2')"  class="ks-cat-tile" data-cat="Medical">
+                <span class="ks-cat-icon" style="background:#fee2e2;color:#dc2626;">💊</span><small>Medical</small>
+              </button>
+              <button onclick="ksCat(this,'Petrol','⛽','#d97706','#fef3c7')"   class="ks-cat-tile" data-cat="Petrol">
+                <span class="ks-cat-icon" style="background:#fef3c7;color:#d97706;">⛽</span><small>Petrol</small>
+              </button>
+              <button onclick="ksCat(this,'Bills','⚡','#2563EB','#DBEAFE')"    class="ks-cat-tile" data-cat="Bills">
+                <span class="ks-cat-icon" style="background:#DBEAFE;color:#2563EB;">⚡</span><small>Bills</small>
+              </button>
+              <button onclick="ksCat(this,'Food','🍱','#ea580c','#ffedd5')"     class="ks-cat-tile" data-cat="Food">
+                <span class="ks-cat-icon" style="background:#ffedd5;color:#ea580c;">🍱</span><small>Khaana</small>
+              </button>
+              <button onclick="ksCat(this,'Shopping','🛍️','#db2777','#fce7f3')" class="ks-cat-tile" data-cat="Shopping">
+                <span class="ks-cat-icon" style="background:#fce7f3;color:#db2777;">🛍️</span><small>Shopping</small>
+              </button>
+              <button onclick="ksCat(this,'Travel','✈️','#0891b2','#e0f2fe')"   class="ks-cat-tile" data-cat="Travel">
+                <span class="ks-cat-icon" style="background:#e0f2fe;color:#0891b2;">✈️</span><small>Travel</small>
+              </button>
+              <button onclick="ksCat(this,'Other','📝','#64748b','#f1f5f9')"    class="ks-cat-tile" data-cat="Other">
+                <span class="ks-cat-icon" style="background:#f1f5f9;color:#64748b;">📝</span><small>Other</small>
+              </button>
+            </div>
+
+            <!-- SELECTED CATEGORY BADGE -->
+            <div id="ks-cat-badge" style="display:none;align-items:center;gap:10px;background:var(--line-color,#f1f5f9);border-radius:16px;padding:12px 14px;margin-bottom:18px;animation:ksFadeIn 0.3s ease;">
+              <span id="ks-badge-icon" style="font-size:22px;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;"></span>
+              <div>
+                <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0;text-transform:uppercase;letter-spacing:0.5px;">Selected</p>
+                <p id="ks-badge-name" style="font-size:16px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
+              </div>
+              <div style="margin-left:auto;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" width="22" height="22"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+
+            <!-- NEXT BUTTON -->
+            <button onclick="ksGoStep(2)" id="ks-next-1" style="
+              width:100%;padding:15px;border:none;border-radius:18px;
+              background:linear-gradient(135deg,#4A1D7E,#5F259F);
+              color:white;font-size:16px;font-weight:800;cursor:pointer;
+              box-shadow:0 8px 24px rgba(95,37,159,0.4);
+              letter-spacing:0.3px;margin-bottom:4px;
+              opacity:0.45;transition:opacity 0.2s,transform 0.15s;
+            " disabled>Aage Badho →</button>
+          </div>
+
+          <!-- ═══════ STEP 2: DESCRIPTION + AMOUNT ═══════ -->
+          <div id="ks-step-2" class="ks-step" style="display:none;padding:22px 20px 10px;">
+
+            <!-- Context pill showing selected category -->
+            <div id="ks-ctx-pill" style="display:inline-flex;align-items:center;gap:6px;background:var(--line-color,#f1f5f9);border-radius:20px;padding:6px 12px;margin-bottom:18px;">
+              <span id="ks-ctx-icon" style="font-size:16px;"></span>
+              <span id="ks-ctx-cat" style="font-size:12px;font-weight:800;color:var(--text-main,#0f172a);"></span>
+              <button onclick="ksGoStep(1)" style="background:none;border:none;color:#94a3b8;font-size:11px;font-weight:700;cursor:pointer;padding:0 0 0 4px;">← badlo</button>
+            </div>
+
+            <!-- DESCRIPTION with Voice -->
+            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Kya kharcha hua? 📝</p>
+            <div style="position:relative;margin-bottom:16px;">
+              <input type="text" id="ks-desc" placeholder="e.g., Sabji, Doctor, Diesel…" style="
+                width:100%;padding:14px 52px 14px 16px;
+                border:2px solid var(--line-color,#e2e8f0);
+                border-radius:16px;font-size:15px;font-weight:600;
+                background:var(--paper-bg,#fff);color:var(--text-main,#0f172a);
+                outline:none;box-sizing:border-box;transition:border 0.2s;
+              " onfocus="this.style.border='2px solid #5F259F'" onblur="this.style.border='2px solid var(--line-color,#e2e8f0)'"
+              oninput="ksAutoDetect(this.value)">
+              <button onclick="ksVoiceDesc()" id="ks-voice-btn" style="
+                position:absolute;right:8px;top:50%;transform:translateY(-50%);
+                width:36px;height:36px;border-radius:12px;
+                background:linear-gradient(135deg,#5F259F,#4A1D7E);
+                border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+                -webkit-tap-highlight-color:transparent;
+              ">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" width="17" height="17"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              </button>
+            </div>
+            <p style="font-size:11px;color:#5F259F;font-weight:600;margin:-10px 0 16px;padding-left:4px;">💡 Mic dabao ya "Sabji 200" bolo — auto detect!</p>
+
+            <!-- AMOUNT NUMPAD -->
+            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;">Kitne Paise? 💰</p>
+
+            <!-- Amount display -->
+            <div id="ks-amount-display" style="
+              background:linear-gradient(135deg,#F3EAFB,#E4D3F7);
+              border:2px solid rgba(95,37,159,0.25);
+              border-radius:20px;padding:16px 20px;
+              margin-bottom:14px;text-align:center;position:relative;
+            ">
+              <p style="font-size:11px;color:#4A1D7E;font-weight:800;margin:0 0 2px;text-transform:uppercase;letter-spacing:0.5px;">Amount</p>
+              <div style="display:flex;align-items:baseline;justify-content:center;gap:4px;">
+                <span style="font-size:28px;font-weight:800;color:#5F259F;font-family:'Sora',sans-serif;">₹</span>
+                <span id="ks-amt-val" style="font-size:42px;font-weight:900;color:#0f172a;font-family:'Sora',sans-serif;letter-spacing:-1px;min-width:60px;">0</span>
+              </div>
+              <!-- Hidden actual input -->
+              <input type="hidden" id="ks-amount">
+            </div>
+
+            <!-- NUMPAD GRID -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;" id="ks-numpad">
+              <button class="ks-num-btn" onclick="ksNum('1')">1</button>
+              <button class="ks-num-btn" onclick="ksNum('2')">2</button>
+              <button class="ks-num-btn" onclick="ksNum('3')">3</button>
+              <button class="ks-num-btn" onclick="ksNum('4')">4</button>
+              <button class="ks-num-btn" onclick="ksNum('5')">5</button>
+              <button class="ks-num-btn" onclick="ksNum('6')">6</button>
+              <button class="ks-num-btn" onclick="ksNum('7')">7</button>
+              <button class="ks-num-btn" onclick="ksNum('8')">8</button>
+              <button class="ks-num-btn" onclick="ksNum('9')">9</button>
+              <button class="ks-num-btn ks-num-zero" onclick="ksNum('00')">00</button>
+              <button class="ks-num-btn" onclick="ksNum('0')">0</button>
+              <button class="ks-num-btn ks-num-del" onclick="ksNumDel()">⌫</button>
+            </div>
+
+            <!-- Quick amounts -->
+            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;">
+              <button class="ks-quick-amt" onclick="ksSetAmt(50)">₹50</button>
+              <button class="ks-quick-amt" onclick="ksSetAmt(100)">₹100</button>
+              <button class="ks-quick-amt" onclick="ksSetAmt(200)">₹200</button>
+              <button class="ks-quick-amt" onclick="ksSetAmt(500)">₹500</button>
+              <button class="ks-quick-amt" onclick="ksSetAmt(1000)">₹1K</button>
+              <button class="ks-quick-amt" onclick="ksSetAmt(2000)">₹2K</button>
+            </div>
+
+            <button onclick="ksGoStep(3)" id="ks-next-2" style="
+              width:100%;padding:15px;border:none;border-radius:18px;
+              background:linear-gradient(135deg,#4A1D7E,#5F259F);
+              color:white;font-size:16px;font-weight:800;cursor:pointer;
+              box-shadow:0 8px 24px rgba(95,37,159,0.4);
+              letter-spacing:0.3px;margin-bottom:4px;
+            ">Aage Badho →</button>
+          </div>
+
+          <!-- ═══════ STEP 3: DATE + CONFIRM ═══════ -->
+          <div id="ks-step-3" class="ks-step" style="display:none;padding:22px 20px 28px;">
+
+            <!-- Summary Card -->
+            <div id="ks-summary-card" style="
+              border-radius:24px;overflow:hidden;
+              box-shadow:0 8px 28px rgba(0,0,0,0.1);
+              margin-bottom:20px;
+            ">
+              <!-- Top colored band -->
+              <div id="ks-summary-top" style="padding:16px 18px;background:linear-gradient(135deg,#4A1D7E,#5F259F);">
+                <p style="font-size:10px;color:rgba(255,255,255,0.6);font-weight:800;text-transform:uppercase;margin:0 0 2px;">Kharcha Summary</p>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span id="ks-sum-icon" style="font-size:26px;"></span>
+                  <div>
+                    <p id="ks-sum-desc" style="font-size:17px;font-weight:800;color:white;margin:0;"></p>
+                    <p id="ks-sum-cat" style="font-size:12px;color:rgba(255,255,255,0.7);font-weight:600;margin:0;"></p>
+                  </div>
+                  <div style="margin-left:auto;text-align:right;">
+                    <p style="font-size:10px;color:rgba(255,255,255,0.6);margin:0;font-weight:600;">Amount</p>
+                    <p id="ks-sum-amt" style="font-size:22px;font-weight:900;color:white;margin:0;font-family:'Sora',sans-serif;"></p>
+                  </div>
+                </div>
+              </div>
+              <!-- Bottom details -->
+              <div style="background:var(--paper-bg,#fff);padding:14px 18px;display:flex;gap:8px;">
+                <div style="flex:1;background:var(--line-color,#f1f5f9);border-radius:12px;padding:10px;text-align:center;">
+                  <p style="font-size:9px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0 0 3px;text-transform:uppercase;">Member</p>
+                  <p id="ks-sum-member" style="font-size:13px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
+                </div>
+                <div style="flex:1;background:var(--line-color,#f1f5f9);border-radius:12px;padding:10px;text-align:center;">
+                  <p style="font-size:9px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0 0 3px;text-transform:uppercase;">Tarikh</p>
+                  <p id="ks-sum-date-label" style="font-size:13px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
+                </div>
+                <div style="flex:1;background:var(--line-color,#f1f5f9);border-radius:12px;padding:10px;text-align:center;">
+                  <p style="font-size:9px;color:var(--text-muted,#94a3b8);font-weight:700;margin:0 0 3px;text-transform:uppercase;">Category</p>
+                  <p id="ks-sum-cat2" style="font-size:13px;font-weight:800;color:var(--text-main,#0f172a);margin:0;"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date picker -->
+            <p style="font-size:10px;color:var(--text-muted,#94a3b8);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Tarikh 📅</p>
+            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+              <button class="ks-date-btn ks-date-active" id="ks-date-today" onclick="ksPickDate('today',this)">📅 Aaj</button>
+              <button class="ks-date-btn" id="ks-date-yesterday" onclick="ksPickDate('yesterday',this)">⏪ Kal</button>
+              <button class="ks-date-btn" id="ks-date-custom" onclick="ksPickDate('custom',this)">🗓️ Custom</button>
+            </div>
+            <input type="date" id="ks-date" style="
+              width:100%;padding:12px 16px;border:2px solid var(--line-color,#e2e8f0);
+              border-radius:14px;font-size:14px;font-weight:700;
+              background:var(--paper-bg,#fff);color:var(--text-main,#0f172a);
+              outline:none;box-sizing:border-box;display:none;
+              transition:border 0.2s;margin-bottom:16px;
+            " onchange="ksUpdateDateLabel()">
+
+            <!-- GPS Row -->
+            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--line-color,#f1f5f9);border-radius:14px;padding:12px 14px;margin-bottom:20px;">
+              <span id="ks-gps-label" style="font-size:12px;color:var(--text-muted,#64748b);font-weight:700;">📍 Location optional</span>
+              <button onclick="ksGetGPS()" style="background:#5F259F;color:white;border:none;border-radius:10px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;">GPS 🌍</button>
+            </div>
+
+            <!-- SAVE BUTTON -->
+            <button onclick="ksSave()" style="
+              width:100%;padding:17px;border:none;border-radius:20px;
+              background:linear-gradient(135deg,#5F259F,#8C3EDB);
+              color:white;font-size:18px;font-weight:900;cursor:pointer;
+              box-shadow:0 10px 32px rgba(95,37,159,0.5);
+              letter-spacing:0.3px;position:relative;overflow:hidden;
+              transition:transform 0.15s,box-shadow 0.15s;
+            " onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+              ✅ Kharcha Save Karo!
+            </button>
+            <button onclick="ksGoStep(2)" style="
+              width:100%;padding:12px;margin-top:10px;border:1.5px solid var(--line-color,#e2e8f0);
+              border-radius:14px;background:transparent;color:var(--text-muted,#64748b);
+              font-size:13px;font-weight:700;cursor:pointer;
+            ">← Wapas Jao</button>
+          </div>
+
+        </div><!-- end scrollable -->
+      </div><!-- end card -->
+    </div><!-- end overlay -->
+
+    <!-- ── KS STYLES ── -->
+    <style>
+      #add-expense-sheet { backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px); }
+      #add-expense-sheet.sheet-open { background:rgba(0,0,0,0.55); }
+      #add-sheet-card.sheet-open { opacity:1 !important;transform:scale(1) translateY(0) !important; }
+
+      @keyframes ksFadeIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+
+      /* Step dots */
+      .ks-dot {
+        height:4px;border-radius:4px;background:rgba(255,255,255,0.25);
+        transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        flex:1;
+      }
+      .ks-dot-active { background:white;flex:2.5 !important; }
+
+      /* Member pills */
+      .ks-member-pill {
+        padding:8px 14px;border-radius:20px;
+        border:2px solid var(--line-color,#e2e8f0);
+        background:var(--paper-bg,#fff);
+        font-size:13px;font-weight:700;cursor:pointer;
+        color:var(--text-muted,#64748b);
+        transition:all 0.2s;white-space:nowrap;
+        -webkit-tap-highlight-color:transparent;
+      }
+      .ks-member-active {
+        background:linear-gradient(135deg,#4A1D7E,#5F259F) !important;
+        color:white !important;border-color:#5F259F !important;
+        box-shadow:0 4px 14px rgba(95,37,159,0.35) !important;
+      }
+
+      /* Category tiles */
+      .ks-cat-tile {
+        display:flex;flex-direction:column;align-items:center;gap:7px;
+        padding:14px 6px;border-radius:18px;
+        border:2px solid var(--line-color,#e2e8f0);
+        background:var(--paper-bg,#fff);cursor:pointer;
+        transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+        -webkit-tap-highlight-color:transparent;
+      }
+      .ks-cat-tile:active { transform:scale(0.93); box-shadow:0 0 0 6px rgba(95,37,159,0.12); }
+      .ks-cat-tile.ks-cat-selected {
+        border-color:currentColor;
+        box-shadow:0 6px 18px rgba(0,0,0,0.12);
+        transform:scale(1.06);
+      }
+      .ks-cat-icon {
+        width:42px;height:42px;border-radius:13px;
+        display:flex;align-items:center;justify-content:center;
+        font-size:20px;transition:transform 0.2s;
+      }
+      .ks-cat-tile small {
+        font-size:10px;font-weight:800;color:var(--text-muted,#64748b);
+        text-align:center;line-height:1.2;
+      }
+
+      /* Numpad */
+      .ks-num-btn {
+        padding:0;height:56px;border-radius:16px;
+        border:1.5px solid var(--line-color,#e2e8f0);
+        background:var(--paper-bg,#fff);
+        font-size:22px;font-weight:700;cursor:pointer;
+        color:var(--text-main,#0f172a);
+        transition:all 0.12s;
+        -webkit-tap-highlight-color:transparent;
+        font-family:'Sora',sans-serif;
+      }
+      .ks-num-btn:active { background:var(--line-color,#f1f5f9);transform:scale(0.93); }
+      .ks-num-zero { font-size:18px; }
+      .ks-num-del { font-size:18px;color:#ef4444; }
+
+      /* Quick amounts */
+      .ks-quick-amt {
+        padding:7px 13px;border-radius:20px;
+        border:1.5px solid var(--line-color,#e2e8f0);
+        background:var(--paper-bg,#fff);
+        font-size:12px;font-weight:800;cursor:pointer;
+        color:var(--text-main,#0f172a);
+        transition:all 0.18s;
+        -webkit-tap-highlight-color:transparent;
+      }
+      .ks-quick-amt:active { background:#EDE0FA;border-color:#5F259F;color:#4A1D7E;transform:scale(0.94); }
+
+      /* Date buttons */
+      .ks-date-btn {
+        padding:9px 16px;border-radius:20px;
+        border:2px solid var(--line-color,#e2e8f0);
+        background:var(--paper-bg,#fff);
+        font-size:12px;font-weight:800;cursor:pointer;
+        color:var(--text-muted,#64748b);
+        transition:all 0.2s;
+        -webkit-tap-highlight-color:transparent;
+      }
+      .ks-date-active {
+        background:#EDE0FA !important;border-color:#5F259F !important;color:#4A1D7E !important;
+      }
+
+      /* Voice recording state */
+      #ks-voice-btn.ks-recording {
+        background:linear-gradient(135deg,#ef4444,#dc2626) !important;
+        animation:ksMicPulse 0.9s ease-in-out infinite;
+      }
+      @keyframes ksMicPulse { 0%,100%{box-shadow:0 4px 12px rgba(239,68,68,0.4)}50%{box-shadow:0 4px 20px rgba(239,68,68,0.7)} }
+    </style>
+
+    <!-- ── KS JAVASCRIPT ── -->
+    <script>
+    // ══ KHARCHA SMART SYSTEM ════════════════════════════════════
+    let ksStep = 1;
+    let ksData = { member:'Me', cat:'', catIcon:'', desc:'', amount:'0', date:'' };
+    let ksVoiceRec = null;
+    let ksVoicing = false;
+
+    // Init today
+    (function(){ const td = new Date().toISOString().split('T')[0]; ksData.date = td; })();
+
+    function openAddSheet() {
+      const sheet = document.getElementById('add-expense-sheet');
+      const card  = document.getElementById('add-sheet-card');
+      // Reset
+      ksData = { member:'Me', cat:'', catIcon:'', desc:'', amount:'0', date: new Date().toISOString().split('T')[0] };
+      ksStep = 1;
+      document.getElementById('ks-amt-val').textContent = '0';
+      document.getElementById('ks-amount').value = '';
+      document.getElementById('ks-desc').value = '';
+      document.getElementById('ks-date-today').classList.add('ks-date-active');
+      document.getElementById('ks-date-yesterday').classList.remove('ks-date-active');
+      document.getElementById('ks-date-custom').classList.remove('ks-date-active');
+      document.getElementById('ks-date').style.display = 'none';
+      // Reset category tiles
+      document.querySelectorAll('.ks-cat-tile').forEach(t => { t.classList.remove('ks-cat-selected'); t.style.borderColor=''; t.style.background=''; });
+      document.getElementById('ks-cat-badge').style.display = 'none';
+      const nb = document.getElementById('ks-next-1');
+      nb.disabled = true; nb.style.opacity = '0.45';
+      // Reset member
+      document.querySelectorAll('.ks-member-pill').forEach(p => p.classList.remove('ks-member-active'));
+      document.querySelector('.ks-member-pill').classList.add('ks-member-active');
+      ksShowStep(1);
+      sheet.style.display = 'flex';
+      sheet.style.alignItems = 'center';
+      sheet.style.justifyContent = 'center';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        sheet.classList.add('sheet-open');
+        card.classList.add('sheet-open');
+      }));
+    }
+
+    function closeAddSheet() {
+      const sheet = document.getElementById('add-expense-sheet');
+      const card  = document.getElementById('add-sheet-card');
+      sheet.classList.remove('sheet-open');
+      card.classList.remove('sheet-open');
+      if (ksVoiceRec) { try { ksVoiceRec.stop(); } catch(e){} }
+      setTimeout(() => { sheet.style.display = 'none'; }, 380);
+    }
+
+    function ksShowStep(n) {
+      ksStep = n;
+      for(let i=1;i<=3;i++) {
+        const el = document.getElementById('ks-step-'+i);
+        if(el) el.style.display = (i===n) ? 'block' : 'none';
+      }
+      // Update dots
+      for(let i=0;i<3;i++) {
+        const d = document.getElementById('dot-'+i);
+        if(d) d.classList.toggle('ks-dot-active', i<n);
+      }
+      // Labels
+      const labels = ['Step 1 of 3 — Category chunein','Step 2 of 3 — Description & Amount','Step 3 of 3 — Confirm & Save'];
+      document.getElementById('ks-step-label').textContent = labels[n-1];
+    }
+
+    function ksGoStep(n) {
+      if(n===2) {
+        if(!ksData.cat) return;
+        document.getElementById('ks-ctx-icon').textContent = ksData.catIcon;
+        document.getElementById('ks-ctx-cat').textContent  = ksData.cat;
+      }
+      if(n===3) {
+        // Build summary
+        const amt = document.getElementById('ks-amount').value || ksData.amount;
+        const desc = document.getElementById('ks-desc').value.trim() || ksData.cat + ' kharcha';
+        ksData.desc = desc; ksData.amount = amt;
+        document.getElementById('ks-sum-icon').textContent   = ksData.catIcon;
+        document.getElementById('ks-sum-desc').textContent   = desc;
+        document.getElementById('ks-sum-cat').textContent    = ksData.cat;
+        document.getElementById('ks-sum-cat2').textContent   = ksData.cat;
+        document.getElementById('ks-sum-amt').textContent    = '₹'+amt;
+        document.getElementById('ks-sum-member').textContent = ksData.member;
+        ksUpdateDateLabel();
+      }
+      ksShowStep(n);
+    }
+
+    function ksMember(btn, val) {
+      document.querySelectorAll('.ks-member-pill').forEach(p => p.classList.remove('ks-member-active'));
+      btn.classList.add('ks-member-active');
+      ksData.member = val;
+    }
+
+    function ksCat(btn, cat, icon, color, bg) {
+      ksData.cat = cat; ksData.catIcon = icon;
+      // Deselect all
+      document.querySelectorAll('.ks-cat-tile').forEach(t => {
+        t.classList.remove('ks-cat-selected');
+        t.style.borderColor = '';
+        t.style.background = '';
+      });
+      // Select this
+      btn.classList.add('ks-cat-selected');
+      btn.style.borderColor = color;
+      btn.style.background = bg;
+      btn.querySelector('.ks-cat-icon').style.transform = 'scale(1.1)';
+      // Badge
+      const badge = document.getElementById('ks-cat-badge');
+      badge.style.display = 'flex';
+      document.getElementById('ks-badge-icon').textContent = icon;
+      document.getElementById('ks-badge-icon').style.background = bg;
+      document.getElementById('ks-badge-icon').style.color = color;
+      document.getElementById('ks-badge-name').textContent = cat;
+      // Enable next
+      const nb = document.getElementById('ks-next-1');
+      nb.disabled = false; nb.style.opacity = '1';
+    }
+
+    // Numpad
+    function ksNum(d) {
+      let cur = document.getElementById('ks-amount').value || '0';
+      if(cur === '0') cur = '';
+      cur += d;
+      if(cur.length > 6) return;
+      document.getElementById('ks-amount').value = cur;
+      document.getElementById('ks-amt-val').textContent = cur || '0';
+    }
+    function ksNumDel() {
+      let cur = document.getElementById('ks-amount').value;
+      cur = cur.slice(0,-1);
+      document.getElementById('ks-amount').value = cur;
+      document.getElementById('ks-amt-val').textContent = cur || '0';
+    }
+    function ksSetAmt(v) {
+      document.getElementById('ks-amount').value = String(v);
+      document.getElementById('ks-amt-val').textContent = String(v);
+    }
+
+    // Auto detect category from description
+    function ksAutoDetect(val) {
+      if(!val) return;
+      const v = val.toLowerCase();
+      let detCat='', detIcon='', detColor='#64748b', detBg='#f1f5f9';
+      if(v.match(/dawa|doctor|hospital|medical|tablet|injection/)) { detCat='Medical';detIcon='💊';detColor='#dc2626';detBg='#fee2e2'; }
+      else if(v.match(/petrol|diesel|bike|fuel/)) { detCat='Petrol';detIcon='⛽';detColor='#d97706';detBg='#fef3c7'; }
+      else if(v.match(/sabji|ration|tel|daal|chawal|atta|grocer/)) { detCat='Ration';detIcon='🛒';detColor='#16a34a';detBg='#dcfce7'; }
+      else if(v.match(/bill|wifi|recharge|bijli|electric|gas/)) { detCat='Bills';detIcon='⚡';detColor='#7c3aed';detBg='#ede9fe'; }
+      else if(v.match(/pizza|food|khaana|restaurant|order|zomato|swiggy/)) { detCat='Food';detIcon='🍱';detColor='#ea580c';detBg='#ffedd5'; }
+      else if(v.match(/kapde|shoes|shopping|market|online/)) { detCat='Shopping';detIcon='🛍️';detColor='#db2777';detBg='#fce7f3'; }
+      else if(v.match(/train|bus|travel|ticket|cab|auto/)) { detCat='Travel';detIcon='✈️';detColor='#0891b2';detBg='#e0f2fe'; }
+      if(detCat) {
+        const tile = document.querySelector(`.ks-cat-tile[data-cat="${detCat}"]`);
+        if(tile) ksCat(tile, detCat, detIcon, detColor, detBg);
+      }
+    }
+
+    // Date helpers
+    function ksPickDate(type, btn) {
+      document.querySelectorAll('.ks-date-btn').forEach(b => b.classList.remove('ks-date-active'));
+      btn.classList.add('ks-date-active');
+      const today = new Date();
+      const dateInp = document.getElementById('ks-date');
+      if(type==='today') {
+        ksData.date = today.toISOString().split('T')[0];
+        dateInp.style.display='none';
+      } else if(type==='yesterday') {
+        const y = new Date(today); y.setDate(y.getDate()-1);
+        ksData.date = y.toISOString().split('T')[0];
+        dateInp.style.display='none';
+      } else {
+        dateInp.style.display='block';
+        dateInp.value = ksData.date;
+      }
+      ksUpdateDateLabel();
+    }
+    function ksUpdateDateLabel() {
+      const d = document.getElementById('ks-date').value || ksData.date;
+      if(d) ksData.date = d;
+      // Format for display
+      let label = ksData.date;
+      try { const dt = new Date(ksData.date+'T00:00:00'); const opts={day:'numeric',month:'short'}; label = dt.toLocaleDateString('hi-IN',opts); } catch(e){}
+      const el = document.getElementById('ks-sum-date-label');
+      if(el) el.textContent = label;
+    }
+
+    // GPS
+    function ksGetGPS() {
+      const lbl = document.getElementById('ks-gps-label');
+      lbl.textContent = '📍 Location le raha hai...';
+      if(!navigator.geolocation) { lbl.textContent='📍 GPS nahi mila'; return; }
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        window.currentGPSLocation = { lat, lng };
+        lbl.textContent = `✅ GPS Mila (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+      }, () => { lbl.textContent='❌ GPS permission do'; });
+    }
+
+    // Voice input for description
+    function ksVoiceDesc() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SpeechRec) { alert('Voice support nahi hai is browser mein'); return; }
+      const btn = document.getElementById('ks-voice-btn');
+      if(ksVoicing) {
+        ksVoicing=false; btn.classList.remove('ks-recording');
+        if(ksVoiceRec) { try{ksVoiceRec.stop();}catch(e){} }
+        return;
+      }
+      ksVoiceRec = new SpeechRec();
+      ksVoiceRec.lang = 'hi-IN';
+      ksVoiceRec.interimResults = true;
+      ksVoiceRec.continuous = false;
+      ksVoicing = true;
+      btn.classList.add('ks-recording');
+      ksVoiceRec.start();
+      ksVoiceRec.onresult = (e) => {
+        let transcript = '';
+        for(let i=e.resultIndex;i<e.results.length;i++) transcript += e.results[i][0].transcript;
+        document.getElementById('ks-desc').value = transcript;
+        ksAutoDetect(transcript);
+        // Try to extract amount
+        const numMatch = transcript.match(/\d+/);
+        if(numMatch) {
+          const amt = numMatch[0];
+          document.getElementById('ks-amount').value = amt;
+          document.getElementById('ks-amt-val').textContent = amt;
+          // Remove number from desc
+          const descOnly = transcript.replace(numMatch[0],'').replace(/(rupaye|rupay|rs|roopaye|ka|ki|ke)/gi,'').trim();
+          if(descOnly) document.getElementById('ks-desc').value = descOnly.charAt(0).toUpperCase()+descOnly.slice(1);
+        }
+      };
+      ksVoiceRec.onend = () => { ksVoicing=false; btn.classList.remove('ks-recording'); };
+      ksVoiceRec.onerror = () => { ksVoicing=false; btn.classList.remove('ks-recording'); };
+    }
+
+    // Save
+    function ksSave() {
+      const desc   = document.getElementById('ks-desc').value.trim() || ksData.cat+' kharcha';
+      const amount = document.getElementById('ks-amount').value;
+      const date   = ksData.date || new Date().toISOString().split('T')[0];
+
+      if(!amount || amount==='0') {
+        document.getElementById('ks-amt-val').style.color='#ef4444';
+        setTimeout(()=>document.getElementById('ks-amt-val').style.color='#0f172a',1200);
+        ksGoStep(2); return;
+      }
+
+      // Sync to main hidden form
+      document.getElementById('description').value      = desc;
+      document.getElementById('amount').value           = amount;
+      document.getElementById('expense-category').value = ksData.cat || 'Other';
+      document.getElementById('member-name').value      = ksData.member || 'Me';
+      document.getElementById('date').value             = date;
+
+      closeAddSheet();
+      setTimeout(() => { if(typeof addExpense==='function') addExpense(); }, 150);
+    }
+
+    // Compatibility shims for old sheet functions
+    function switchAddTab(){}
+    function toggleSheetVoice(){ ksVoiceDesc(); }
+    function resetVoiceSheet(){}
+    function stopSheetVoice(){ if(ksVoiceRec){try{ksVoiceRec.stop();}catch(e){}} }
+    function saveVoiceExpense(){}
+    function saveManualExpense(){ ksSave(); }
+    function selectMemberChip(){}
+    function selectCatChip(){}
+    </script>
+
+</body>
+</html>

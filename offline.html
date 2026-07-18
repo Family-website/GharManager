@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GharManager - Offline</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(160deg, #2E1259 0%, #4A1D7E 55%, #5F259F 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .icon { font-size: 80px; margin-bottom: 20px; }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        p { font-size: 16px; opacity: 0.8; margin-bottom: 30px; line-height: 1.6; }
+        button {
+            background: #5F259F;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="icon">🏠</div>
+    <h1>Aap Offline Hain</h1>
+    <p>Internet connection nahi mili.<br>Connect hone ke baad app automatically sync ho jayega.</p>
+    <button onclick="window.location.reload()">🔄 Dobara Try Karo</button>
+</body>
+</html>
