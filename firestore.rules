@@ -1,0 +1,52 @@
+rules_version = '2';
+
+// ============================================================
+// GharManager Pro — Firestore Security Rules
+// Phase 1 security fix.
+//
+// Codebase audit finding: every read/write in script.js uses
+// currentUser.uid (loadCloudData(user.uid), saveToCloud() ->
+// db.collection('familyData').doc(currentUser.uid)). "Family
+// members" (familyMembers[]) are just name labels stored inside
+// that one document, not separate Firebase accounts — the
+// invite-code flow currently doesn't link a second real account
+// to the same document. So the correct, honest rule for TODAY's
+// architecture is simple owner-only access. If you later build
+// real multi-account family sharing (see roadmap Phase 3), these
+// rules will need a members-list check added — flag that build
+// when you get there and the rules can be extended.
+// ============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Each user's finance data ----
+    // Only the signed-in owner of this uid may read or write it.
+    // No one else — authenticated or not — can touch another
+    // user's document.
+    match /familyData/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // ---- AI usage counters (rate-limit bookkeeping) ----
+    // Written only by the askAI Cloud Function via the Admin SDK,
+    // which bypasses these rules entirely. Clients may read their
+    // own counter (e.g. to show "X of 60 AI questions used today")
+    // but can never write it directly — that would let someone
+    // reset their own rate limit from the browser console.
+    match /aiUsage/{docId} {
+      allow read: if request.auth != null
+                   && docId.matches(request.auth.uid + '_.*');
+      allow write: if false;
+    }
+
+    // ---- Deny everything else by default ----
+    // Any collection not explicitly listed above is closed. This
+    // is the single most important line in the file — without it,
+    // a forgotten or future collection defaults to open in test
+    // mode and exposes data.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
