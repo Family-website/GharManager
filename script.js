@@ -2862,3 +2862,43 @@ function patchBudgetRemaining() {
         setup();
     }
 })();
+
+window.emergencyFix = function() {
+    if(!currentUser) return alert("Pehle login karo bhai!");
+    
+    // 1. Ziddi Cache ko jabardasti delete karo
+    if('caches' in window) { caches.keys().then(names => names.forEach(n => caches.delete(n))); }
+    
+    // 2. Seedha Cloud se data nikalo
+    db.collection('familyData').doc(currentUser.uid).get().then(doc => {
+        if(!doc.exists) return alert("Cloud pe data hi nahi hai!");
+        let data = doc.data();
+        let recovered = [];
+        
+        // Pehle se jo list mein hai
+        if(data.expenses && Array.isArray(data.expenses)) recovered = [...data.expenses];
+        
+        // Jo root pe bikhra hai (Jaise amount: 5)
+        if (data.amount !== undefined && typeof data.amount !== 'object') {
+            recovered.push({ amount: data.amount, category: data.category, date: data.date, description: data.description, member: data.member });
+        }
+        
+        // Jo numbers wale folder mein hai (17, 18, 19...)
+        for(let key in data) {
+            if(!isNaN(parseInt(key)) && typeof data[key] === 'object' && data[key].amount) {
+                recovered.push(data[key]);
+            }
+        }
+        
+        if(recovered.length === 0) return alert("Cloud mein koi purana kharcha nahi mila.");
+        
+        alert("Mubarak ho! " + recovered.length + " purane kharche mil gaye. Ab inko automatically theek kar rahe hain...");
+        
+        // 3. Sahi format mein wapas Cloud par save karo
+        db.collection('familyData').doc(currentUser.uid).set({ expenses: recovered }, { merge: true }).then(() => {
+            alert("Data 100% Fix ho gaya! 🎉 Ab page reload hoga.");
+            window.location.reload(true);
+        });
+    }).catch(e => alert("Error: " + e.message));
+}
+
